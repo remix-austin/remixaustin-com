@@ -1,0 +1,14 @@
+node_modules
+
+/build
+/public/build
+.env
+.env.example
+
+/cypress/screenshots
+/cypress/videos
+/prisma/data.db
+/prisma/data.db-journal
+/prisma/migrations
+
+/app/styles/tailwind.css
