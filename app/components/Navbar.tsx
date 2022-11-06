@@ -26,9 +26,9 @@ export default function Navbar() {
             tabIndex={0}
             className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
           >
-            <li>
+            {/* <li>
               <Link to="/blog">Blog</Link>
-            </li>
+            </li> */}
             <li>
               <a
                 href="https://github.com/remix-austin"
@@ -39,7 +39,7 @@ export default function Navbar() {
                 <GitHub />
               </a>
             </li>
-            <li>
+            <li className="pt-4">
               <a
                 href="https://www.meetup.com/remix-austin/"
                 className="btn-primary btn md:hidden"
@@ -82,9 +82,9 @@ export default function Navbar() {
       </div>
       <div className="navbar-center hidden md:flex">
         <ul className="menu menu-horizontal p-0 text-lg">
-          <li>
+          {/* <li>
             <Link to="/blog">Blog</Link>
-          </li>
+          </li> */}
           <li>
             <a
               href="https://github.com/remix-austin"
