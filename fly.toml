@@ -9,9 +9,10 @@ auto_rollback = true
 cmd = "start.sh"
 entrypoint = "sh"
 
-[mounts]
-source = "data"
-destination = "/data"
+# DISABLED: No need to mount a "data" volume since we're not using SQLite
+# [mounts]
+# source = "data"
+# destination = "/data"
 
 [[services]]
 internal_port = 8_080
