@@ -29,7 +29,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="dark relative h-full pb-16">
+      <body className="dark relative h-full">
         <Navbar />
         <div className="divider my-1"></div>
         <main className="md:prose-md container prose mx-auto mt-8 max-w-none px-8">
