@@ -1,9 +1,10 @@
 import { Link } from "@remix-run/react";
 import GitHub from "./icons/GitHub";
+import Meetup from "./icons/Meetup";
 
 export default function Navbar() {
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-base-300">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn-ghost btn md:hidden">
@@ -37,6 +38,16 @@ export default function Navbar() {
               >
                 GitHub
                 <GitHub />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.meetup.com/remix-austin/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="mr-2">Meetup</span>
+                <Meetup />
               </a>
             </li>
             <li className="pt-4">
@@ -85,16 +96,6 @@ export default function Navbar() {
           {/* <li>
             <Link to="/blog">Blog</Link>
           </li> */}
-          <li>
-            <a
-              href="https://github.com/remix-austin"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub
-              <GitHub />
-            </a>
-          </li>
           {/* <li tabIndex={0}>
             <a>
               Parent
@@ -123,14 +124,30 @@ export default function Navbar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <a
-          href="https://www.meetup.com/remix-austin/"
-          className="btn-primary btn hidden md:flex"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Attend the Meetup!
-        </a>
+        <ul className="mr-4 flex gap-2">
+          <li z-index="0">
+            <a
+              className="btn-ghost btn hidden md:inline-flex"
+              href="https://www.meetup.com/remix-austin/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="mr-2">Meetup</span>
+              <Meetup />
+            </a>
+          </li>
+          <li>
+            <a
+              className="btn-ghost btn hidden md:inline-flex"
+              href="https://github.com/remix-austin"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="mr-2">GitHub</span>
+              <GitHub />
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   );

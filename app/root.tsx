@@ -31,8 +31,7 @@ export default function App() {
       </head>
       <body className="dark relative h-full">
         <Navbar />
-        <div className="divider my-1"></div>
-        <main className="md:prose-md container prose mx-auto mt-8 max-w-none px-8">
+        <main className="container mx-auto max-w-none">
           <Outlet />
         </main>
         <Footer />
