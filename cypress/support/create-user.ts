@@ -7,6 +7,7 @@
 import { installGlobals } from "@remix-run/node";
 import { parse } from "cookie";
 
+// @ts-ignore this file no longer exists, but we might reintroduce it later
 import { createUser } from "~/models/user.server";
 import { createUserSession } from "~/session.server";
 

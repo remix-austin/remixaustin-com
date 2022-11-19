@@ -6,6 +6,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { installGlobals } from "@remix-run/node";
 
+// @ts-ignore this file no longer exists, but we might reintroduce it later
 import { prisma } from "~/db.server";
 
 installGlobals();

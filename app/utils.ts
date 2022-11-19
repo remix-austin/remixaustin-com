@@ -1,6 +1,7 @@
 import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
 
+// @ts-ignore this file no longer exists, but we might reintroduce it later
 import type { User } from "~/models/user.server";
 
 const DEFAULT_REDIRECT = "/";
