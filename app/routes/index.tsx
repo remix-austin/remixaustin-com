@@ -1,4 +1,4 @@
-import Meetup from "~/components/icons/Meetup";
+import MeetupIcon from "~/components/icons/MeetupIcon";
 import DiscordHeader from "~/images/discord-header.jpg";
 
 interface CardProps {
@@ -62,7 +62,7 @@ export default function Index() {
               rel="noopener noreferrer"
             >
               <span className="mr-2">Join us on Meetup</span>
-              <Meetup />
+              <MeetupIcon />
             </a>
           </div>
         </div>
