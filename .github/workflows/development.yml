@@ -9,7 +9,7 @@ on:
       - edited
       - synchronize
       - reopened
-workflow_call:
+  workflow_call:
 
 permissions:
   actions: write
