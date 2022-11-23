@@ -5,6 +5,7 @@ module.exports = {
     extend: {},
   },
   daisyui: {
+    logs: false,
     themes: [
       {
         remixAustinDark: {
