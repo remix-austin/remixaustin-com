@@ -1,7 +1,5 @@
 # RemixAustin.com
 
-![example workflow](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy.yml/badge.svg)
-
 <img src="public/img/remix-logo-rainbow.jpg" width="600" alt="Remix Austin logo" />
 
 The public repository for the [RemixAustin.com](https://remixaustin.com) website.
