@@ -10,5 +10,5 @@ on:
 
 jobs:
   development:
-    name: Development
+    name: 👷 Development
     uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
