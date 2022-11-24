@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   development:
-    name: Lint, Typecheck & Test
+    name: Development
     uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
 
   # cypress:
