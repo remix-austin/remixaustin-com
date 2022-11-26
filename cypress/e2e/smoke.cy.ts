@@ -5,9 +5,9 @@ export const meetupUrl = "https://www.meetup.com/remix-austin/";
 export const gitHubUrl = "https://github.com/remix-austin";
 export const youTubeUrl = "https://www.youtube.com/@remixaustin";
 
-// TODO: Convert cypress tests to TypeScript?
+// TODO: Configure cypress tests to be able to import TypeScript files
 
-describe("smoke tests", () => {
+describe("💨 Smoke tests", () => {
   it("should load the homepage", () => {
     // Check that the page renders
     cy.visitAndCheck("/");
