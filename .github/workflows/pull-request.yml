@@ -11,4 +11,4 @@ on:
 jobs:
   development:
     name: 👷 Development
-    uses: remix-austin/remixaustin-com/.github/workflows/development.yml
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@gkn/enable-initial-tests
