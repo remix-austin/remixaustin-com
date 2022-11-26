@@ -11,4 +11,4 @@ on:
 jobs:
   development:
     name: 👷 Development
-    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml
