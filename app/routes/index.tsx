@@ -67,7 +67,7 @@ export default function Index() {
           </div>
         </div>
       </div>
-      <div className="mb-8 grid grid-cols-1 gap-8 px-8 md:grid-cols-2">
+      <div className="container mx-auto mb-8 grid grid-cols-1 gap-8 px-8 md:grid-cols-2">
         <Card
           cta="Sign up"
           ctaLink="https://forms.gle/aQxC76yD2pagtB7HA"
