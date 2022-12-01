@@ -1,11 +1,16 @@
 import { Link } from "@remix-run/react";
-import GitHubIcon from "./icons/GitHubIcon";
-import MeetupIcon from "./icons/MeetupIcon";
-import YouTubeIcon from "./icons/YouTubeIcon";
+import GitHubIcon from "../icons/GitHubIcon";
+import MeetupIcon from "../icons/MeetupIcon";
+import YouTubeIcon from "../icons/YouTubeIcon";
+
+export const homepageLinkTitle = "Remix Austin 💿";
+export const meetupUrl = "https://www.meetup.com/remix-austin/";
+export const gitHubUrl = "https://github.com/remix-austin";
+export const youTubeUrl = "https://www.youtube.com/@remixaustin";
 
 export default function Navbar() {
   return (
-    <div className="navbar bg-base-300">
+    <nav className="navbar bg-base-300">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn-ghost btn md:hidden">
@@ -29,39 +34,27 @@ export default function Navbar() {
             className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
           >
             <li>
-              <a
-                href="https://github.com/remix-austin"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-                <GitHubIcon />
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.meetup.com/remix-austin/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={meetupUrl} target="_blank" rel="noopener noreferrer">
                 Meetup
                 <MeetupIcon />
               </a>
             </li>
             <li>
-              <a
-                href="https://www.youtube.com/@remixaustin"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={youTubeUrl} target="_blank" rel="noopener noreferrer">
                 YouTube
                 <YouTubeIcon />
+              </a>
+            </li>
+            <li>
+              <a href={gitHubUrl} target="_blank" rel="noopener noreferrer">
+                GitHub
+                <GitHubIcon />
               </a>
             </li>
           </ul>
         </div>
         <Link to="/" className="btn-ghost btn text-xl normal-case">
-          Remix Austin 💿
+          {homepageLinkTitle}
         </Link>
       </div>
       <div className="navbar-center hidden md:flex">
@@ -101,7 +94,7 @@ export default function Navbar() {
           <li z-index="0">
             <a
               className="btn-ghost btn hidden md:inline-flex"
-              href="https://www.meetup.com/remix-austin/"
+              href={meetupUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -112,7 +105,7 @@ export default function Navbar() {
           <li>
             <a
               className="btn-ghost btn hidden md:inline-flex"
-              href="https://www.youtube.com/@remixaustin"
+              href={youTubeUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -123,7 +116,7 @@ export default function Navbar() {
           <li>
             <a
               className="btn-ghost btn hidden md:inline-flex"
-              href="https://github.com/remix-austin"
+              href={gitHubUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -133,6 +126,6 @@ export default function Navbar() {
           </li>
         </ul>
       </div>
-    </div>
+    </nav>
   );
 }

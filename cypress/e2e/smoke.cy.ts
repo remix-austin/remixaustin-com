@@ -1,51 +1,40 @@
-import { faker } from "@faker-js/faker";
+// import { faker } from "@faker-js/faker";
 
-describe("smoke tests", () => {
-  afterEach(() => {
-    cy.cleanupUser();
-  });
+export const homepageLinkTitle = "Remix Austin 💿";
+export const meetupUrl = "https://www.meetup.com/remix-austin/";
+export const gitHubUrl = "https://github.com/remix-austin";
+export const youTubeUrl = "https://www.youtube.com/@remixaustin";
 
-  it("should allow you to register and login", () => {
-    const loginForm = {
-      email: `${faker.internet.userName()}@example.com`,
-      password: faker.internet.password(),
-    };
+// TODO: Configure cypress tests to be able to import TypeScript files
 
-    cy.then(() => ({ email: loginForm.email })).as("user");
-
+describe("💨 Smoke tests", () => {
+  it("should load the homepage", () => {
+    // Check that the page renders
     cy.visitAndCheck("/");
 
-    cy.findByRole("link", { name: /sign up/i }).click();
+    // Check top navbar with links exist
+    cy.get(
+      `nav.navbar > .navbar-start > a.btn:contains("${homepageLinkTitle}")`
+    ).should("have.attr", "href", "/");
 
-    cy.findByRole("textbox", { name: /email/i }).type(loginForm.email);
-    cy.findByLabelText(/password/i).type(loginForm.password);
-    cy.findByRole("button", { name: /create account/i }).click();
+    cy.get(`nav.navbar > .navbar-end a.btn:contains("Meetup")`).should(
+      "have.attr",
+      "href",
+      meetupUrl
+    );
 
-    cy.findByRole("link", { name: /notes/i }).click();
-    cy.findByRole("button", { name: /logout/i }).click();
-    cy.findByRole("link", { name: /log in/i });
-  });
+    cy.get(`nav.navbar > .navbar-end a.btn:contains("YouTube")`).should(
+      "have.attr",
+      "href",
+      youTubeUrl
+    );
 
-  it("should allow you to make a note", () => {
-    const testNote = {
-      title: faker.lorem.words(1),
-      body: faker.lorem.sentences(1),
-    };
-    cy.login();
+    cy.get(`nav.navbar > .navbar-end a.btn:contains("GitHub")`).should(
+      "have.attr",
+      "href",
+      gitHubUrl
+    );
 
-    cy.visitAndCheck("/");
-
-    cy.findByRole("link", { name: /notes/i }).click();
-    cy.findByText("No notes yet");
-
-    cy.findByRole("link", { name: /\+ new note/i }).click();
-
-    cy.findByRole("textbox", { name: /title/i }).type(testNote.title);
-    cy.findByRole("textbox", { name: /body/i }).type(testNote.body);
-    cy.findByRole("button", { name: /save/i }).click();
-
-    cy.findByRole("button", { name: /delete/i }).click();
-
-    cy.findByText("No notes yet");
+    cy.get(`footer`).should("contain", "Copyright");
   });
 });

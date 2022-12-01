@@ -2,6 +2,7 @@ node_modules
 
 /build
 /public/build
+/coverage
 .env
 
 /app/styles/tailwind.css
