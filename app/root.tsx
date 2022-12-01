@@ -18,7 +18,10 @@ export const links: LinksFunction = () => {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Remix Austin 💿",
+  title:
+    "Remix Austin 💿 A community & monthly Meetup event for Remix developers",
+  description:
+    "We are the premiere Remix community for developers in Austin, TX, and we stream remotely all over the world!",
   viewport: "width=device-width,initial-scale=1",
 });
 
