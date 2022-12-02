@@ -1,5 +1,7 @@
 import MeetupIcon from "~/components/icons/MeetupIcon";
-import DiscordHeader from "~/images/discord-header.jpg";
+import DiscordHeaderImage from "~/images/discord-header.jpg";
+import HeroImage from "~/images/hero.jpg";
+import GivePresentationImage from "~/images/give-a-presentation.jpg";
 
 interface CardProps {
   altText: string;
@@ -35,7 +37,7 @@ export default function Index() {
       <div
         className="hero mb-8"
         style={{
-          backgroundImage: `url("https://secure.meetupstatic.com/photos/event/7/4/6/6/highres_505889798.jpeg")`,
+          backgroundImage: `url(${HeroImage})`,
         }}
       >
         <div className="hero-overlay bg-opacity-90"></div>
@@ -67,7 +69,7 @@ export default function Index() {
           </div>
         </div>
       </div>
-      <div className="mb-8 grid grid-cols-1 gap-8 px-8 md:grid-cols-2">
+      <div className="container mx-auto mb-8 grid grid-cols-1 gap-8 px-8 md:grid-cols-2">
         <Card
           cta="Sign up"
           ctaLink="https://forms.gle/aQxC76yD2pagtB7HA"
@@ -76,14 +78,14 @@ export default function Index() {
                 what you've been learning. Not to mention, it helps others learn
                 too! Feel free to reach out if you want to know more."
           altText="Remix presentation on Medusa"
-          imgSrc="https://secure.meetupstatic.com/photos/event/7/4/6/5/highres_505889797.webp"
+          imgSrc={GivePresentationImage}
         />
         <Card
           altText="Discord header with interesting creatures"
           cta="Chat with us"
           ctaLink="https://discord.com/channels/770287896669978684/953371044108972112"
           heading="Connect on Discord"
-          imgSrc={DiscordHeader}
+          imgSrc={DiscordHeaderImage}
           text="We want to help each other build better experiences on the web for our users by learning and teaching Remix together."
         />
       </div>
