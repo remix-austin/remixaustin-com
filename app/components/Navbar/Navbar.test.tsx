@@ -23,5 +23,7 @@ describe("Navbar", () => {
     expect(screen.getAllByRole("link", { name: "YouTube" })).toHaveLength(2);
 
     expect(screen.getAllByRole("link", { name: "GitHub" })).toHaveLength(2);
+
+    expect(screen.getAllByRole("link", { name: "Discord" })).toHaveLength(2);
   });
 });
