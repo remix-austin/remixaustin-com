@@ -10,4 +10,4 @@ on:
 jobs:
   development:
     name: 👷 Development
-    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@gkn/update-cypress-to-11.2.0
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
