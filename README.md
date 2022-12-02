@@ -1,6 +1,6 @@
 # RemixAustin.com
 
-[![Deploy](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy/badge.svg?branch=main)](.github/workflows/deploy.yml) [![remixaustin.com](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/6s6892/main&style=flat&logo=cypress)](https://cloud.cypress.io/projects/6s6892/runs)
+![🚀 Deploy](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy.yml/badge.svg?branch=main) [![remixaustin.com](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/6s6892/main&style=flat&logo=cypress)](https://cloud.cypress.io/projects/6s6892/runs)
 
 <img src="public/img/remix-logo-rainbow.jpg" width="600" alt="Remix Austin logo" />
 

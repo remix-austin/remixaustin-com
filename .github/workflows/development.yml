@@ -2,9 +2,9 @@ name: 👷 Development
 on:
   workflow_call:
 
-permissions:
-  actions: write
-  contents: read
+# permissions:
+#   actions: write
+#   contents: read
 
 # TODO: Create an install job for caching artifacts?
 
