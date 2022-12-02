@@ -2,11 +2,14 @@ import { Link } from "@remix-run/react";
 import GitHubIcon from "../icons/GitHubIcon";
 import MeetupIcon from "../icons/MeetupIcon";
 import YouTubeIcon from "../icons/YouTubeIcon";
+import DiscordIcon from "../icons/DiscordIcon";
 
 export const homepageLinkTitle = "Remix Austin 💿";
 export const meetupUrl = "https://www.meetup.com/remix-austin/";
 export const gitHubUrl = "https://github.com/remix-austin";
 export const youTubeUrl = "https://www.youtube.com/@remixaustin";
+export const discordUrl =
+  "https://discord.com/channels/770287896669978684/953371044108972112";
 
 export default function Navbar() {
   return (
@@ -49,6 +52,12 @@ export default function Navbar() {
               <a href={gitHubUrl} target="_blank" rel="noopener noreferrer">
                 GitHub
                 <GitHubIcon />
+              </a>
+            </li>
+            <li>
+              <a href={discordUrl} target="_blank" rel="noopener noreferrer">
+                Discord
+                <DiscordIcon />
               </a>
             </li>
           </ul>
@@ -122,6 +131,17 @@ export default function Navbar() {
             >
               <span className="mr-2">GitHub</span>
               <GitHubIcon />
+            </a>
+          </li>
+          <li>
+            <a
+              className="btn-ghost btn hidden md:inline-flex"
+              href={discordUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="mr-2">Discord</span>
+              <DiscordIcon />
             </a>
           </li>
         </ul>
