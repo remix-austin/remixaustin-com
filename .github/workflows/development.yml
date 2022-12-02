@@ -113,7 +113,6 @@ jobs:
           start: npm run start:mocks
           wait-on: "http://localhost:8811"
           record: false
-          video: false
         env:
           PORT: "8811"
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
