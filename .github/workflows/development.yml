@@ -2,9 +2,9 @@ name: 👷 Development
 on:
   workflow_call:
 
-# permissions:
-#   actions: write
-#   contents: read
+permissions:
+  actions: write
+  contents: read
 
 # TODO: Create an install job for caching artifacts?
 
@@ -112,7 +112,8 @@ jobs:
         with:
           start: npm run start:mocks
           wait-on: "http://localhost:8811"
-          record: true
+          record: false
+          video: false
         env:
           PORT: "8811"
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}

@@ -4,9 +4,9 @@ on:
     branches:
       - main
 
-# permissions:
-#   actions: write
-#   contents: read
+permissions:
+  actions: write
+  contents: read
 
 jobs:
   development:
