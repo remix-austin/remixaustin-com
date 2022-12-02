@@ -1,6 +1,6 @@
 # RemixAustin.com
 
-[![remixaustin.com](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/6s6892/main&style=flat&logo=cypress)](https://cloud.cypress.io/projects/6s6892/runs)
+[![Deploy](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy/badge.svg?branch=main)](.github/workflows/deploy.yml) [![remixaustin.com](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/detailed/6s6892/main&style=flat&logo=cypress)](https://cloud.cypress.io/projects/6s6892/runs)
 
 <img src="public/img/remix-logo-rainbow.jpg" width="600" alt="Remix Austin logo" />
 
@@ -46,6 +46,8 @@ You can, however, [create an issue](https://github.com/remix-austin/remixaustin-
 ## Testing
 
 ### Cypress
+
+[![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
 
 We use Cypress for our End-to-End tests in this project. You'll find those in the `cypress` directory. As you make changes, add to an existing file or create a new file in the `cypress/e2e` directory to test your changes.
 

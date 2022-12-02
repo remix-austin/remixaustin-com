@@ -93,16 +93,16 @@ jobs:
         with:
           node-version: 16
 
-      - name: Cypress info
-        run: npx cypress info
-
-      - name: Node info
-        run: node -v
-
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
+
+      - name: Node info
+        run: node -v
+
+      - name: Cypress info
+        run: npx cypress info
 
       - name: ⚙️ Build
         run: npm run build
