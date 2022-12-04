@@ -8,8 +8,7 @@ export const homepageLinkTitle = "Remix Austin 💿";
 export const meetupUrl = "https://www.meetup.com/remix-austin/";
 export const gitHubUrl = "https://github.com/remix-austin";
 export const youTubeUrl = "https://www.youtube.com/@remixaustin";
-export const discordUrl =
-  "https://discord.com/channels/770287896669978684/953371044108972112";
+export const discordUrl = "https://discord.gg/mYy2kzqX";
 
 export default function Navbar() {
   return (
