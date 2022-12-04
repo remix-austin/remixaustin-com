@@ -16,6 +16,8 @@ interface CardProps {
   rel?: string;
 }
 
+export const h1Title = "Welcome to Remix Austin!";
+
 function Card({
   altText,
   cta,
@@ -72,9 +74,7 @@ export default function Index() {
                 className="my-0"
               />
             </div>
-            <h1 className="mb-4 inline-block text-5xl font-bold">
-              Welcome to Remix Austin!
-            </h1>
+            <h1 className="mb-4 inline-block text-5xl font-bold">{h1Title}</h1>
             <p className="mb-4">
               We are the premiere Remix community for developers in Austin, and
               we stream remotely all over the world!

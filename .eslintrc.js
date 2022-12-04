@@ -16,4 +16,12 @@ module.exports = {
       version: 28,
     },
   },
+  overrides: [
+    {
+      files: ["*.spec.ts"],
+      rules: {
+        "testing-library/prefer-screen-queries": "off",
+      },
+    },
+  ],
 };

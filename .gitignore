@@ -12,3 +12,6 @@ node_modules
 /prisma/migrations
 
 /app/styles/tailwind.css
+/playwright-results/
+/playwright-report/
+/playwright/.cache/
