@@ -1,4 +1,9 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,6 +16,7 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
+import { redirectToNonWww } from "./utils";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -21,6 +27,16 @@ export const meta: MetaFunction = () => ({
   title: "Remix Austin 💿",
   viewport: "width=device-width,initial-scale=1",
 });
+
+export const loader: LoaderFunction = async ({ request }) => {
+  // Redirect if "www." is in the url.
+  const redirectUrl = redirectToNonWww(request.url);
+  if (redirectUrl) {
+    return redirect(redirectUrl, 308);
+  }
+
+  return null;
+};
 
 export default function App() {
   return (
