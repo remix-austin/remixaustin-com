@@ -33,7 +33,7 @@ export function safeRedirect(
  *
  * Otherwise, return null.
  */
-export const redirectToNonWww = (requestUrl: string): string | null => {
+export const getRedirectUrlIfWww = (requestUrl: string): string | null => {
   const url = new URL(requestUrl);
   const hostname = url.hostname;
 

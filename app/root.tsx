@@ -16,7 +16,7 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { redirectToNonWww } from "./utils";
+import { getRedirectUrlIfWww } from "./utils";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -30,7 +30,7 @@ export const meta: MetaFunction = () => ({
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Redirect if "www." is in the url.
-  const redirectUrl = redirectToNonWww(request.url);
+  const redirectUrl = getRedirectUrlIfWww(request.url);
   if (redirectUrl) {
     return redirect(redirectUrl, 308);
   }

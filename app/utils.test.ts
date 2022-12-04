@@ -1,4 +1,4 @@
-import { validateEmail, safeRedirect, redirectToNonWww } from "./utils";
+import { validateEmail, safeRedirect, getRedirectUrlIfWww } from "./utils";
 
 describe("utils", () => {
   describe("email validation", () => {
@@ -62,31 +62,31 @@ describe("utils", () => {
     });
   });
 
-  describe("redirectToNonWww", () => {
+  describe("getRedirectUrlIfWww", () => {
     it("returns a non-www redirect url if passed a url with www", () => {
       const requestUrl = "https://www.remixaustin.com/";
-      const result = redirectToNonWww(requestUrl);
+      const result = getRedirectUrlIfWww(requestUrl);
 
       expect(result).toBe("https://remixaustin.com/");
     });
 
     it("returns a non-www redirect url if passed a url with www and no trailing slash", () => {
       const requestUrl = "https://www.remixaustin.com";
-      const result = redirectToNonWww(requestUrl);
+      const result = getRedirectUrlIfWww(requestUrl);
 
       expect(result).toBe("https://remixaustin.com/");
     });
 
     it("returns a non-www redirect url and retains the path & querystring", () => {
       const requestUrl = "https://www.remixaustin.com/blah/?a=apple&b=banana";
-      const result = redirectToNonWww(requestUrl);
+      const result = getRedirectUrlIfWww(requestUrl);
 
       expect(result).toBe("https://remixaustin.com/blah/?a=apple&b=banana");
     });
 
     it("returns null (and therefore no redirect) if the url does not contain www", () => {
       const requestUrl = "https://remixaustin.com/blah/?a=apple&b=banana";
-      const result = redirectToNonWww(requestUrl);
+      const result = getRedirectUrlIfWww(requestUrl);
 
       expect(result).toBe(null);
     });
