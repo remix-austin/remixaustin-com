@@ -104,15 +104,19 @@ jobs:
       - name: ⚙️ Build
         run: npm run build
 
+      - name: 🏃 Run
+        run: PORT="8811" npm run start:mocks &
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: npx playwright test
+        env:
+          PORT: ${{ env.PORT || '8811' }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: playwright-report
           path: playwright-report/
-          retention-days: 30
