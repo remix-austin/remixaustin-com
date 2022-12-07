@@ -2,7 +2,7 @@ import MeetupIcon from "~/components/icons/MeetupIcon";
 import DiscordHeaderImage from "~/images/discord-header.jpg";
 import HeroImage from "~/images/hero.jpg";
 import GivePresentationImage from "~/images/give-a-presentation.jpg";
-import { discordUrl } from "~/components/Navbar/Navbar";
+import { discordUrl } from "~/components/Navbar/SocialLinks";
 
 interface CardProps {
   altText: string;

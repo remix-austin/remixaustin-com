@@ -1,14 +1,7 @@
 import { Link } from "@remix-run/react";
-import GitHubIcon from "../icons/GitHubIcon";
-import MeetupIcon from "../icons/MeetupIcon";
-import YouTubeIcon from "../icons/YouTubeIcon";
-import DiscordIcon from "../icons/DiscordIcon";
+import SocialLinks from "./SocialLinks";
 
 export const homepageLinkTitle = "Remix Austin 💿";
-export const meetupUrl = "https://www.meetup.com/remix-austin/";
-export const gitHubUrl = "https://github.com/remix-austin";
-export const youTubeUrl = "https://www.youtube.com/@remixaustin";
-export const discordUrl = "https://discord.gg/mYy2kzqX";
 
 export default function Navbar() {
   return (
@@ -35,30 +28,7 @@ export default function Navbar() {
             tabIndex={0}
             className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
           >
-            <li>
-              <a href={meetupUrl} target="_blank" rel="noopener noreferrer">
-                Meetup
-                <MeetupIcon />
-              </a>
-            </li>
-            <li>
-              <a href={youTubeUrl} target="_blank" rel="noopener noreferrer">
-                YouTube
-                <YouTubeIcon />
-              </a>
-            </li>
-            <li>
-              <a href={gitHubUrl} target="_blank" rel="noopener noreferrer">
-                GitHub
-                <GitHubIcon />
-              </a>
-            </li>
-            <li>
-              <a href={discordUrl} target="_blank" rel="noopener noreferrer">
-                Discord
-                <DiscordIcon />
-              </a>
-            </li>
+            <SocialLinks />
           </ul>
         </div>
         <Link to="/" className="btn-ghost btn text-xl normal-case">
@@ -99,50 +69,7 @@ export default function Navbar() {
       </div>
       <div className="navbar-end">
         <ul className="mr-4 flex gap-2">
-          <li z-index="0">
-            <a
-              className="btn-ghost btn hidden md:inline-flex"
-              href={meetupUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="mr-2">Meetup</span>
-              <MeetupIcon />
-            </a>
-          </li>
-          <li>
-            <a
-              className="btn-ghost btn hidden md:inline-flex"
-              href={youTubeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="mr-2">YouTube</span>
-              <YouTubeIcon />
-            </a>
-          </li>
-          <li>
-            <a
-              className="btn-ghost btn hidden md:inline-flex"
-              href={gitHubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="mr-2">GitHub</span>
-              <GitHubIcon />
-            </a>
-          </li>
-          <li>
-            <a
-              className="btn-ghost btn hidden md:inline-flex"
-              href={discordUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="mr-2">Discord</span>
-              <DiscordIcon />
-            </a>
-          </li>
+          <SocialLinks linkClassName="btn-ghost btn hidden md:inline-flex gap-x-2" />
         </ul>
       </div>
     </nav>
