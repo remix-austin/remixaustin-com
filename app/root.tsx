@@ -59,13 +59,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-
   const matches = useMatches();
 
-  const includeScripts = matches.some(
-    (match) => match.handle?.hydrate
-  );
-  
+  const includeScripts = matches.some((match) => match.handle?.hydrate);
+
   return (
     <html lang="en" className="relative h-full">
       <head>

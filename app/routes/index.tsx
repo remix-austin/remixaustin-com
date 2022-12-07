@@ -2,6 +2,7 @@ import MeetupIcon from "~/components/icons/MeetupIcon";
 import DiscordHeaderImage from "~/images/discord-header.jpg";
 import HeroImage from "~/images/hero.jpg";
 import GivePresentationImage from "~/images/give-a-presentation.jpg";
+import type { LinksFunction } from "@remix-run/node";
 
 interface CardProps {
   altText: string;
@@ -46,6 +47,10 @@ function Card({
     </div>
   );
 }
+
+export const links: LinksFunction = () => {
+  return [{ rel: "preload", href: HeroImage, as: "image" }];
+};
 
 export default function Index() {
   return (
