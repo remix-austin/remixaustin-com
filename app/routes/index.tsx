@@ -2,6 +2,7 @@ import MeetupIcon from "~/components/icons/MeetupIcon";
 import DiscordHeaderImage from "~/images/discord-header.jpg";
 import HeroImage from "~/images/hero.jpg";
 import GivePresentationImage from "~/images/give-a-presentation.jpg";
+import { discordUrl } from "~/components/Navbar/SocialLinks";
 
 interface CardProps {
   altText: string;
@@ -101,7 +102,7 @@ export default function Index() {
         <Card
           altText="Discord header with interesting creatures"
           cta="Chat with us"
-          ctaLink="https://discord.com/channels/770287896669978684/953371044108972112"
+          ctaLink={discordUrl}
           heading="Connect on Discord"
           imgSrc={DiscordHeaderImage}
           text="We want to help each other build better experiences on the web for our users by learning and teaching Remix together."
