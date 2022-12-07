@@ -10,9 +10,20 @@ interface CardProps {
   text: string;
   cta: string;
   ctaLink: string;
+  target?: string;
+  rel?: string;
 }
 
-function Card({ altText, cta, ctaLink, heading, imgSrc, text }: CardProps) {
+function Card({
+  altText,
+  cta,
+  ctaLink,
+  heading,
+  imgSrc,
+  rel,
+  text,
+  target,
+}: CardProps) {
   return (
     <div className="card border border-neutral bg-base-100 shadow-xl">
       <figure className="max-h-48 overflow-clip">
@@ -22,7 +33,12 @@ function Card({ altText, cta, ctaLink, heading, imgSrc, text }: CardProps) {
         <h2 className="card-title text-2xl">{heading}</h2>
         <p className="mb-4">{text}</p>
         <div className="card-actions justify-end">
-          <a href={ctaLink} className="btn-primary btn">
+          <a
+            href={ctaLink}
+            className="btn-primary btn"
+            target={target}
+            rel={rel}
+          >
             {cta}
           </a>
         </div>
@@ -79,6 +95,8 @@ export default function Index() {
                 too! Feel free to reach out if you want to know more."
           altText="Remix presentation on Medusa"
           imgSrc={GivePresentationImage}
+          target="_blank"
+          rel="noopener noreferrer"
         />
         <Card
           altText="Discord header with interesting creatures"
@@ -87,6 +105,8 @@ export default function Index() {
           heading="Connect on Discord"
           imgSrc={DiscordHeaderImage}
           text="We want to help each other build better experiences on the web for our users by learning and teaching Remix together."
+          target="_blank"
+          rel="noopener noreferrer"
         />
       </div>
     </>
