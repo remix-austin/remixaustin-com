@@ -18,6 +18,7 @@ describe("Navbar", () => {
       screen.getByRole("link", { name: homepageLinkTitle })
     ).toBeInTheDocument();
 
+    // Check for 2 links for each, for both mobile and desktop nav menus
     expect(screen.getAllByRole("link", { name: "Meetup" })).toHaveLength(2);
 
     expect(screen.getAllByRole("link", { name: "YouTube" })).toHaveLength(2);
