@@ -22,7 +22,7 @@
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
     "prepare": "husky install",
     "typecheck": "tsc -b && tsc -b cypress",
-    "validate": "run-p test lint typecheck e2e",
+    "validate": "run-p test lint typecheck test:e2e:run",
     "validate:precommit": "run-p lint format:check typecheck"
   },
   "prettier": {},
