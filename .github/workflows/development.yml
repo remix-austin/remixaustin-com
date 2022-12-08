@@ -101,17 +101,17 @@ jobs:
       - name: Node info
         run: node -v
 
-      - name: ⚙️ Build
-        run: npm run build
+      # - name: ⚙️ Build
+      #   run: npm run build
 
-      - name: 🏃 Run
-        run: PORT="8811" npm run start:mocks &
+      # - name: 🏃 Run
+      #   run: PORT="8811" npm run start:mocks &
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      # - name: Install Playwright Browsers
+      #   run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: PORT="8811" npm run e2e
         env:
           PORT: ${{ env.PORT || '8811' }}
 
