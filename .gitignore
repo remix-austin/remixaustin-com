@@ -7,10 +7,11 @@ node_modules
 .vscode
 
 /coverage
-/cypress/screenshots
-/cypress/videos
 /prisma/data.db
 /prisma/data.db-journal
 /prisma/migrations
 
 /app/styles/tailwind.css
+/playwright-results/
+/playwright-report/
+/playwright/.cache/

@@ -6,10 +6,8 @@ module.exports = {
     "@remix-run/eslint-config/jest-testing-library",
     "prettier",
   ],
-  env: {
-    "cypress/globals": true,
-  },
-  plugins: ["cypress"],
+  env: {},
+  plugins: [],
   // we're using vitest which has a very similar API to jest
   // (so the linting plugins work nicely), but it means we have to explicitly
   // set the jest version.
@@ -18,4 +16,12 @@ module.exports = {
       version: 28,
     },
   },
+  overrides: [
+    {
+      files: ["*.spec.ts"],
+      rules: {
+        "testing-library/prefer-screen-queries": "off",
+      },
+    },
+  ],
 };

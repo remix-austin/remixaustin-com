@@ -23,7 +23,7 @@ export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
 };
 
-const defaultTitle =
+export const defaultTitle =
   "Remix Austin 💿 A community & monthly Meetup event for Remix developers";
 const defaultDescription =
   "We are the premiere Remix community for developers in Austin, TX, and we stream remotely all over the world!";
