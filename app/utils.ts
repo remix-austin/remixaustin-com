@@ -1,4 +1,5 @@
 import { useMatches } from "@remix-run/react";
+import type { ReactNode } from "react";
 import { useMemo } from "react";
 
 const DEFAULT_REDIRECT = "/";
@@ -65,3 +66,11 @@ export function useMatchesData(
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
+
+export function isEmptyString(val: unknown): boolean {
+  return typeof val === "string" && val.trim().length <= 0;
+}
+
+export type PropsWithRequiredChildren<P = unknown> = P & {
+  children: ReactNode;
+};

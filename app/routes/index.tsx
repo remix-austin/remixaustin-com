@@ -1,9 +1,14 @@
-import MeetupIcon from "~/components/icons/MeetupIcon";
 import DiscordHeaderImage from "~/images/discord-header.jpg";
 import HeroImage from "~/images/hero.jpg";
 import GivePresentationImage from "~/images/give-a-presentation.jpg";
 import { discordUrl } from "~/components/Navbar/SocialLinks";
 import type { LinksFunction } from "@remix-run/node";
+import { tryToFetchRemixAustinInfo } from "~/models/meetup.server";
+import { json } from "@remix-run/server-runtime";
+import { useLoaderData } from "@remix-run/react";
+import NextEventInfo from "~/components/NextEventInfo/NextEventInfo";
+import MeetupLink from "~/components/MeetupLink";
+import { meetupUrl } from "~/components/Navbar/SocialLinks";
 
 interface CardProps {
   altText: string;
@@ -55,7 +60,17 @@ export const links: LinksFunction = () => {
   return [{ rel: "preload", href: HeroImage, as: "image" }];
 };
 
+export async function loader() {
+  const group = await tryToFetchRemixAustinInfo();
+  const nextEvent =
+    group !== undefined && group.upcomingEvents.edges.length >= 1
+      ? group.upcomingEvents.edges[0].node
+      : undefined;
+  return json({ link: group?.link, nextEvent });
+}
+
 export default function Index() {
+  const { link, nextEvent } = useLoaderData<typeof loader>();
   return (
     <>
       <div
@@ -75,19 +90,17 @@ export default function Index() {
               />
             </div>
             <h1 className="mb-4 inline-block text-5xl font-bold">{h1Title}</h1>
-            <p className="mb-4">
+            <p className="mb-8">
               We are the premiere Remix community for developers in Austin, and
               we stream remotely all over the world!
             </p>
-            <a
-              href="https://www.meetup.com/remix-austin/"
-              className="btn-primary btn"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="mr-2">Join us on Meetup</span>
-              <MeetupIcon />
-            </a>
+            {nextEvent ? (
+              <NextEventInfo event={nextEvent} />
+            ) : (
+              <MeetupLink link={link || meetupUrl}>
+                Join us on Meetup!
+              </MeetupLink>
+            )}
           </div>
         </div>
       </div>

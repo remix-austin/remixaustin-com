@@ -1,4 +1,9 @@
-import { validateEmail, safeRedirect, getRedirectUrlIfWww } from "./utils";
+import {
+  validateEmail,
+  safeRedirect,
+  getRedirectUrlIfWww,
+  isEmptyString,
+} from "./utils";
 
 describe("utils", () => {
   describe("email validation", () => {
@@ -89,6 +94,32 @@ describe("utils", () => {
       const result = getRedirectUrlIfWww(requestUrl);
 
       expect(result).toBe(null);
+    });
+  });
+
+  describe("isEmptyString", () => {
+    test("should return true if empty string", () => {
+      expect(isEmptyString("")).toBe(true);
+      expect(isEmptyString("   ")).toBe(true);
+    });
+
+    test("should return false if string has contents", () => {
+      expect(isEmptyString("content")).toBe(false);
+      expect(isEmptyString("  content")).toBe(false);
+      expect(isEmptyString("content  ")).toBe(false);
+    });
+
+    test("should return false if not given a string", () => {
+      expect(isEmptyString(undefined)).toBe(false);
+      expect(isEmptyString(null)).toBe(false);
+      expect(isEmptyString(0)).toBe(false);
+      expect(isEmptyString(1)).toBe(false);
+      expect(isEmptyString(true)).toBe(false);
+      expect(isEmptyString(false)).toBe(false);
+      expect(isEmptyString({})).toBe(false);
+      expect(isEmptyString({ foo: "bar" })).toBe(false);
+      expect(isEmptyString([])).toBe(false);
+      expect(isEmptyString(["foo"])).toBe(false);
     });
   });
 
