@@ -9,7 +9,10 @@ import path from "path";
 // require('dotenv').config();
 
 // Use process.env.PORT by default and fallback to port 3000
-const PORT = process.env.PORT || 3000;
+let PORT = Number(process.env.PORT);
+if (Number.isNaN(PORT)) {
+  PORT = 3000;
+}
 
 // Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
 const baseURL = `http://localhost:${PORT}`;
@@ -106,10 +109,10 @@ const config: PlaywrightTestConfig = {
   outputDir: "playwright-results/",
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   port: 3000,
-  // },
+  webServer: {
+    command: "npm run start:mocks",
+    port: PORT,
+  },
 };
 
 export default config;

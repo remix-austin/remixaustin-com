@@ -3,6 +3,7 @@
     "baseUrl": "..", // This must be specified if "paths" is.
     "paths": {
       "@app/*": ["app/*"] // This mapping is relative to "baseUrl".
-    }
+    },
+    "noEmit": true
   }
 }
