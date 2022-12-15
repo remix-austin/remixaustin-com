@@ -22,8 +22,8 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Meetup
           <MeetupIcon />
+          Meetup
         </a>
       </li>
       <li>
@@ -33,8 +33,8 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
         >
-          YouTube
           <YouTubeIcon />
+          YouTube
         </a>
       </li>
       <li>
@@ -44,8 +44,8 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
         >
-          GitHub
           <GitHubIcon />
+          GitHub
         </a>
       </li>
       <li>
@@ -55,8 +55,8 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
         >
-          Discord
           <DiscordIcon />
+          Discord
         </a>
       </li>
     </>
