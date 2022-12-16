@@ -167,7 +167,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: 👀 View this PR on staging at ${{ steps.deploy-pr.outputs.url }}
+          msg: |
+            ## 👀 View this PR on staging at:
+            ${{ steps.deploy-pr.outputs.url }}
           check_for_duplicate_msg: true
 
       # - name: 🚀 Deploy Staging
