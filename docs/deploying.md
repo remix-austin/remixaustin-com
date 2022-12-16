@@ -1,6 +1,15 @@
 # Deployment
 
-There are two GitHub Actions that handle automatically deploying the website to production and staging environments.
+## Running workflows locally
+
+This is a great method to run & test GitHub action workflows rapidly, without constantly pushing to PR branches!
+
+**You should also consider creating workflows for automation that might be done both locally and on GitHub, which will reduce the need for shell scripts, and avoid duplication.**
+
+1. Install [act](https://github.com/nektos/act)
+2.
+
+## Deploying the website to production
 
 Prior to your first deployment, you'll need to do a few things:
 
