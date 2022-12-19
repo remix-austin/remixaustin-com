@@ -13,7 +13,9 @@ import Navbar from "./components/Navbar/Navbar";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl }
+  ];
 };
 
 const defaultTitle =
