@@ -20,7 +20,9 @@ import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getRedirectUrlIfWww } from "./utils";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [
+    { rel: "stylesheet", href: tailwindStylesheetUrl }
+  ];
 };
 
 export const defaultTitle =
