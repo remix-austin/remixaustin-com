@@ -1,48 +1,45 @@
-import type { InferType } from "yup";
-import { object, string, number, array, date } from "yup";
+import { z } from "zod";
 
-const MEETUP_EVENT_SCHEMA = object({
-  title: string().required(),
-  shortUrl: string().required().url(),
-  venue: object({
-    name: string().required(),
-    address: string().defined().strict(true),
-    city: string().defined().strict(true),
-    state: string().defined().strict(true),
-  }).required(),
-  dateTime: date().required(),
-  going: number().required(),
-}).required();
+const meetupEventSchema = z.object({
+  title: z.string(),
+  shortUrl: z.string().url(),
+  venue: z
+    .object({
+      name: z.string(),
+      address: z.string(),
+      city: z.string(),
+      state: z.string(),
+    })
+    .nullable(),
+  dateTime: z.string().transform((d) => new Date(d)),
+  going: z.number(),
+});
 
-export interface MeetupEvent extends InferType<typeof MEETUP_EVENT_SCHEMA> {}
+export type MeetupEvent = z.infer<typeof meetupEventSchema>;
 
-const MEETUP_GROUP_BY_URL_NAME_SCHEMA = object({
-  link: string().required(),
-  memberships: object({
-    count: number().required(),
-  }).required(),
-  upcomingEvents: object({
-    edges: array()
-      .of(
-        object({
-          node: MEETUP_EVENT_SCHEMA,
-        }).required()
-      )
-      .required(),
-  }).required(),
-}).required();
+const meetupGroupByUrlnameSchema = z.object({
+  link: z.string(),
+  memberships: z.object({
+    count: z.number(),
+  }),
+  upcomingEvents: z.object({
+    edges: z.array(
+      z.object({
+        node: meetupEventSchema,
+      })
+    ),
+  }),
+});
 
-export interface MeetupGroupByUrlname
-  extends InferType<typeof MEETUP_GROUP_BY_URL_NAME_SCHEMA> {}
+export type MeetupGroupByUrlname = z.infer<typeof meetupGroupByUrlnameSchema>;
 
-const MEETUP_GROUP_RESPONSE_SCHEMA = object({
-  data: object({
-    groupByUrlname: MEETUP_GROUP_BY_URL_NAME_SCHEMA,
-  }).required(),
-}).required();
+const meetupGroupResponseSchema = z.object({
+  data: z.object({
+    groupByUrlname: meetupGroupByUrlnameSchema,
+  }),
+});
 
-export interface MeetupGroupResponse
-  extends InferType<typeof MEETUP_GROUP_RESPONSE_SCHEMA> {}
+export type MeetupGroupResponse = z.infer<typeof meetupGroupResponseSchema>;
 
 export interface MeetupRequestBody {
   variables: { urlname: string };
@@ -50,8 +47,6 @@ export interface MeetupRequestBody {
   query: string;
 }
 
-export async function parseMeetupGroupResponse(
-  val: unknown
-): Promise<MeetupGroupResponse> {
-  return MEETUP_GROUP_RESPONSE_SCHEMA.validate(val);
+export async function parseMeetupGroupResponse(val: unknown) {
+  return meetupGroupResponseSchema.parse(val);
 }
