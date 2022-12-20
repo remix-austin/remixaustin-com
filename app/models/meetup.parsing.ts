@@ -11,7 +11,7 @@ const meetupEventSchema = z.object({
       state: z.string(),
     })
     .nullable(),
-  dateTime: z.string().transform((d) => new Date(d)),
+  dateTime: z.string(),
   going: z.number(),
 });
 
@@ -19,9 +19,6 @@ export type MeetupEvent = z.infer<typeof meetupEventSchema>;
 
 const meetupGroupByUrlnameSchema = z.object({
   link: z.string(),
-  memberships: z.object({
-    count: z.number(),
-  }),
   upcomingEvents: z.object({
     edges: z.array(
       z.object({
