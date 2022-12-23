@@ -10,9 +10,6 @@ const GET_GROUP_QUERY = `
   query($urlname: String!) {
    groupByUrlname(urlname: $urlname) {
     link
-    memberships {
-     count
-    }
     upcomingEvents(input: {first: 1}){
      edges {
       node {

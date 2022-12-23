@@ -18,15 +18,12 @@ const MOCK_EVENT: MeetupEvent = {
     city: "",
     state: "",
   },
-  dateTime: new Date("2022-01-01T01:00:00Z"),
+  dateTime: "2022-01-01T01:00:00Z",
   going: 100,
 };
 
 const MOCK_GROUP: MeetupGroupByUrlname = {
   link: "https://group.link",
-  memberships: {
-    count: 200,
-  },
   upcomingEvents: {
     edges: [{ node: MOCK_EVENT }],
   },

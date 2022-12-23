@@ -3,7 +3,9 @@ import { isEmptyString } from "~/utils";
 import MeetupLink from "~/components/MeetupLink";
 import type { SerializeFrom } from "@remix-run/server-runtime";
 
-const DEFAULT_VENUE: MeetupEvent["venue"] = {
+type Venue = NonNullable<MeetupEvent["venue"]>;
+
+const DEFAULT_VENUE: Venue = {
   name: "H-E-B Digital & Favor Eastside Tech Hub (and online)",
   address: "2416 E 6th St",
   city: "Austin",
@@ -20,11 +22,12 @@ const EVENT_TIME_FORMAT = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Chicago",
 });
 
-function isUndefinedVenue(venue: MeetupEvent["venue"]): boolean {
+function isValidVenue(venue: MeetupEvent["venue"]): venue is Venue {
   return (
-    isEmptyString(venue.address) ||
-    isEmptyString(venue.city) ||
-    isEmptyString(venue.state)
+    venue !== null &&
+    !isEmptyString(venue.address) &&
+    !isEmptyString(venue.city) &&
+    !isEmptyString(venue.state)
   );
 }
 
@@ -35,7 +38,8 @@ export default function NextEventInfo({
 }: {
   event: SerializedMeetupEvent;
 }) {
-  const venue = isUndefinedVenue(event.venue) ? DEFAULT_VENUE : event.venue;
+  const venue = isValidVenue(event.venue) ? event.venue : DEFAULT_VENUE;
+
   const buttonPronoun = event.going <= 1 ? "us" : `${event.going} others`;
   return (
     <>

@@ -62,11 +62,10 @@ export const links: LinksFunction = () => {
 
 export async function loader() {
   const group = await tryToFetchRemixAustinInfo();
-  const nextEvent =
-    group !== undefined && group.upcomingEvents.edges.length >= 1
-      ? group.upcomingEvents.edges[0].node
-      : undefined;
-  return json({ link: group?.link, nextEvent });
+  return json({
+    link: group?.link,
+    nextEvent: group?.upcomingEvents.edges[0]?.node,
+  });
 }
 
 export default function Index() {
