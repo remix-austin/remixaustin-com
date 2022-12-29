@@ -15,3 +15,5 @@ node_modules
 /playwright-results/
 /playwright-report/
 /playwright/.cache/
+
+/.github/workflows/act/act.secrets
