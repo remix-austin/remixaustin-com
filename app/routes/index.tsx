@@ -79,7 +79,7 @@ export default function Index() {
         }}
       >
         <div className="hero-overlay bg-opacity-90"></div>
-        <div className="hero-content py-10 md:py-32 text-center text-white ">
+        <div className="hero-content py-10 text-center text-white md:py-32 ">
           <div className="max-w-md">
             <div className="mb-4">
               <img
