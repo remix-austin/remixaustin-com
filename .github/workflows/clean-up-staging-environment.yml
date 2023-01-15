@@ -1,12 +1,13 @@
-name: 🧼 Pull request closed
+#
+# This workflow takes care of destroying the staging environment in Fly.io when a
+# PR is closed/merged, or when the "staging" label is removed.
+#
+name: 🧼 Clean up staging environment
 on:
   pull_request:
     types:
       - closed
       - unlabeled
-
-env:
-  ACTIONS_STEP_DEBUG: true
 
 jobs:
   log:
@@ -37,12 +38,12 @@ jobs:
 
   cleanup:
     name: 🧼 Clean up GitHub environment after closing PR
+    if: >
+      (github.event.action == 'unlabeled' && github.event.label.name == 'staging')
+      || (github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'staging'))
     runs-on: ubuntu-latest
     needs: [log]
     permissions: write-all
-    if: |
-      (github.event.action == 'unlabeled' && github.event.label.name == 'staging')
-      || (github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'staging'))
 
     # Only run one deployment at a time per PR.
     concurrency:
@@ -53,20 +54,25 @@ jobs:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
 
-      - name: 🧼 Clean up GitHub environment after closing PR
+      - uses: actions/checkout@v2
+
+      - uses: navikt/github-app-token-generator@a3831f44404199df32d8f39f7c0ad9bb8fa18b1c
+        id: get-token
+        with:
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.GH_APP_ID }}
+
+      - name: 🗑 Delete deployment environment
         uses: strumwolf/delete-deployment-environment@v2.2.3
-        if: |
-          (github.event.action == 'unlabeled' && github.event.label.name == 'staging')
-          || (github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'staging'))
         with:
           # The provided token needs permission for admin write:org
-          token: ${{ secrets.GH_APP_INSTALLATION_TOKEN }}
+          token: ${{ steps.get-token.outputs.token }}
           environment: remixaustin-com-pr-${{ github.event.number }}
           ref: ${{ github.ref_name }}
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: 🧼 Delete Fly deployment
+      - name: 🗑 Destroy Fly deployment
         run: "flyctl apps destroy remixaustin-com-pr-${{ github.event.number }} -y"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

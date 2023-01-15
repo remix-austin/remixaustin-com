@@ -1,0 +1,26 @@
+name: "🙋 Pull Request"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  log:
+    name: 🪵 Log some helpful vars
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::group::Log some helpful vars"
+          echo "🏷 contains \"staging\" label = ${{ contains(github.event.pull_request.labels.*.name, 'staging') }}"
+          echo "🏷 does not contain \"staging\" label = ${{ !contains(github.event.pull_request.labels.*.name, 'staging') }}"
+          echo "::endgroup:: "
+
+  development:
+    name: 👷 Development
+    # Development is run for PRs labeled "staging" in deploy-pr-to-staging.yml
+    if: >
+      github.event.action != 'closed' 
+      && !contains(github.event.pull_request.labels.*.name, 'staging')
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main

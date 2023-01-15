@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+#
+# See https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-a-github-app
+#
+
 require 'openssl'
 require 'jwt'  # https://rubygems.org/gems/jwt
 require 'optparse'
