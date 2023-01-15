@@ -14,7 +14,6 @@ jobs:
       - run: |
           echo "::group::Log some helpful vars"
           echo "🏷 contains \"staging\" label = ${{ contains(github.event.pull_request.labels.*.name, 'staging') }}"
-          echo "🏷 does not contain \"staging\" label = ${{ !contains(github.event.pull_request.labels.*.name, 'staging') }}"
           echo "::endgroup:: "
 
   development:
