@@ -9,5 +9,7 @@ on:
 jobs:
   development:
     name: 👷 Development
+    if: >
+      ${{ github.event.action != 'closed' 
+      && !contains(github.event.pull_request.labels.*.name, 'staging') }}
     uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
-    if: ${{ github.event.action != 'closed' }}
