@@ -55,7 +55,8 @@ jobs:
     name: 👷 Development
     # Only run the development job if this is a pull request, but not `labeled`
     if: >
-      ${{ github.event_name == 'pull_request' && github.event.action != 'labeled' }}
+      (github.event_name == 'pull_request' && github.event.action != 'labeled')
+      && contains(github.event.pull_request.labels.*.name, 'staging')
     uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
 
   build:
