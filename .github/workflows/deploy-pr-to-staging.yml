@@ -53,11 +53,12 @@ jobs:
 
   development:
     name: 👷 Development
-    # Only run the development job if this isn't an `unlabeled` action,
-    # or if the "staging" label was added and it's going to be built & deployed.
+    # Only run the development job if this PR is open,
+    # has the "staging" label, and it's going to be built & deployed.
     if: >
-      github.event.action != 'unlabeled'
-      || (github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'staging'))
+      github.event.pull_request.state == 'open'
+      && contains(github.event.pull_request.labels.*.name, 'staging')
+      && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
     uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
 
   build:
@@ -144,8 +145,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [log, development, build]
     # Only build/deploy on pushes to main, and when the "staging" label is added to a PR.
-    if: >
-      contains(github.event.pull_request.labels.*.name, 'staging')
+    if: contains(github.event.pull_request.labels.*.name, 'staging')
 
     # Only run one deployment at a time per PR.
     concurrency:
