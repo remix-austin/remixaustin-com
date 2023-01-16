@@ -88,3 +88,23 @@ jobs:
 
             ~~https://remixaustin-com-pr-${{ github.event.number }}.fly.dev~~
           check_for_duplicate_msg: true
+
+  remove_label:
+    name: 🗑 🏷 Remove staging label
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            // this gets the number at the end of the content URL, which should be the issue/PR number
+            const issue_num = context.payload.project_card.content_url.split('/').pop()
+            github.rest.issues.removeLabel({
+              issue_number: issue_num,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: ["staging"]
+            })
