@@ -21,7 +21,7 @@ interface CardProps {
   rel?: string;
 }
 
-export const h1Title = "Welcome to Remix Austin! (test)";
+export const h1Title = "Welcome to Remix Austin!";
 
 function Card({
   altText,
