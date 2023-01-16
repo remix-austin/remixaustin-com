@@ -38,8 +38,9 @@ jobs:
 
   cleanup:
     name: 🧼 Clean up GitHub environment after closing PR
+    # Only run cleanup if the `staging` label was removed from an open PR, or if a PR labeled `staging` was closed.
     if: >
-      (github.event.action == 'unlabeled' && github.event.label.name == 'staging')
+      (github.event.action == 'unlabeled' && github.event.label.name == 'staging' && github.event.pull_request.state == 'open')
       || (github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'staging'))
     runs-on: ubuntu-latest
     needs: [log]
@@ -54,7 +55,7 @@ jobs:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: navikt/github-app-token-generator@a3831f44404199df32d8f39f7c0ad9bb8fa18b1c
         id: get-token
