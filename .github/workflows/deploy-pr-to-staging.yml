@@ -35,11 +35,6 @@ jobs:
           replace-with: "$1-merge"
           flags: "g"
 
-      - name: Update env variables
-        id: update_env_variables
-        run: |
-          echo "CLEAN_REF_NAME=${{ steps.clean_ref_name.outputs.replaced }}" >> $GITHUB_ENV
-
       - run: |
           echo "::group::Log some helpful vars"
           echo "🏷 ref = ${{ github.ref }}"
@@ -78,16 +73,15 @@ jobs:
           replace-with: "$1-merge"
           flags: "g"
 
-      - name: Update env variables
-        id: update_env_variables
-        run: |
-          echo "CLEAN_REF_NAME=${{ steps.clean_ref_name.outputs.replaced }}" >> $GITHUB_ENV
-
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
 
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
+      # It's important to update robots.txt on PR deployments to block search engines!
+      - name: ⛔️🤖 Block robots
+        run: npm run block-robots
 
       - name: 👀 Read app name
         uses: SebRollen/toml-action@v1.0.2

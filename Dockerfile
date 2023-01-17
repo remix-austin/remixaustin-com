@@ -31,10 +31,6 @@ WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 
-# DISABLED: Not using prisma
-# ADD prisma .
-# RUN npx prisma generate
-
 ADD . .
 RUN npm run build
 
