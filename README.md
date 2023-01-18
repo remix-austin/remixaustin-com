@@ -28,7 +28,7 @@ You can, however, [create an issue](https://github.com/remix-austin/remixaustin-
 
 ## Development
 
-- Use [nvm](https://github.com/nvm-sh/nvm) to use the minimum Node.js version _(`hydrogen` is the current LTS release):_
+- Use [nvm](https://github.com/nvm-sh/nvm) to use the minimum Node.js version _(`18.3.0`):_
 
   ```sh
   nvm use
