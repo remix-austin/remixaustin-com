@@ -10,4 +10,5 @@ on:
 jobs:
   development:
     name: 👷 Development
-    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
+    # TODO: ❗️ Remove this before merging!
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@gkn/update-node-to-hydrogen
