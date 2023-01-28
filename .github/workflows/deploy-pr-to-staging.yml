@@ -181,7 +181,7 @@ jobs:
       # https://github.com/superfly/fly-pr-review-apps/pull/17
       - name: 🪰 superfly/fly-pr-review-apps
         id: deploy-pr
-        uses: superfly/fly-pr-review-apps@1.0.0
+        uses: superfly/fly-pr-review-apps@main
         if: >
           github.event_name == 'pull_request'
           && contains(github.event.pull_request.labels.*.name, 'staging')
