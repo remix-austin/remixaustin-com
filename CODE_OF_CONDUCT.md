@@ -61,7 +61,7 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at hello@remix.run.
+reported to the community leaders responsible for enforcement at [howdy@remixaustin.com](mailto:howdy@remixaustin.com).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
@@ -123,3 +123,5 @@ Community Impact Guidelines were inspired by [Mozilla's code of conduct
 enforcement ladder](https://github.com/mozilla/diversity).
 
 [homepage]: https://www.contributor-covenant.org
+
+The Remix Austin Code of Conduct is based on the [Remix.run Code of Conduct](https://github.com/remix-run/remix/blob/main/CODE_OF_CONDUCT.md).
