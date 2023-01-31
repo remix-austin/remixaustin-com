@@ -179,9 +179,9 @@ jobs:
 
       # Will deploy an app called "pr-123-null-null" by default until this is fixed:
       # https://github.com/superfly/fly-pr-review-apps/pull/17
-      - name: 🪰 superfly/fly-pr-review-apps
+      - name: 🪰 Deploy PR to Fly staging
         id: deploy-pr
-        uses: superfly/fly-pr-review-apps@main
+        uses: grantnorwood/fly-pr-review-apps@gkn/various-fixes
         if: >
           github.event_name == 'pull_request'
           && contains(github.event.pull_request.labels.*.name, 'staging')
