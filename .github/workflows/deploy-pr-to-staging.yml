@@ -1,0 +1,215 @@
+#
+# This workflow takes care of running Development as well as building the app
+# and deploying it to a staging environment in Fly.io.
+#
+name: 🕵️ Deploy PR to staging
+on:
+  pull_request:
+    types:
+      - labeled
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  actions: write
+  pull-requests: write
+  contents: read
+
+env:
+  FLY_REGION: dfw
+  FLY_ORG: personal
+
+jobs:
+  log:
+    name: 🪵 Log some helpful vars
+    runs-on: ubuntu-latest
+    steps:
+      # Slashes in the ref_name will break Fly's Docker tags.
+      - name: Replace slashes in ref_name
+        id: clean_ref_name
+        uses: frabert/replace-string-action@v2.4
+        with:
+          pattern: '(\d+)/merge'
+          string: "${{ github.ref_name }}"
+          replace-with: "$1-merge"
+          flags: "g"
+
+      - run: |
+          echo "::group::Log some helpful vars"
+          echo "🏷 ref = ${{ github.ref }}"
+          echo "🏷 ref_name = ${{ github.ref_name }}"
+          echo "🏷 env.CLEAN_REF_NAME = ${{ env.CLEAN_REF_NAME }}"
+          echo "🏷 event_name = ${{ github.event_name }}"
+          echo "🏷 event.action = ${{ github.event.action }}"
+          echo "🏷 event.number = ${{ github.event.number }}"
+          echo "🏷 contains \"staging\" label = ${{ contains(github.event.pull_request.labels.*.name, 'staging') }}"
+          echo "::endgroup:: "
+
+  development:
+    name: 👷 Development
+    # Only run the development job if this PR is open,
+    # has the "staging" label, and it's going to be built & deployed.
+    if: >
+      github.event.pull_request.state == 'open'
+      && contains(github.event.pull_request.labels.*.name, 'staging')
+      && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
+
+  build:
+    name: 🐳 Build
+    # Only build/deploy when a PR has the "staging" label
+    if: contains(github.event.pull_request.labels.*.name, 'staging')
+    runs-on: ubuntu-latest
+    needs: [log, development]
+    steps:
+      # Slashes in the ref_name will break Fly's Docker tags.
+      - name: Replace slashes in ref_name
+        id: clean_ref_name
+        uses: frabert/replace-string-action@v2.4
+        with:
+          pattern: '(\d+)/merge'
+          string: "${{ github.ref_name }}"
+          replace-with: "$1-merge"
+          flags: "g"
+
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      # It's important to update robots.txt on PR deployments to block search engines!
+      - name: ⛔️🤖 Block robots
+        run: npm run block-robots
+
+      - name: 👀 Read app name
+        uses: SebRollen/toml-action@v1.0.2
+        id: app_name
+        with:
+          file: "fly.toml"
+          field: "app"
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Setup cache
+      - name: ⚡️ Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: 🔑 Fly Registry Auth
+        uses: docker/login-action@v2
+        with:
+          registry: registry.fly.io
+          username: x
+          password: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: 🐳 Docker build
+        uses: docker/build-push-action@v3
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_REGION: ${{ env.FLY_REGION }}
+          FLY_ORG: ${{ env.FLY_ORG }}
+        with:
+          context: .
+          push: true
+          tags: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ steps.clean_ref_name.outputs.replaced }}-${{ github.sha }}
+          build-args: |
+            COMMIT_SHA=${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      # This ugly bit is necessary if you don't want your cache to grow forever
+      # till it hits GitHub's limit of 5GB.
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: 🚚 Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  deploy_pr_to_staging:
+    name: 🚀 Deploy PR to staging
+    runs-on: ubuntu-latest
+    needs: [log, development, build]
+    # Only build/deploy on pushes to main, and when the "staging" label is added to a PR.
+    if: contains(github.event.pull_request.labels.*.name, 'staging')
+
+    # Only run one deployment at a time per PR.
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: false
+
+    environment:
+      name: remixaustin-com-pr-${{ github.event.number }}
+      url: ${{ steps.deploy-pr.outputs.url }}
+
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 🪰 setup-flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: 👀 Read app name
+        uses: SebRollen/toml-action@v1.0.2
+        id: app_name
+        with:
+          file: "fly.toml"
+          field: "app"
+
+      # Slashes in the ref_name will break Fly's Docker tags.
+      - name: Replace slashes in ref_name
+        id: clean_ref_name
+        uses: frabert/replace-string-action@v2.4
+        with:
+          pattern: '(\d+)/merge'
+          string: "${{ github.ref_name }}"
+          replace-with: "$1-merge"
+          flags: "g"
+
+      # Will deploy an app called "pr-123-null-null" by default until this is fixed:
+      # https://github.com/superfly/fly-pr-review-apps/pull/17
+      - name: 🪰 Deploy PR to Fly staging
+        id: deploy-pr
+        uses: grantnorwood/fly-pr-review-apps@gkn/various-fixes
+        if: >
+          github.event_name == 'pull_request'
+          && contains(github.event.pull_request.labels.*.name, 'staging')
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_REGION: ${{ env.FLY_REGION }}
+          FLY_ORG: ${{ env.FLY_ORG }}
+        with:
+          name: remixaustin-com-pr-${{ github.event.number }}
+          image: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ steps.clean_ref_name.outputs.replaced }}-${{ github.sha }}
+
+      - name: Allocate v4 ips
+        run: "flyctl ips allocate-v4 --app=remixaustin-com-pr-${{ github.event.number }}"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_REGION: ${{ env.FLY_REGION }}
+          FLY_ORG: ${{ env.FLY_ORG }}
+
+      - name: 💬 Comment URL on PR
+        uses: unsplash/comment-on-pr@master
+        if: >
+          github.event_name == 'pull_request'
+          && contains(github.event.pull_request.labels.*.name, 'staging')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: |
+            #### 👀 View this PR on staging
+
+            ${{ steps.deploy-pr.outputs.url }}
+          check_for_duplicate_msg: true

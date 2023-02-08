@@ -1,0 +1,108 @@
+#
+# This workflow takes care of destroying the staging environment in Fly.io when a
+# PR is closed/merged, or when the "staging" label is removed.
+#
+name: 🧼 Clean up staging environment
+on:
+  pull_request:
+    types:
+      - closed
+      - unlabeled
+
+jobs:
+  log:
+    name: 🪵 Log some helpful vars
+    runs-on: ubuntu-latest
+    steps:
+      # Slashes in the ref_name will break Fly's Docker tags.
+      - name: Replace slashes in ref_name
+        id: replace_slashes_in_ref_name
+        uses: frabert/replace-string-action@v2.4
+        with:
+          pattern: '(\d+)/merge'
+          string: "${{ github.ref_name }}"
+          replace-with: "$1-merge"
+          flags: "g"
+
+      - run: |
+          echo "::group::Log some helpful vars"
+          echo "🏷 ref = ${{ github.ref }}"
+          echo "🏷 ref_name = ${{ github.ref_name }}"
+          echo "🏷 clean ref_name = ${{ steps.replace_slashes_in_ref_name.outputs.replaced }}"
+          echo "🏷 event_name = ${{ github.event_name }}"
+          echo "🏷 action = ${{ github.event.action }}"
+          echo "🏷 event.number = ${{ github.event.number }}"
+          echo "🏷 contains \"staging\" label = ${{ contains(github.event.pull_request.labels.*.name, 'staging') }}"
+          echo "🏷 environment = remixaustin-com-pr-${{ github.event.number }}"
+          echo "::endgroup:: "
+
+  cleanup:
+    name: 🧼 Clean up GitHub environment after closing PR
+    # Only run cleanup if the `staging` label was removed from an open PR, or if a PR labeled `staging` was closed.
+    if: >
+      (github.event.action == 'unlabeled' && github.event.label.name == 'staging' && github.event.pull_request.state == 'open')
+      || (github.event.action == 'closed' && contains(github.event.pull_request.labels.*.name, 'staging'))
+    runs-on: ubuntu-latest
+    needs: [log]
+    permissions: write-all
+
+    # Only run one deployment at a time per PR.
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: 🛑 Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
+
+      - uses: actions/checkout@v3
+
+      - uses: navikt/github-app-token-generator@a3831f44404199df32d8f39f7c0ad9bb8fa18b1c
+        id: get-token
+        with:
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.GH_APP_ID }}
+
+      - name: 🗑 Delete deployment environment
+        uses: strumwolf/delete-deployment-environment@v2.2.3
+        with:
+          # The provided token needs permission for admin write:org
+          token: ${{ steps.get-token.outputs.token }}
+          environment: remixaustin-com-pr-${{ github.event.number }}
+          ref: ${{ github.ref_name }}
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: 🗑 Destroy Fly deployment
+        run: "flyctl apps destroy remixaustin-com-pr-${{ github.event.number }} -y"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: 💬 Comment URL on PR
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: |
+            #### 🧼 Cleaned up the deployment
+
+            ~~https://remixaustin-com-pr-${{ github.event.number }}.fly.dev~~
+          check_for_duplicate_msg: true
+
+  remove_label:
+    name: 🗑 🏷 Remove staging label
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: ["staging"]
+            })

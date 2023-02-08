@@ -1,64 +1,33 @@
 # Deployment
 
-There are two GitHub Actions that handle automatically deploying the website to production and staging environments.
+Deploying to staging & production environments is automated via GitHub Actions.
 
-Prior to your first deployment, you'll need to do a few things:
+## Deploying the website to staging
 
-- [Install Fly](https://fly.io/docs/getting-started/installing-flyctl/)
+Some changes may require deploying to staging so they can be previewed before they go to prod. This won't be necessary for every PR, and it's easy to run up the hosting bill!
 
-- Sign up and log in to Fly
+- When a PR is labeled with `staging`, it will create a staging environment & url, and keep it updated as you push new code
+- The staging url will be posted as a comment to the PR _(it will look something like `https://remixaustin-com-pr-123.fly.dev/`)_
 
-  ```sh
-  fly auth signup
+    <img width="500" alt="image" src="https://user-images.githubusercontent.com/707463/212535337-9d906636-cc9b-41b4-991c-63ca9688df52.png">
+
+- When the PR is closed or merged to `main`, or if the `staging` label is removed, the GitHub environment & Fly.io deployment will be cleaned up automatically _(gotta save 💵!)_
+
+- ⚠️ ... and speaking of 💵, **please don't leave staging PRs/deployments open forever, it could get expensive**. Consider not leaving it deployed to staging for more than a few days. And you can always un-label it to clean things up, and add the label again when you're ready to preview!
+
+- A comment will be posted to the PR to notify the GitHub environment & Fly.io deployment was cleaned up.
+  <img width="500" alt="image" src="https://user-images.githubusercontent.com/707463/212535476-3e50ad10-48e1-48b0-ab3d-408d914e592c.png">
+
+### Under the hood
+
+- The depoyment workflows use a new GitHub App developed specifically for this repo's CI/CD, and generates a fresh JWT on each workflow's run.
+- Search engine robots are automatically disabled on PR deployments _(Example: https://remixaustin-com-pr-123.fly.dev/robots.txt)_
+
+  ```
+  User-agent: *
+  Disallow: /
   ```
 
-  > **Note:** If you have more than one Fly account, ensure that you are signed into the same account in the Fly CLI as you are in the browser. In your terminal, run `fly auth whoami` and ensure the email matches the Fly account signed into the browser.
+## Deploying the website to production
 
-- Create two apps on Fly, one for staging and one for production:
-
-  ```sh
-  fly apps create remixaustin-com
-  fly apps create remixaustin-com-staging
-  ```
-
-  > **Note:** Make sure this name matches the `app` set in your `fly.toml` file. Otherwise, you will not be able to deploy.
-
-  - Initialize Git.
-
-  ```sh
-  git init
-  ```
-
-- Create a new [GitHub Repository](https://repo.new), and then add it as the remote for your project. **Do not push your app yet!**
-
-  ```sh
-  git remote add origin <ORIGIN_URL>
-  ```
-
-- Add a `FLY_API_TOKEN` to your GitHub repo. To do this, go to your user settings on Fly and create a new [token](https://web.fly.io/user/personal_access_tokens/new), then add it to [your repo secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) with the name `FLY_API_TOKEN`.
-
-- Add a `SESSION_SECRET` to your fly app secrets, to do this you can run the following commands:
-
-  ```sh
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app remixaustin-com
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app remixaustin-com-staging
-  ```
-
-  If you don't have openssl installed, you can also use [1password](https://1password.com/password-generator/) to generate a random secret, just replace `$(openssl rand -hex 32)` with the generated secret.
-
-- Create a persistent volume for the sqlite database for both your staging and production environments. Run the following:
-
-  ```sh
-  fly volumes create data --size 1 --app remixaustin-com
-  fly volumes create data --size 1 --app remixaustin-com-staging
-  ```
-
-Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
-
-## Getting Help with Deployment
-
-If you run into any issues deploying to Fly, make sure you've followed all of the steps above and if you have, then post as many details about your deployment (including your app name) to [the Fly support community](https://community.fly.io). They're normally pretty responsive over there and hopefully can help resolve any of your deployment issues and questions.
-
-## GitHub Actions
-
-We use GitHub Actions for continuous integration and deployment. Anything that gets into the `main` branch will be deployed to production after running tests/build/etc. Anything in the `dev` branch will be deployed to staging.
+When a PR is merged into the `main` branch, the app will automatically be deployed to the production environment.

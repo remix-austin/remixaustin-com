@@ -28,7 +28,8 @@
     "prepare": "husky install",
     "typecheck": "tsc -b && tsc -b e2e",
     "validate": "run-p test lint typecheck test:e2e",
-    "validate:precommit": "run-p lint format:check typecheck"
+    "validate:precommit": "run-p lint format:check typecheck",
+    "block-robots": "./tools/block-robots.sh"
   },
   "prettier": {},
   "eslintIgnore": [
