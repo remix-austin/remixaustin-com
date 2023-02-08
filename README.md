@@ -73,3 +73,7 @@ We use [Prettier](https://prettier.io/) for auto-formatting in this project. It'
 ## Deployment
 
 Check out our [deployment docs](docs/deploying.md).
+
+## License
+
+Remix Austin has adopted the [MIT license](https://github.com/remix-austin/remixaustin-com/blob/main/LICENSE.md) for the [remixaustin.com](https://remixaustin.com) website.
