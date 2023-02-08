@@ -1,6 +1,6 @@
 # RemixAustin.com
 
-[![🚀 Deploy](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy.yml)
+[![🚀 Deploy](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy-to-prod.yml/badge.svg?branch=main)](https://github.com/remix-austin/remixaustin-com/actions/workflows/deploy-to-prod.yml)
 
 <img src="public/img/remix-logo-rainbow.jpg" width="600" alt="Remix Austin logo" />
 
