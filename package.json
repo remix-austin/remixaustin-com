@@ -1,5 +1,6 @@
 {
   "name": "remixaustin-com",
+  "version": "1.0.0",
   "private": true,
   "sideEffects": false,
   "scripts": {
@@ -29,7 +30,7 @@
     "typecheck": "tsc -b && tsc -b e2e",
     "validate": "run-p test lint typecheck test:e2e",
     "validate:precommit": "run-p lint format:check typecheck",
-    "block-robots": "./tools/block-robots.sh"
+    "block-robots": "./tools/workflows/block-robots.sh"
   },
   "prettier": {},
   "eslintIgnore": [

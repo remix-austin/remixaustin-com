@@ -1,4 +1,4 @@
-app = "remixaustin-com"
+app = "remixaustin-com-prod"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
@@ -15,7 +15,7 @@ entrypoint = "sh"
 # destination = "/data"
 
 [[services]]
-internal_port = 8_080
+internal_port = 8080
 processes = [ "app" ]
 protocol = "tcp"
 script_checks = [ ]

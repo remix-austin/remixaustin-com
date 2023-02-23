@@ -18,7 +18,7 @@ permissions:
 
 env:
   FLY_REGION: dfw
-  FLY_ORG: personal
+  FLY_ORG: remix-austin
 
 jobs:
   log:
@@ -39,11 +39,12 @@ jobs:
           echo "::group::Log some helpful vars"
           echo "🏷 ref = ${{ github.ref }}"
           echo "🏷 ref_name = ${{ github.ref_name }}"
-          echo "🏷 env.CLEAN_REF_NAME = ${{ env.CLEAN_REF_NAME }}"
+          echo "🏷 CLEAN_REF_NAME = ${{ steps.app_name.outputs.value }}"
           echo "🏷 event_name = ${{ github.event_name }}"
           echo "🏷 event.action = ${{ github.event.action }}"
           echo "🏷 event.number = ${{ github.event.number }}"
           echo "🏷 contains \"staging\" label = ${{ contains(github.event.pull_request.labels.*.name, 'staging') }}"
+          echo "🏷 github.workspace = ${{ github.workspace }}"
           echo "::endgroup:: "
 
   development:
@@ -61,7 +62,7 @@ jobs:
     # Only build/deploy when a PR has the "staging" label
     if: contains(github.event.pull_request.labels.*.name, 'staging')
     runs-on: ubuntu-latest
-    needs: [log, development]
+    needs: [development]
     steps:
       # Slashes in the ref_name will break Fly's Docker tags.
       - name: Replace slashes in ref_name
@@ -110,11 +111,7 @@ jobs:
           password: ${{ secrets.FLY_API_TOKEN }}
 
       - name: 🐳 Docker build
-        uses: docker/build-push-action@v3
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          FLY_REGION: ${{ env.FLY_REGION }}
-          FLY_ORG: ${{ env.FLY_ORG }}
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: true
@@ -137,7 +134,7 @@ jobs:
   deploy_pr_to_staging:
     name: 🚀 Deploy PR to staging
     runs-on: ubuntu-latest
-    needs: [log, development, build]
+    needs: [build]
     # Only build/deploy on pushes to main, and when the "staging" label is added to a PR.
     if: contains(github.event.pull_request.labels.*.name, 'staging')
 
@@ -181,7 +178,7 @@ jobs:
       # https://github.com/superfly/fly-pr-review-apps/pull/17
       - name: 🪰 Deploy PR to Fly staging
         id: deploy-pr
-        uses: grantnorwood/fly-pr-review-apps@gkn/various-fixes
+        uses: grantnorwood/fly-pr-review-apps@main
         if: >
           github.event_name == 'pull_request'
           && contains(github.event.pull_request.labels.*.name, 'staging')
@@ -193,8 +190,8 @@ jobs:
           name: remixaustin-com-pr-${{ github.event.number }}
           image: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ steps.clean_ref_name.outputs.replaced }}-${{ github.sha }}
 
-      - name: Allocate v4 ips
-        run: "flyctl ips allocate-v4 --app=remixaustin-com-pr-${{ github.event.number }}"
+      - name: ➕ Allocate v4 ips
+        run: tools/workflows/fly-allocate-ips.sh --app "remixaustin-com-pr-${{ github.event.number }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_REGION: ${{ env.FLY_REGION }}
