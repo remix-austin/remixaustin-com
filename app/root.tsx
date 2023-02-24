@@ -1,4 +1,5 @@
 import { redirect } from "@remix-run/node";
+import { withSentry } from "@sentry/remix";
 import type {
   LinksFunction,
   LoaderFunction,
@@ -17,7 +18,7 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { getRedirectUrlIfWww } from "./utils";
+import { getRedirectUrlIfWww } from "./utils/utils";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -58,10 +59,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-export default function App() {
-  const matches = useMatches();
-
-  const includeScripts = matches.some((match) => match.handle?.hydrate);
+function App() {
+  // TODO: ❗️ Re-enable this before merging!
+  // const matches = useMatches();
+  // const includeScripts = matches.some((match) => match.handle?.hydrate);
+  const includeScripts = true;
 
   return (
     <html lang="en" className="relative h-full">
@@ -82,3 +84,5 @@ export default function App() {
     </html>
   );
 }
+
+export default withSentry(App);

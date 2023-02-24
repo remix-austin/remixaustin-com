@@ -17,6 +17,7 @@ env:
   FLY_ORG: remix-austin
   ENVIRONMENT_NAME: production
   ENVIRONMENT_URL: https://remixaustin.com/
+  SENTRY_ENVIRONMENT: production
 
 jobs:
   log:
@@ -46,6 +47,7 @@ jobs:
           echo "🏷 FLY_REGION = ${{ env.FLY_REGION }}"
           echo "🏷 ENVIRONMENT_NAME = ${{ env.ENVIRONMENT_NAME }}"
           echo "🏷 ENVIRONMENT_URL = ${{ env.ENVIRONMENT_URL }}"
+          echo "🏷 SENTRY_ENVIRONMENT = ${{ env.SENTRY_ENVIRONMENT }}"
           echo "::endgroup:: "
 
   development:
@@ -140,7 +142,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: 🚀 Deploy Production
-        run: "flyctl deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
+        run: "flyctl deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }} --env SENTRY_ENVIRONMENT=${{ env.SENTRY_ENVIRONMENT }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_REGION: ${{ env.FLY_REGION }}

@@ -19,6 +19,7 @@ permissions:
 env:
   FLY_REGION: dfw
   FLY_ORG: remix-austin
+  SENTRY_ENVIRONMENT: staging
 
 jobs:
   log:
@@ -51,6 +52,7 @@ jobs:
           echo "🏷 github.workspace = ${{ github.workspace }}"
           echo "🏷 FLY_ORG = ${{ env.FLY_ORG }}"
           echo "🏷 FLY_REGION = ${{ env.FLY_REGION }}"
+          echo "🏷 SENTRY_ENVIRONMENT = ${{ env.SENTRY_ENVIRONMENT }}"
           echo "::endgroup:: "
 
   development:
@@ -202,6 +204,19 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_REGION: ${{ env.FLY_REGION }}
           FLY_ORG: ${{ env.FLY_ORG }}
+
+      - name: 💂 Sentry Release
+        uses: getsentry/action-release@v1.2.1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_LOG_LEVEL: debug
+        with:
+          environment: ${{ env.SENTRY_ENVIRONMENT }}
+          # TODO: ❗️ Fix sourcemaps path problem!
+          # sourcemaps: /home/runner/work/remixaustin-com/remixaustin-com/public/build
+          version: ${{ github.sha }}
 
       - name: 💬 Comment URL on PR
         uses: unsplash/comment-on-pr@master

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "run-s build:*",
     "build:css": "npm run generate:css -- --minify",
-    "build:remix": "remix build",
+    "build:remix": "remix build --sourcemap",
     "dev": "run-p dev:*",
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
@@ -44,6 +44,9 @@
     "@remix-run/react": "^1.7.5",
     "@remix-run/serve": "^1.7.5",
     "@remix-run/server-runtime": "^1.7.5",
+    "@sentry/browser": "7.38.0",
+    "@sentry/remix": "7.38.0",
+    "@sentry/tracing": "7.38.0",
     "bcryptjs": "^2.4.3",
     "daisyui": "2.38.0",
     "isbot": "^3.5.3",
