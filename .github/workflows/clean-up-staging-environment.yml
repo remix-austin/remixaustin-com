@@ -38,6 +38,9 @@ jobs:
           echo "🏷 event.number = ${{ github.event.number }}"
           echo "🏷 contains \"staging\" label = ${{ contains(github.event.pull_request.labels.*.name, 'staging') }}"
           echo "🏷 environment = remixaustin-com-pr-${{ github.event.number }}"
+          echo "🏷 github.workspace = ${{ github.workspace }}"
+          echo "🏷 FLY_ORG = ${{ env.FLY_ORG }}"
+          echo "🏷 FLY_REGION = ${{ env.FLY_REGION }}"
           echo "::endgroup:: "
 
   cleanup:

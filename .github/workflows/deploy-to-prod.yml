@@ -39,6 +39,9 @@ jobs:
           echo "🏷 event_name = ${{ github.event_name }}"
           echo "🏷 event.action = ${{ github.event.action }}"
           echo "🏷 event.number = ${{ github.event.number }}"
+          echo "🏷 github.workspace = ${{ github.workspace }}"
+          echo "🏷 FLY_ORG = ${{ env.FLY_ORG }}"
+          echo "🏷 FLY_REGION = ${{ env.FLY_REGION }}"
           echo "::endgroup:: "
 
   development:
