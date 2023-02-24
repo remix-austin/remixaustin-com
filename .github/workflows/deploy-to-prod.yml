@@ -140,7 +140,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: 🚀 Deploy Production
-        run: "deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
+        run: "flyctl deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_REGION: ${{ env.FLY_REGION }}
