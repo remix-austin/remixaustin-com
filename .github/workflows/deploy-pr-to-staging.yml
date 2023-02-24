@@ -23,6 +23,10 @@ env:
 jobs:
   log:
     name: 🪵 Log some helpful vars
+    if: >
+      github.event.pull_request.state == 'open'
+      && contains(github.event.pull_request.labels.*.name, 'staging')
+      && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
     runs-on: ubuntu-latest
     steps:
       # Slashes in the ref_name will break Fly's Docker tags.
