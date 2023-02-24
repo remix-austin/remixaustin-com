@@ -15,6 +15,8 @@ permissions:
 env:
   FLY_REGION: dfw
   FLY_ORG: remix-austin
+  ENVIRONMENT_NAME: production
+  ENVIRONMENT_URL: https://remixaustin.com/
 
 jobs:
   log:
@@ -42,6 +44,8 @@ jobs:
           echo "🏷 github.workspace = ${{ github.workspace }}"
           echo "🏷 FLY_ORG = ${{ env.FLY_ORG }}"
           echo "🏷 FLY_REGION = ${{ env.FLY_REGION }}"
+          echo "🏷 ENVIRONMENT_NAME = ${{ env.ENVIRONMENT_NAME }}"
+          echo "🏷 ENVIRONMENT_URL = ${{ env.ENVIRONMENT_URL }}"
           echo "::endgroup:: "
 
   development:
@@ -53,7 +57,6 @@ jobs:
     # only build/deploy main branch on pushes
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     needs: [development]
-    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -111,8 +114,11 @@ jobs:
 
   deploy:
     name: 🚀 Deploy
-    runs-on: ubuntu-latest
+    environment:
+      name: ${{ env.ENVIRONMENT_NAME }}
+      url: ${{ env.ENVIRONMENT_URL }}
     needs: [build]
+    runs-on: ubuntu-latest
     if: >
       github.ref == 'refs/heads/main'
       && github.event_name == 'push'
@@ -131,11 +137,10 @@ jobs:
           file: "fly.toml"
           field: "app"
 
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
       - name: 🚀 Deploy Production
-        if: github.ref == 'refs/heads/main'
-        uses: superfly/flyctl-actions/setup-flyctl@master
-        with:
-          args: "deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
+        run: "deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_REGION: ${{ env.FLY_REGION }}
