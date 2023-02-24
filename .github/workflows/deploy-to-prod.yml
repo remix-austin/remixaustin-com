@@ -115,8 +115,8 @@ jobs:
   deploy:
     name: 🚀 Deploy
     environment:
-      name: ${{ env.ENVIRONMENT_NAME }}
-      url: ${{ env.ENVIRONMENT_URL }}
+      name: production
+      url: https://remixaustin.com/
     needs: [build]
     runs-on: ubuntu-latest
     if: >
