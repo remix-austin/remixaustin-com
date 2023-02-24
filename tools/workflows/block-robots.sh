@@ -1,3 +1,4 @@
+#!/bin/bash
 
 cat > ./public/robots.txt <<EOF
 User-agent: *
