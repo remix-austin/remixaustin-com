@@ -135,3 +135,5 @@ jobs:
           args: "deploy --image registry.fly.io/${{ steps.app_name.outputs.value }}:${{ github.ref_name }}-${{ github.sha }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_REGION: ${{ env.FLY_REGION }}
+          FLY_ORG: ${{ env.FLY_ORG }}
