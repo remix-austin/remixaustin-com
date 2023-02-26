@@ -11,13 +11,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useMatches,
 } from "@remix-run/react";
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import { getRedirectUrlIfWww } from "./utils";
+import { getRedirectUrlIfWww } from "./utils/utils";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -59,9 +58,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-  const matches = useMatches();
-
-  const includeScripts = matches.some((match) => match.handle?.hydrate);
+  // TODO: ❗️ Re-enable before merging ❗️
+  // const matches = useMatches();
+  // const includeScripts = matches.some((match) => match.handle?.hydrate);
+  const includeScripts = true;
 
   return (
     <html lang="en" className="relative h-full">

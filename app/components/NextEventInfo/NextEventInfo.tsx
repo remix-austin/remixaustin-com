@@ -1,5 +1,5 @@
 import type { MeetupEvent } from "~/models/meetup.parsing";
-import { isEmptyString } from "~/utils";
+import { isEmptyString } from "~/utils/utils";
 import MeetupLink from "~/components/MeetupLink";
 import type { SerializeFrom } from "@remix-run/server-runtime";
 

@@ -1,5 +1,5 @@
 import MeetupIcon from "~/components/icons/MeetupIcon";
-import type { PropsWithRequiredChildren } from "~/utils";
+import type { PropsWithRequiredChildren } from "~/utils/utils";
 
 export default function MeetupLink({
   link,
