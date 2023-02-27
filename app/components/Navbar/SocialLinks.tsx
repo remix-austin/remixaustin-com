@@ -6,7 +6,7 @@ import DiscordIcon from "../icons/DiscordIcon";
 export const meetupUrl = "https://www.meetup.com/remix-austin/";
 export const gitHubUrl = "https://github.com/remix-austin";
 export const youTubeUrl = "https://www.youtube.com/@remixaustin";
-export const discordUrl = "https://discord.gg/mYy2kzqX";
+export const discordUrl = "https://discord.gg/rZpbp3mQqd";
 
 export default function SocialLinks({
   linkClassName,
