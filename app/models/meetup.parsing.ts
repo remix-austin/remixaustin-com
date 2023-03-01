@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+const formatEventDate = new Intl.DateTimeFormat("en-US", {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  timeZoneName: "short",
+  timeZone: "America/Chicago",
+});
+
 const meetupEventSchema = z.object({
   title: z.string(),
   shortUrl: z.string().url(),
@@ -11,7 +21,11 @@ const meetupEventSchema = z.object({
       state: z.string(),
     })
     .nullable(),
-  dateTime: z.string(),
+  dateTime: z.string().transform((dateTime) => ({
+    localDateTime: dateTime,
+    // Formatting on the server ensures there won't be a server-client hydration mismatch
+    formatted: formatEventDate.format(new Date(dateTime)),
+  })),
   going: z.number(),
 });
 

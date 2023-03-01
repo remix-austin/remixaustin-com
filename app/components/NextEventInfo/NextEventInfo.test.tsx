@@ -13,7 +13,10 @@ const DEFAULT_ONLINE_EVENT: SerializedMeetupEvent = {
     city: "",
     state: "",
   },
-  dateTime: "2022-01-01T01:00:00Z",
+  dateTime: {
+    localDateTime: "2022-01-01T01:00:00Z",
+    formatted: "Fri, Dec 31, 7:00 PM CST",
+  },
   going: 100,
 };
 

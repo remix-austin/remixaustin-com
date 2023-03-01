@@ -12,16 +12,6 @@ const DEFAULT_VENUE: Venue = {
   state: "TX",
 };
 
-const EVENT_TIME_FORMAT = new Intl.DateTimeFormat("en-US", {
-  weekday: "short",
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  timeZoneName: "short",
-  timeZone: "America/Chicago",
-});
-
 function isValidVenue(venue: MeetupEvent["venue"]): venue is Venue {
   return (
     venue !== null &&
@@ -41,6 +31,7 @@ export default function NextEventInfo({
   const venue = isValidVenue(event.venue) ? event.venue : DEFAULT_VENUE;
 
   const buttonPronoun = event.going <= 1 ? "us" : `${event.going} others`;
+
   return (
     <>
       <MeetupLink link={event.shortUrl}>
@@ -48,8 +39,8 @@ export default function NextEventInfo({
       </MeetupLink>
       <p className="text-xl font-bold">{event.title}</p>
       <p>
-        <time dateTime={event.dateTime}>
-          {EVENT_TIME_FORMAT.format(new Date(event.dateTime))}
+        <time dateTime={event.dateTime.localDateTime}>
+          {event.dateTime.formatted}
         </time>
       </p>
       <p>{venue.name}</p>
