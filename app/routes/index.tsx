@@ -13,6 +13,8 @@ import { meetupUrl } from "~/components/Navbar/SocialLinks";
 interface CardProps {
   altText: string;
   imgSrc: string;
+  imgWidth: number;
+  imgHeight: number;
   heading: string;
   text: string;
   cta: string;
@@ -29,6 +31,8 @@ function Card({
   ctaLink,
   heading,
   imgSrc,
+  imgWidth,
+  imgHeight,
   rel,
   text,
   target,
@@ -36,7 +40,7 @@ function Card({
   return (
     <div className="card border border-neutral bg-base-100 shadow-xl">
       <figure className="max-h-48 overflow-clip">
-        <img src={imgSrc} alt={altText} />
+        <img src={imgSrc} alt={altText} width={imgWidth} height={imgHeight} />
       </figure>
       <div className="card-body">
         <h2 className="card-title text-2xl">{heading}</h2>
@@ -86,6 +90,8 @@ export default function Index() {
                 src="/img/remix-logo-rainbow.svg"
                 alt="Remix Austin logo"
                 className="my-0"
+                width="1200"
+                height="627"
               />
             </div>
             <h1 className="mb-4 inline-block text-5xl font-bold">{h1Title}</h1>
@@ -113,6 +119,8 @@ export default function Index() {
                 too! Feel free to reach out if you want to know more."
           altText="Remix presentation on Medusa"
           imgSrc={GivePresentationImage}
+          imgWidth={1200}
+          imgHeight={600}
           target="_blank"
           rel="noopener noreferrer"
         />
@@ -122,6 +130,8 @@ export default function Index() {
           ctaLink={discordUrl}
           heading="Connect on Discord"
           imgSrc={DiscordHeaderImage}
+          imgWidth={1200}
+          imgHeight={600}
           text="We want to help each other build better experiences on the web for our users by learning and teaching Remix together."
           target="_blank"
           rel="noopener noreferrer"

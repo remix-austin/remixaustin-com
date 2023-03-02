@@ -17,3 +17,5 @@ node_modules
 /playwright/.cache/
 
 /.github/workflows/act/act.secrets
+
+.DS_Store
