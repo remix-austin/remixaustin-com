@@ -22,6 +22,16 @@ const EVENT_TIME_FORMAT = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Chicago",
 });
 
+function formatDateTime(dateTime: string) {
+  const narrownNonBreakSpace = String.fromCharCode(8239);
+
+  // Discrepency between server and client, see https://github.com/remix-austin/remixaustin-com/issues/83#issuecomment-1450654389
+  return EVENT_TIME_FORMAT.format(new Date(dateTime)).replaceAll(
+    narrownNonBreakSpace,
+    " "
+  );
+}
+
 function isValidVenue(venue: MeetupEvent["venue"]): venue is Venue {
   return (
     venue !== null &&
@@ -48,9 +58,7 @@ export default function NextEventInfo({
       </MeetupLink>
       <p className="text-xl font-bold">{event.title}</p>
       <p>
-        <time dateTime={event.dateTime}>
-          {EVENT_TIME_FORMAT.format(new Date(event.dateTime))}
-        </time>
+        <time dateTime={event.dateTime}>{formatDateTime(event.dateTime)}</time>
       </p>
       <p>{venue.name}</p>
       <p>
