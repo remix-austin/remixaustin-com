@@ -5,10 +5,16 @@ import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import * as Sentry from "@sentry/remix";
+import getEnv from "./utils/env.server";
 
+// Init global ENV object
+global.env = getEnv();
+
+// Init Sentry
 Sentry.init({
   dsn: "https://34c8ccc43eb048dc8bc97c56c9db3219:aec6646277604bfa8ed1f9c3907f2ec0@o4504646063489024.ingest.sentry.io/4504651149410304",
-  environment: "staging",
+  environment: getEnv().SENTRY_ENVIRONMENT,
+  release: getEnv().npm_package_version,
   tracesSampleRate: 1,
   // ...
 });

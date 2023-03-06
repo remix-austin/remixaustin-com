@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
 import type {
   LinksFunction,
   LoaderFunction,
@@ -11,12 +11,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getRedirectUrlIfWww } from "./utils/utils";
+import getEnv from "./utils/env.server";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -47,6 +49,10 @@ export const meta: MetaFunction = () => ({
   "og:image": logoUrl,
 });
 
+type LoaderData = {
+  env: ReturnType<typeof getEnv>;
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   // Redirect if "www." is in the url.
   const redirectUrl = getRedirectUrlIfWww(request.url);
@@ -54,14 +60,19 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect(redirectUrl, 308);
   }
 
-  return null;
+  return json<LoaderData>({
+    env: getEnv(),
+  });
 };
 
+/* eslint-disable-next-line complexity */
 export default function App() {
   // TODO: ❗️ Re-enable before merging ❗️
   // const matches = useMatches();
   // const includeScripts = matches.some((match) => match.handle?.hydrate);
   const includeScripts = true;
+
+  const { env } = useLoaderData();
 
   return (
     <html lang="en" className="relative h-full">
@@ -77,6 +88,12 @@ export default function App() {
         <Footer />
         <ScrollRestoration />
         {includeScripts ? <Scripts /> : null}
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`,
+          }}
+        />
         <LiveReload />
       </body>
     </html>

@@ -2,7 +2,8 @@ import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/server-runtime";
 import HeroImage from "~/images/hero.jpg";
-import getEnv from "~/utils/env";
+import getEnv from "~/utils/env.server";
+import * as Sentry from "@sentry/remix";
 
 export const h1Title = "Welcome to Remix Austin!";
 
@@ -13,16 +14,24 @@ export async function loader() {
 }
 export const meta: MetaFunction = () => {
   return {
+    // Block robots on this /error-test route ... it's just for testing
     robots: "noindex",
   };
 };
 
-export default function Index() {
+export default function ErrorTest() {
   const { env } = useLoaderData<typeof loader>();
 
   function throwException() {
     throw new Error(`The button was clicked in "${env.SENTRY_ENVIRONMENT}" 🙈`);
   }
+
+  function captureTestEvent() {
+    Sentry.captureEvent({
+      message: "The /error-test route was accessed",
+    });
+  }
+  captureTestEvent();
 
   return (
     <>
