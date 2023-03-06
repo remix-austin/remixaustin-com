@@ -26,6 +26,9 @@ export default function ErrorTest() {
     throw new Error(`The button was clicked in "${env.SENTRY_ENVIRONMENT}" 🙈`);
   }
 
+  /**
+   * TODO: ❗️ Remove before merging to prod ❗️
+   */
   function captureTestEvent() {
     Sentry.captureEvent({
       message: "The /error-test route was accessed",
