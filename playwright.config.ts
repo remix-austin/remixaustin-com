@@ -21,6 +21,7 @@ const baseURL = `http://localhost:${PORT}`;
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
+  globalSetup: require.resolve("./e2e/global-setup"),
   // Timeout per test
   timeout: 30 * 1000,
   // Test directory
