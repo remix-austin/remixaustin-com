@@ -74,7 +74,7 @@ function die() {
 #
 function hasDedicatedV4Ip() {
   # Checks for no existing v4 addresses, or existing but shared addresses.
-  local grep_code='$(( $(flyctl ips list --app "$1" | grep -cP "^v4.*public(?! \(shared\)).*") ))'
+  local grep_code="$(( $(flyctl ips list --app \"$1\" | grep -cP \"^v4.*public(?! \(shared\)).*\") ))"
 
   # If grep code is 0, then a dedicated (non-shared) v4 ip was found
   if [ $grep_code = 0 ] ; then

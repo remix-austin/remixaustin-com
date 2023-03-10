@@ -70,7 +70,6 @@ jobs:
     # Only build/deploy when a PR has the "staging" label
     if: contains(github.event.pull_request.labels.*.name, 'staging')
     runs-on: ubuntu-latest
-    # TODO: ❗️ Delete before merging ❗️
     needs: [development]
     steps:
       # Slashes in the ref_name will break Fly's Docker tags.
