@@ -55,22 +55,24 @@ jobs:
           echo "🏷 SENTRY_ENVIRONMENT = ${{ env.SENTRY_ENVIRONMENT }}"
           echo "::endgroup:: "
 
-  development:
-    name: 👷 Development
-    # Only run the development job if this PR is open,
-    # has the "staging" label, and it's going to be built & deployed.
-    if: >
-      github.event.pull_request.state == 'open'
-      && contains(github.event.pull_request.labels.*.name, 'staging')
-      && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
-    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
+  # TODO: ❗️ Delete before merging ❗️
+  # development:
+  #   name: 👷 Development
+  #   # Only run the development job if this PR is open,
+  #   # has the "staging" label, and it's going to be built & deployed.
+  #   if: >
+  #     github.event.pull_request.state == 'open'
+  #     && contains(github.event.pull_request.labels.*.name, 'staging')
+  #     && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
+  #   uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
 
   build:
     name: 🐳 Build
     # Only build/deploy when a PR has the "staging" label
     if: contains(github.event.pull_request.labels.*.name, 'staging')
     runs-on: ubuntu-latest
-    needs: [development]
+    # TODO: ❗️ Delete before merging ❗️
+    # needs: [development]
     steps:
       # Slashes in the ref_name will break Fly's Docker tags.
       - name: Replace slashes in ref_name
@@ -126,6 +128,7 @@ jobs:
           tags: registry.fly.io/${{ steps.app_name.outputs.value }}:${{ steps.clean_ref_name.outputs.replaced }}-${{ github.sha }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
+            DEPLOYMENT_ENV=staging
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
@@ -206,6 +209,14 @@ jobs:
           FLY_REGION: ${{ env.FLY_REGION }}
           FLY_ORG: ${{ env.FLY_ORG }}
 
+      # TODO: Implement caching of build artifacts across workflows/jobs
+      #       to avoid having to build again just for sourcemaps.
+      #       (It only takes a few seconds, and it may not be cacheable due to using Docker Buildx)
+      - name: 👷 Build to generate sourcemaps
+        run: |-
+          npm install
+          npm run build
+
       - name: 💂 Sentry Release
         uses: getsentry/action-release@v1.2.1
         env:
@@ -215,8 +226,7 @@ jobs:
           SENTRY_LOG_LEVEL: debug
         with:
           environment: ${{ env.SENTRY_ENVIRONMENT }}
-          # TODO: ❗️ Fix sourcemaps path problem!
-          # sourcemaps: /home/runner/work/remixaustin-com/remixaustin-com/public/build
+          sourcemaps: public/build
           version: ${{ github.sha }}
 
       - name: 💬 Comment URL on PR

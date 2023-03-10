@@ -4,7 +4,7 @@ FROM node:18.13.0-bullseye-slim as base
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
 
-# DISABLED: Install openssl for Prisma
+# DISABLED: Here's where we'd install dependencies
 # RUN apt-get update && apt-get install -y openssl sqlite3
 
 # Install all node_modules, including dev dependencies
@@ -32,7 +32,12 @@ WORKDIR /myapp
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 
 ADD . .
-RUN npm run build
+
+# Build with sourcemaps in staging only
+ARG DEPLOYMENT_ENV
+ENV SENTRY_AUTH_TOKEN ${SENTRY_AUTH_TOKEN}
+RUN echo "🍺 DEPLOYMENT_ENV = $DEPLOYMENT_ENV"
+RUN if [ "$DEPLOYMENT_ENV" = "staging" ] ; then npm run build-with-sourcemaps ; else npm run build ; fi
 
 # Finally, build the production image with minimal footprint
 FROM base
