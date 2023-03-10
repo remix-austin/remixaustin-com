@@ -31,7 +31,7 @@ export default function ErrorTest() {
    */
   function captureTestEvent() {
     Sentry.captureEvent({
-      message: "The /error-test route was accessed",
+      message: `The /error-test route was accessed in "${env.SENTRY_ENVIRONMENT}"`,
     });
   }
   captureTestEvent();
