@@ -55,16 +55,15 @@ jobs:
           echo "🏷 SENTRY_ENVIRONMENT = ${{ env.SENTRY_ENVIRONMENT }}"
           echo "::endgroup:: "
 
-  # TODO: ❗️ Delete before merging ❗️
-  # development:
-  #   name: 👷 Development
-  #   # Only run the development job if this PR is open,
-  #   # has the "staging" label, and it's going to be built & deployed.
-  #   if: >
-  #     github.event.pull_request.state == 'open'
-  #     && contains(github.event.pull_request.labels.*.name, 'staging')
-  #     && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
-  #   uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
+  development:
+    name: 👷 Development
+    # Only run the development job if this PR is open,
+    # has the "staging" label, and it's going to be built & deployed.
+    if: >
+      github.event.pull_request.state == 'open'
+      && contains(github.event.pull_request.labels.*.name, 'staging')
+      && (github.event.action != 'labeled' || github.event.action != 'unlabeled')
+    uses: remix-austin/remixaustin-com/.github/workflows/development.yml@main
 
   build:
     name: 🐳 Build
@@ -72,7 +71,7 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'staging')
     runs-on: ubuntu-latest
     # TODO: ❗️ Delete before merging ❗️
-    # needs: [development]
+    needs: [development]
     steps:
       # Slashes in the ref_name will break Fly's Docker tags.
       - name: Replace slashes in ref_name
