@@ -1,5 +1,5 @@
 import type { MeetupEvent } from "~/models/meetup.parsing";
-import { isEmptyString } from "~/utils";
+import { formatDateTime, isEmptyString } from "~/utils";
 import MeetupLink from "~/components/MeetupLink";
 import type { SerializeFrom } from "@remix-run/server-runtime";
 
@@ -11,26 +11,6 @@ const DEFAULT_VENUE: Venue = {
   city: "Austin",
   state: "TX",
 };
-
-const EVENT_TIME_FORMAT = new Intl.DateTimeFormat("en-US", {
-  weekday: "short",
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  timeZoneName: "short",
-  timeZone: "America/Chicago",
-});
-
-function formatDateTime(dateTime: string) {
-  const narrownNonBreakSpace = String.fromCharCode(8239);
-
-  // Discrepency between server and client, see https://github.com/remix-austin/remixaustin-com/issues/83#issuecomment-1450654389
-  return EVENT_TIME_FORMAT.format(new Date(dateTime)).replaceAll(
-    narrownNonBreakSpace,
-    " "
-  );
-}
 
 function isValidVenue(venue: MeetupEvent["venue"]): venue is Venue {
   return (
