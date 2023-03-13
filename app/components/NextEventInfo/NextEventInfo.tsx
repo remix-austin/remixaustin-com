@@ -1,5 +1,5 @@
 import type { MeetupEvent } from "~/models/meetup.parsing";
-import { isEmptyString } from "~/utils";
+import { formatDateTime, isEmptyString } from "~/utils";
 import MeetupLink from "~/components/MeetupLink";
 import type { SerializeFrom } from "@remix-run/server-runtime";
 
@@ -11,16 +11,6 @@ const DEFAULT_VENUE: Venue = {
   city: "Austin",
   state: "TX",
 };
-
-const EVENT_TIME_FORMAT = new Intl.DateTimeFormat("en-US", {
-  weekday: "short",
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  timeZoneName: "short",
-  timeZone: "America/Chicago",
-});
 
 function isValidVenue(venue: MeetupEvent["venue"]): venue is Venue {
   return (
@@ -48,9 +38,7 @@ export default function NextEventInfo({
       </MeetupLink>
       <p className="text-xl font-bold">{event.title}</p>
       <p>
-        <time dateTime={event.dateTime}>
-          {EVENT_TIME_FORMAT.format(new Date(event.dateTime))}
-        </time>
+        <time dateTime={event.dateTime}>{formatDateTime(event.dateTime)}</time>
       </p>
       <p>{venue.name}</p>
       <p>
