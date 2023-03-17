@@ -74,3 +74,29 @@ export function isEmptyString(val: unknown): boolean {
 export type PropsWithRequiredChildren<P = unknown> = P & {
   children: ReactNode;
 };
+
+const eventTimeFormat = new Intl.DateTimeFormat("en-US", {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  timeZoneName: "short",
+  timeZone: "America/Chicago",
+});
+
+const NARROW_NON_BREAK_SPACE = String.fromCharCode(8239);
+
+// Note: if we have more date formatting needs we can seperate this function and others
+// into a dedicated utils file
+
+/**
+ * Formats an date string into a more human readable format
+ * For example: "2023-03-08T15:06:39.096Z" -> "Wed, Mar 8, 9:06 AM CST"
+ */
+export function formatDateTime(dateTime: string) {
+  // Discrepency between server and client, see https://github.com/remix-austin/remixaustin-com/issues/83#issuecomment-1450654389
+  return eventTimeFormat
+    .format(new Date(dateTime))
+    .replaceAll(NARROW_NON_BREAK_SPACE, " ");
+}
