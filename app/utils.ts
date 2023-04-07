@@ -71,6 +71,13 @@ export function isEmptyString(val: unknown): boolean {
   return typeof val === "string" && val.trim().length <= 0;
 }
 
+export const publishDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "America/Chicago",
+});
+
 export type PropsWithRequiredChildren<P = unknown> = P & {
   children: ReactNode;
 };

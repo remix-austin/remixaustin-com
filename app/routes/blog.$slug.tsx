@@ -1,32 +1,27 @@
-import { json, type LoaderFunction } from "@remix-run/node";
+import { json, LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { getMDXComponent } from "mdx-bundler/client";
+import { getPost } from "blog-content/bundler.db";
+import { useMemo } from "react";
+import invariant from "tiny-invariant";
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  // TODO: Connect to Strapi content
-  const content = Array(5)
-    .fill(
-      "<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Possimus in qui porro quia neque, animi illo, vero sed, nulla minus ut facilis laborum. Suscipit nam at nemo, quas dolor ut!</p>"
-    )
-    .join("");
-
-  return json({
-    post: {
-      // @ts-ignore
-      title: `Article ${params.slug.slice(-1)}`,
-      teaser: "Lorem ipsum, dolor sit amet consectetur adipisicing elit...",
-      content,
-      slug: params.slug,
-    },
-  });
+export const loader = async function ({ params, request }: LoaderArgs) {
+  const { slug } = params;
+  invariant(typeof slug === "string", "Missing slug");
+  const post = await getPost(new URL(request.url).origin, slug);
+  invariant(post !== undefined, "Could not find post");
+  return json({ post });
 };
 
 export default function BlogSlugRoute() {
   const { post } = useLoaderData<typeof loader>();
-
+  const { title } = post.frontmatter;
+  const { code } = post;
+  const Component = useMemo(() => getMDXComponent(code), [code]);
   return (
     <div className="container prose mx-auto py-8">
-      <h1>{post.title}</h1>
-      <p dangerouslySetInnerHTML={{ __html: post.content }} />
+      <h1>{title}</h1>
+      <Component />
     </div>
   );
 }
