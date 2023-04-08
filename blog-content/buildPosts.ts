@@ -1,12 +1,14 @@
 import path from "path";
 import fs from "fs";
 import { parseMdx } from "./bundler";
-import { POST_CACHE_FILENAME } from "./bundler.db";
+import {
+  POST_CACHE_DIR_DEV,
+  POST_CACHE_FILEPATH_DEV,
+  POST_CACHE_FILEPATH_PROD,
+} from "./bundler.db";
 
 const POST_DIR = path.join(__dirname, ".", "posts");
-const POST_CACHE_DIR = path.join(__dirname, "..", "public");
 const COMPONENT_DIR = path.join(POST_DIR, "components");
-const POST_CACHE_FILEPATH = path.join(POST_CACHE_DIR, POST_CACHE_FILENAME);
 
 function readComponents() {
   if (!fs.existsSync(COMPONENT_DIR)) {
@@ -49,7 +51,7 @@ function isMarkdownFilename(filename: unknown): filename is "*md" | "*mdx" {
   );
 }
 
-async function writePostCache() {
+async function writePostCache(postCacheFilepath: string) {
   const comps = readComponents();
   const postFileNames = fs
     .readdirSync(POST_DIR)
@@ -58,16 +60,26 @@ async function writePostCache() {
   const content = await Promise.all(
     postFileNames.map((filename) => readMdxFile(filename, comps))
   );
-  fs.writeFileSync(POST_CACHE_FILEPATH, JSON.stringify(content, null, 2));
-  console.log("Wrote", path.relative(__dirname, POST_CACHE_FILEPATH));
+  fs.writeFileSync(postCacheFilepath, JSON.stringify(content, null, 2));
+  console.log("Wrote", path.relative(__dirname, postCacheFilepath));
 }
 
 (async () => {
-  await writePostCache();
+  if (
+    process.env.NODE_ENV === "development" &&
+    !fs.existsSync(POST_CACHE_DIR_DEV)
+  ) {
+    fs.mkdirSync(POST_CACHE_DIR_DEV);
+  }
+  const postCacheFilepath =
+    process.env.NODE_ENV === "development"
+      ? POST_CACHE_FILEPATH_DEV
+      : POST_CACHE_FILEPATH_PROD;
+  await writePostCache(postCacheFilepath);
   if (process.env.NODE_ENV === "development") {
     fs.watch(POST_DIR, (event, filename) => {
       if (isMarkdownFilename(filename)) {
-        writePostCache();
+        writePostCache(postCacheFilepath);
       }
     });
   }

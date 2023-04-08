@@ -13,6 +13,7 @@ node_modules
 /prisma/migrations
 
 /app/styles/tailwind.css
+/app/_posts
 /playwright-results/
 /playwright-report/
 /playwright/.cache/
