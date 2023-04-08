@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { json, LoaderArgs } from "@remix-run/server-runtime";
-import { Mdx } from "blog-content/bundler";
+import { json, type LoaderArgs } from "@remix-run/server-runtime";
+import { type Mdx } from "blog-content/bundler";
 import { getPosts } from "blog-content/bundler.db";
 import { publishDateFormatter } from "~/utils";
 

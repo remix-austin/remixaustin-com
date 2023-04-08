@@ -1,18 +1,6 @@
 import type { Mdx } from "./bundler";
-import path from "path";
-import fs from "fs";
 
 export const POST_CACHE_FILENAME = "post-cache.json";
-export const POST_CACHE_DIR_PROD = path.join(__dirname, "..", "public");
-export const POST_CACHE_DIR_DEV = path.join(__dirname, "..", "app", "_posts");
-export const POST_CACHE_FILEPATH_PROD = path.join(
-  POST_CACHE_DIR_PROD,
-  POST_CACHE_FILENAME
-);
-export const POST_CACHE_FILEPATH_DEV = path.join(
-  POST_CACHE_DIR_DEV,
-  POST_CACHE_FILENAME
-);
 
 function isDefinedString(val: unknown): val is string {
   return typeof val === "string";
@@ -32,12 +20,12 @@ function reverseSort(a: Mdx, b: Mdx) {
 
 // TODO add paging
 export async function getPosts(origin: string) {
+  let url: URL;
   if (process.env.NODE_ENV === "development") {
-    return JSON.parse(
-      fs.readFileSync(POST_CACHE_FILEPATH_DEV, "utf-8")
-    ) as Mdx[];
+    url = new URL(`http://localhost:8080/${POST_CACHE_FILENAME}`);
+  } else {
+    url = new URL(POST_CACHE_FILENAME, origin);
   }
-  const url = new URL(POST_CACHE_FILENAME, origin);
   console.log("getPosts", url);
   return fetch(url)
     .then((response) => {

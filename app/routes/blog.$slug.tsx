@@ -1,4 +1,4 @@
-import { json, LoaderArgs } from "@remix-run/node";
+import { json, type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { getPost } from "blog-content/bundler.db";
