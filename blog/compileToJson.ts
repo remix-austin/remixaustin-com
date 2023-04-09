@@ -1,12 +1,7 @@
 import path from "path";
 import fs from "fs";
-import { parseMdx } from "./bundler";
-import { POST_CACHE_FILENAME } from "./bundler.db";
-
-export const POST_DIR = path.join(__dirname, ".", "posts");
-const POST_CACHE_DIR = path.join(__dirname, "..", "public");
-const COMPONENT_DIR = path.join(POST_DIR, "components");
-const POST_CACHE_FILEPATH = path.join(POST_CACHE_DIR, POST_CACHE_FILENAME);
+import { parseMdx } from "./parser";
+import { COMPONENT_DIR, POST_DIR } from "./paths";
 
 function readComponents() {
   if (!fs.existsSync(COMPONENT_DIR)) {
@@ -23,7 +18,7 @@ function readComponents() {
     }, {} as Record<string, string>);
 }
 
-function readMdxFile(filename: string, comps?: Record<string, string>) {
+async function readMdxFile(filename: string, comps?: Record<string, string>) {
   const slug = path.basename(filename, path.extname(filename));
   return new Promise<Buffer>((resolve, reject) => {
     fs.readFile(filename, (err, content) => {
@@ -42,16 +37,14 @@ function isTypescriptFilename(filename: string | undefined) {
   );
 }
 
-export function isMarkdownFilename(
-  filename: unknown
-): filename is "*md" | "*mdx" {
+function isMarkdownFilename(filename: unknown): filename is "*md" | "*mdx" {
   return (
     typeof filename === "string" &&
     (filename.endsWith("md") || filename.endsWith("mdx"))
   );
 }
 
-export async function getPostCacheFileContents() {
+export async function compilePostsToJson() {
   const comps = readComponents();
   const postFileNames = fs
     .readdirSync(POST_DIR)
@@ -62,20 +55,3 @@ export async function getPostCacheFileContents() {
   );
   return JSON.stringify(content, null, 2);
 }
-
-async function writePostCache() {
-  const content = await getPostCacheFileContents();
-  fs.writeFileSync(POST_CACHE_FILEPATH, content);
-  console.log("Wrote", path.relative(__dirname, POST_CACHE_FILEPATH));
-}
-
-export default async () => {
-  await writePostCache();
-  if (process.env.NODE_ENV === "development") {
-    fs.watch(POST_DIR, (event, filename) => {
-      if (isMarkdownFilename(filename)) {
-        writePostCache();
-      }
-    });
-  }
-};

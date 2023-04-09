@@ -1,6 +1,5 @@
-import type { Mdx } from "./bundler";
-
-export const POST_CACHE_FILENAME = "post-cache.json";
+import type { Mdx } from "./parser";
+import { POST_CACHE_FILENAME } from "./paths";
 
 function isDefinedString(val: unknown): val is string {
   return typeof val === "string";
@@ -26,7 +25,6 @@ export async function getPosts(origin: string) {
   } else {
     url = new URL(POST_CACHE_FILENAME, origin);
   }
-  console.log("getPosts", url);
   return fetch(url)
     .then((response) => {
       if (!response.ok) {

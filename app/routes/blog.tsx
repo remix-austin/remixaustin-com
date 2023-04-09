@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { json, type LoaderArgs } from "@remix-run/server-runtime";
-import { type Mdx } from "blog-content/bundler";
-import { getPosts } from "blog-content/bundler.db";
+import { type Mdx } from "blog/parser";
+import { getPosts } from "blog/client";
 import { publishDateFormatter } from "~/utils";
 
 export const loader = async function ({ request }: LoaderArgs) {
