@@ -1,4 +1,4 @@
-import type { Mdx } from "./parser";
+import type { Mdx } from "./parser.js";
 import { POST_CACHE_FILENAME } from "./paths";
 
 function isDefinedString(val: unknown): val is string {

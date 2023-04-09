@@ -22,14 +22,20 @@ export default function BlogRoute() {
           (
             {
               slug,
-              frontmatter: { title, date },
+              frontmatter: { title, date, author },
             }: Pick<Mdx, "slug" | "frontmatter">,
             index: number
           ) => (
             <li key={`${title}-${index}`} className="pl-0">
               <Link to={`/blog/${slug}`}>
                 <h3 className="mb-4 text-2xl font-bold">{title}</h3>
-                {date && <h4>{publishDateFormatter.format(new Date(date))}</h4>}
+                {(author || date) && (
+                  <h4>
+                    {author}
+                    {author && date && " - "}
+                    {date && publishDateFormatter.format(new Date(date))}
+                  </h4>
+                )}
               </Link>
             </li>
           )
