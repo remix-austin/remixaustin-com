@@ -50,9 +50,9 @@ I'm a big fan of using a file system as a CMS, especially for smaller blogs that
 on an occasional basis. Most developers already have a good deal of familiarity with markdown and
 static site generators have been allowing devs like us to websites from markdown since the dawn of docpad.
 
-I was happy to see in Colby's discussion that he also like the filesystem
-approach to a certain degree and had actually gone that route when making his [own website](https://colbywhite.dev/).
-In his website, he uses `.mdx` files to give a little bit of React flavor to regular markdown.
+I was happy to see in Colby's discussion that he also liked the filesystem
+approach to a certain degree and had actually gone down that route when making his [own website](https://colbywhite.dev/).
+In his website, he uses `.mdx` files to write markdown posts with a little bit of React flavor.
 
 <BlogImage
   src={colbyWhite}
@@ -63,15 +63,15 @@ In his website, he uses `.mdx` files to give a little bit of React flavor to reg
 So my next move was simple? Steal his work!
 
 With credit, of course! But hey, don't repeat work that's already been done for you. And thanks
-almost exclusively to my timing in this project, a good chunk of tedious work had been done for me.
-I branched off a [previous PR for an initial blog implementation from Seth Davis](https://github.com/remix-austin/remixaustin-com/pull/86)
+almost exclusively to my timing in this project, I was the unlikely benefactor of Colby's
+hard work <span className="text-xxs">Hehehehe</span>. I branched off a [previous PR for an initial blog implementation from Seth Davis](https://github.com/remix-austin/remixaustin-com/pull/86)
 and then got to work. I explored the Github repo for Colby's website, found the pieces concerned
-with parsing `.mdx` files and turning them into a consumable format, and then whole hog copied and
+with parsing `.mdx` files into a consumable format, and then whole hog copied and
 pasted that stuff over.
 
-I gotta admit during the whole process, I only had about a 50% understanding of how everything worked.
+I gotta admit, during the whole process, I only had about a 50% understanding of how everything worked.
 Honestly, I just kind of let the compiler act as my guide. Module not found error?
-Great! There was something missing from what I was supposed to steal. Let me go back to Colby's
+Great! What did I not steal that I was supposed to? Let me go back to Colby's
 repo and find out it.
 
 With about two hours of copy and paste, some compiler errors, and a few mock blog files, I was
@@ -83,55 +83,57 @@ The solution technically worked, but it was lacking quite a bit. The first being
 I'm no fan of "copy and paste" into production code. Sure, publicly available solutions are great
 starting points. But you shouldn't put any code into a codebase that you don't understand.
 
-I took a good long look at what I copied and got my head around how it worked. The basic idea was to have
-a NodeJS script that would take all of the `.mdx` files and any of their React component dependencies
-and compile them using `mdx-bundler`. The final result would be a JSON array, with each post as an
-object in that array. Those objects would have some frontmatter and a raw source string for a React
-component that represented the post content.
+I took a good long look at what I copied and got my head around how it worked. The basic idea was this:
+there's a NodeJS script that takes all of the `.mdx` files and any of their React component dependencies
+and compiles them using `mdx-bundler`. The final result is a JSON array, with each post as an
+object in that array. Those objects have some frontmatter and a raw source string for a React
+component. That React component is the full content of the blog post.
 
-The array then goes into a file called `post-cache.json` written into our `public`
-directory making it available to all loaders in the site. Loaders for the blog list and individual
-blog posts query the file, pick out the data they need, and inject it into the page like
-a regular React component.
+The array then gets written into a file called `post-cache.json` in our `public`
+directory, making it available to all loaders in the site. Loaders for the blog list route and the
+individual blog post route make a fetch for the file, pick out the data they need, and inject it
+into the page like a regular React component.
 
-And lastly, all `.mdx` files are watched by Node when we run the script in development mode. If any
-of their content changes, `post-cache.json` is regenerated with the new content.
+And lastly, all `.mdx` files are watched by Node when we run this script in development mode. If any
+of their content changes, `post-cache.json` is regenerated with the updated contents.
 
 <BlogImage
   src={mattConfused}
   alt="Not confused at all"
-  caption="Confused like my face here? Just reread that a few more times."
+  caption="Confused like my face here? Just reread that section a few more times."
   maxWidth={300}
 ></BlogImage>
 
-So this pretty good, right? But it could be better.
+So this is pretty good, right? But it could be better.
 
-For starters, the `post-cache.json` would be created in both development mode and production mode.
-I wasn't fan of making this file for every single blog change in dev. Ideally,
-I would like a cached version of this file to exist in memory during development mode, and only to
-exist on the file system after a build. We also weren't seeing live reload functionality in our
-app when blog posts would change because the Remix dev command doesn't watch `public` for changes.
+For starters, the `post-cache.json` file was being created in both development mode and production mode.
+I wasn't fan of making this file for every single blog change when running the app in development mode.
+Ideally, I would like a cached version of this file to exist in memory during development mode,
+and only to exist on the file system after a production build. We also weren't seeing live reload
+functionality in our app when blog posts would change because the Remix dev server doesn't watch
+`public` for changes.
 
 These are all good things to fix, but they take some serious thought into how to do it right.
 
 ## Where to begin?
 
-First thing was to start caching `post-cache.json`. Unfortunately, the Remix dev server and compile
-process is pretty closed off outside of the configuration options available in `remix.config.js`.
-So we couldn't rely on Remix being able to cache this file for us. Which means we gotta take it back.
-How far back? BACK TO THE FUTURE MARTY!!
+First thing was to start caching `post-cache.json` in development mode. Unfortunately, the Remix
+dev server and compile process is pretty closed off outside of the configuration options available
+in `remix.config.js`. So we couldn't rely on Remix being able to cache this file for us.
+Which means we gotta go back. How far back? BACK TO THE FUTURE MARTY!!
 
 Not really. Back to the days of running a simple HTTP server locally. Big shoutout if you ever
 had to run one of these in Python or Node.
 
-I wrote a script that took the compile functionality of turning `.mdx` files into `post-cache.json`
-but eliminated the part where it actually wrote that file. Instead, it would hold on to the contents
-of that JSON array in a local variable. Then it would start a small HTTP server on localhost alongside
-the Remix dev server. So we now have two servers running, one for Remix, and one for the blog content.
+I wrote a script that took the compile functionality for `.mdx` files but eliminated the part where it
+actually wrote a JSON file. Instead, it would hold on to the contents of the JSON array in a local
+variable. Then it would start a small HTTP server on localhost alongside the Remix dev server.
+We now have two servers running, one for Remix, and one for the blog content.
 
 Inside our Remix app, I wrote a conditional to check to see if `process.env.NODE_ENV === "development"`.
-If that was the case, then our app would send a request for `post-cache.json` to our other local server.
-Our other server would listen for that request and send back our cached version of `post-cache.json`.
+If that was the case, then our app would send a request for `post-cache.json` but to our other local
+server. Our other server would listen for that request and send back its local variable contents as
+`post-cache.json`.
 
 BOOM! We now have the ability to serve a file in dev without actually having it on the file system.
 But we're still missing something.
@@ -145,8 +147,9 @@ But we're still missing something.
 
 How do we get auto-refresh when blog content changes? Well pretty much all auto-refresh behavior in
 any library these days is handled by a websocket. In fact, if you dig into the `<LiveReload>` component
-in Remix and go to the compiled code. You'll see that it's basically just setting up a `<script>`
-that only appears in the client in dev mode to connect to the Remix dev server websocket.
+in Remix and go to the compiled code, you'll see that it's basically just setting up a `<script>`
+that only appears in the client in dev mode. This `<script>` connects to the Remix dev server websocket
+and starts listening for messages to trigger a reload.
 
 <BlogImage
   src={websocketImage}
@@ -155,10 +158,11 @@ that only appears in the client in dev mode to connect to the Remix dev server w
   caption="Never be afraid to explore the source."
 ></BlogImage>
 
-I started out this project stealing other solutions, so why stop now? I made my own websocket server
-in the same script that starts my HTTP server. This websocket is what's actually watching the blog posts
-for changes. If any of them change, a message if fired that looks like this:
-`websocket.send('{ "type": "RELOAD" }')`.
+I started out this project stealing other solutions, so why stop now?
+
+I made my own websocket server in the same script that runs my HTTP server. This websocket is what's
+actually watching the blog posts for changes. If any of them change, a message is fired that looks
+like this: `websocket.send('{ "type": "RELOAD" }')`.
 
 I then made a `<BlogLiveReload>` component that does almost the same thing as the Remix `<LiveReload>`,
 only ours targets the websocket server I made explicitly. If it receives a message of type `"RELOAD"`
@@ -168,54 +172,60 @@ it auto-refreshes the browser and our blog changes show up instantly.
 
 So what did we learn and what do we still have to do?
 
-Well, the Remix community seems to be in need of a solution for blog integration. In fact, that's
-what [Colby White's original discussion](https://github.com/remix-austin/remixaustin-com/discussions/89)
+Well, the Remix community seems to be in need of a solid, popular solution to blog integration.
+In fact, that's what [Colby White's original discussion](https://github.com/remix-austin/remixaustin-com/discussions/89)
 was trying to solve. And while our solution is good, it still has some rough edges.
 
-For one, we are able to load images into these blog posts, in case you haven't seen. But the way
-we are doing it is by using the esbuild plugin `remark-mdx-images` with `mdx-bundler`. This plugin
-turns our images into base64 encoded URLs. Not bad per se, but the output is so large that it
-severly bloats our `post-cache.json` file with gibberish data, making one single post weigh as much
-as 2 MB even after image optimization. YIKES!
+For one, we are able to load images into these blog posts. But the way we are doing it is by using
+the esbuild plugin `remark-mdx-images` with `mdx-bundler`. This plugin turns our images into base64
+encoded URLs. Not bad per se, but the output is so large that it severly bloats our `post-cache.json`
+file with gibberish data. One single post can weigh as much as 2 MB even after image optimization.
+YIKES!
 
 We could work on a solution to copy images into our build, but then we have to deal with how
 to keep our URLs working for both a dev environment and a prod environment, plus cache busting on
 production.
 
-But even with that latter solution, we still run into the big problem, which is simply using
-a filebased CMS. If we keep growing, we're going to hit a point where we outgrow this approach.
-There's only so many images and content our codebase can hold. Remix doesn't have a solid way forward
-when it comes to integrating with a third-party CMS via API. And we may have to figure it out ourselves
+But even with that latter solution, we still run into one big problem, which is that filebased CMS
+systems are always small. If we keep growing, we're going to hit a point where we can't keep doing this.
+There's only so many images and content our codebase can hold. Remix doesn't have a
+recommended way to integrate with a third-party CMS via API. We may have to figure it out ourselves
 yet again.
 
 ## Maybe this is where you come in
 
 We only got to this point thanks to the efforts of so many people, from Seth Davis' original PR,
-to Colby White's musings about the state of Remix with a CMS, to me integrating strategies from multiple
+to Colby White's musings about the state of Remix and CMS-es, to me integrating strategies from multiple
 people into one cohesive whole, to the overall support of the Remix Austin community.
 
 We are interested in taking these lessons and using them to impact all of the Remix community, not
 just the one here in Austin. We'd ideally like to make a utility library that can act as the solid
-solution we wish we would have had when we started.
+solution we wish we could have had at the beginning. And we'd like to make all the optimizations
+that will allow it to scale.
 
-If you're interested, please let us know, via our [GitHub](https://github.com/remix-austin/remixaustin-com)
+If you're interested, please let us know via our [GitHub](https://github.com/remix-austin/remixaustin-com)
 or find some of us on our socials. We'll be improving what we have in the meantime. We hope you're
 there to see it!
 
-<AuthorFooter imageSrc={mattAuthor} alt="Matt Hernandez">
-  Matt Hernandez is a UI developer in Austin, TX. Originally a film school grad,
-  he made his way to working as a dev when he realized that working in Hollywood
-  was not all it cracked up to be. He's worked across all layers of the stack,
-  but considers the front-end to be home and React to be the best UI library so
-  far. You can find him on
-  <a href="https://github.com/matt-hernandez" target="_blank">
-    his Github
-  </a> or on
-  <a
-    href="https://www.linkedin.com/in/matthew-hernandez-52665041"
-    target="_blank"
-  >
-    LinkedIn
-  </a>
-  .
-</AuthorFooter>
+<AuthorFooter
+  imageSrc={mattAuthor}
+  alt="Matt Hernandez"
+  contents={
+    <>
+      Matt Hernandez is a UI developer in Austin, TX. Originally a film school
+      grad, he made his way to working as a dev when he realized that working in
+      Hollywood was not all it cracked up to be. He's worked across all layers
+      of the stack, but considers the front-end to be home and React to be the
+      best UI library so far. You can find him on
+      <a href="https://github.com/matt-hernandez" target="_blank">
+        his Github
+      </a> or on
+      <a
+        href="https://www.linkedin.com/in/matthew-hernandez-52665041"
+        target="_blank"
+      >
+        LinkedIn.
+      </a>
+    </>
+  }
+></AuthorFooter>
