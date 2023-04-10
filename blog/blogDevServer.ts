@@ -21,7 +21,13 @@ const server = http.createServer((req, res) => {
      */
     res.setHeader("Cache-Control", "no-store");
     res.writeHead(200);
-    res.end(source);
+    if (source === "") {
+      setTimeout(() => {
+        res.end(source);
+      }, 400);
+    } else {
+      res.end(source);
+    }
   } else {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/plain");

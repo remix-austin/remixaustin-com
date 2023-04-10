@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { compilePostsToJson } from "./compileToJson.js";
+import { compilePostsToJson } from "./compileToJson";
 import { POST_CACHE_FILEPATH } from "./paths";
 
 (async function writePostCache() {
