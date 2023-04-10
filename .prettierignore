@@ -7,3 +7,6 @@ node_modules
 
 /app/styles/tailwind.css
 /playwright-report
+
+# New line breaks matter on MDX files, and prettier has broken some MDX files after formatting
+/blog/**/*.mdx

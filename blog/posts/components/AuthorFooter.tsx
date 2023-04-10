@@ -1,19 +1,13 @@
-import { type ReactNode } from "react";
+import { type PropsWithChildren } from "react";
 
-/**
- * Using `contents` here instead of `children` because of a weird bug
- * with nesting children in `mdx-bundler`. Our prettier auto-format
- * kept making it bug out too. Super weird stuff.
- */
 export function AuthorFooter({
   imageSrc,
   alt,
-  contents,
+  children,
 }: {
   imageSrc: string;
   alt: string;
-  contents: ReactNode;
-}) {
+} & PropsWithChildren) {
   return (
     <div className="flex flex-row items-center">
       <img
@@ -21,7 +15,7 @@ export function AuthorFooter({
         src={imageSrc}
         alt={alt}
       />
-      <p className="ml-4 flex-1">{contents}</p>
+      <div className="ml-4 flex-1">{children}</div>
     </div>
   );
 }
