@@ -7,15 +7,15 @@ function readComponents() {
   if (!fs.existsSync(COMPONENT_DIR)) {
     return undefined;
   }
-  return fs
-    .readdirSync(COMPONENT_DIR)
-    .filter(isTypescriptFilename)
-    .map((filename) => path.join(COMPONENT_DIR, filename))
-    .reduce((componentFiles, file) => {
-      const relativePath = path.relative(POST_DIR, file);
-      const content = fs.readFileSync(file).toString("utf-8");
-      return { ...componentFiles, [relativePath]: content };
-    }, {} as Record<string, string>);
+  return fs.readdirSync(COMPONENT_DIR).reduce((componentFiles, filename) => {
+    if (!isTypescriptFilename(filename)) {
+      return componentFiles;
+    }
+    const absolutePath = path.join(COMPONENT_DIR, filename);
+    const relativePath = path.relative(POST_DIR, absolutePath);
+    const content = fs.readFileSync(absolutePath).toString("utf-8");
+    return { ...componentFiles, [relativePath]: content };
+  }, {} as Record<string, string>);
 }
 
 async function readMdxFile(filename: string, comps?: Record<string, string>) {
