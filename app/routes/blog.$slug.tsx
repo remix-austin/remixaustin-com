@@ -4,6 +4,7 @@ import { getMDXComponent } from "mdx-bundler/client";
 import { getPost } from "blog/client";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
+import { publishDateFormatter } from "~/utils";
 
 export const loader = async function ({ params, request }: LoaderArgs) {
   const { slug } = params;
@@ -15,12 +16,18 @@ export const loader = async function ({ params, request }: LoaderArgs) {
 
 export default function BlogSlugRoute() {
   const { post } = useLoaderData<typeof loader>();
-  const { title } = post.frontmatter;
+  const { title, author, date } = post.frontmatter;
   const { code } = post;
   const Component = useMemo(() => getMDXComponent(code), [code]);
   return (
     <div className="container prose mx-auto py-8 px-4 md:px-0">
-      <h1>{title}</h1>
+      <h1 className="mb-[0px]">{title}</h1>
+      {author && (
+        <h4 className={`mt-4${date ? " mb-[0px]" : ""}`}>By {author}</h4>
+      )}
+      {date && (
+        <h5 className="mb-2">{publishDateFormatter.format(new Date(date))}</h5>
+      )}
       <Component />
     </div>
   );
