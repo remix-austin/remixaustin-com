@@ -16,7 +16,11 @@ export function AuthorFooter({
 }) {
   return (
     <div className="flex flex-row items-center">
-      <img className="h-48 w-48 rounded-full" src={imageSrc} alt={alt} />
+      <img
+        className="h-40 w-40 rounded-full md:h-48 md:w-48"
+        src={imageSrc}
+        alt={alt}
+      />
       <p className="ml-4 flex-1">{contents}</p>
     </div>
   );

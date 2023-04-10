@@ -19,7 +19,7 @@ export default function BlogSlugRoute() {
   const { code } = post;
   const Component = useMemo(() => getMDXComponent(code), [code]);
   return (
-    <div className="container prose mx-auto py-8">
+    <div className="container prose mx-auto py-8 px-4 md:px-0">
       <h1>{title}</h1>
       <Component />
     </div>
