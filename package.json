@@ -29,7 +29,7 @@
     "prepare": "husky install",
     "typecheck": "tsc -b && tsc -b e2e",
     "validate": "run-p test lint typecheck test:e2e",
-    "validate:precommit": "run-p lint format:check typecheck",
+    "validate:precommit": "run-p lint format typecheck",
     "block-robots": "./tools/workflows/block-robots.sh"
   },
   "prettier": {},
@@ -78,6 +78,7 @@
     "eslint-config-prettier": "^8.5.0",
     "husky": "^8.0.2",
     "jsdom": "20.0.3",
+    "lint-staged": "^13.2.1",
     "msw": "^0.47.3",
     "npm-run-all": "^4.1.5",
     "playwright": "1.28.1",
