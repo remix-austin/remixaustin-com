@@ -1,28 +1,24 @@
 import { bundleMDX } from "mdx-bundler";
+import type { BundleMDXSource } from "mdx-bundler/dist/types";
+import type { PostFrontMatter } from "./models";
+import { POSTS_BUILD_DIR } from "./pathsBuild";
 /**
  * Not super proud of this ESM workaround, but it's the only thing
  * that would allow images to be used in blog posts.
  */
 const remarkMdxImages = require("fix-esm").require("remark-mdx-images");
 
-interface PostFrontMatter extends Record<string, any> {
-  title: string;
-  date: string;
-  author: string;
-  tags: string[];
-}
-
 export type Mdx = Awaited<ReturnType<typeof parseMdx>>;
 
 export async function parseMdx(
-  content: Buffer,
+  content: string,
   slug: string,
-  files?: Parameters<typeof bundleMDX>[0]["files"]
+  files?: BundleMDXSource<PostFrontMatter>["files"]
 ) {
-  const { code, frontmatter } = await bundleMDX<Partial<PostFrontMatter>>({
-    source: content.toString("utf-8"),
+  const { code, frontmatter } = await bundleMDX<PostFrontMatter>({
+    source: content,
     files,
-    cwd: `${__dirname}/posts`,
+    cwd: POSTS_BUILD_DIR,
     mdxOptions: (options) => {
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),

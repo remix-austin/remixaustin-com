@@ -1,54 +1,58 @@
-import type { Mdx } from "./parser.js";
-import { POST_CACHE_FILENAME } from "./paths";
+import type { PostFrontMatter, PostFrontMatterCollection } from "./models";
+import { FRONT_MATTER_CACHE_FILENAME } from "./pathsBuild";
+import { extractImports } from "./extractImports";
+import { type Mdx, parseMdx } from "./parser";
 
-function isDefinedString(val: unknown): val is string {
-  return typeof val === "string";
-}
-
-function reverseSort(a: Mdx, b: Mdx) {
-  if (
-    !isDefinedString(a.frontmatter.date) ||
-    !isDefinedString(b.frontmatter.date)
-  ) {
-    throw new Error("Missing dates");
-  }
-  const aDate = new Date(a.frontmatter.date);
-  const bDate = new Date(b.frontmatter.date);
-  return bDate.getTime() - aDate.getTime();
-}
-
-// TODO add paging
 export async function getPosts(origin: string) {
   let url: URL;
   if (process.env.NODE_ENV === "development") {
-    url = new URL(`http://localhost:8080/${POST_CACHE_FILENAME}`);
+    url = new URL(`http://localhost:8080/${FRONT_MATTER_CACHE_FILENAME}`);
   } else {
-    url = new URL(POST_CACHE_FILENAME, origin);
+    url = new URL(FRONT_MATTER_CACHE_FILENAME, origin);
+  }
+  return fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Could not retrieve posts ${response.statusText}`);
+    }
+    return response.json() as Promise<PostFrontMatterCollection>;
+  });
+}
+
+export async function getPost(origin: string, slug: string): Promise<Mdx> {
+  const url = new URL(`${origin}/posts/${slug}.mdx`);
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Could not retrieve post ${response.statusText}`);
+      }
+      return response.text();
+    })
+    .then((postContents): [string, Record<string, string>] => {
+      const postImports = extractImports(`${origin}/posts`, postContents);
+      return [postContents, postImports];
+    })
+    .then(([postContents, postImports]) => {
+      return parseMdx(postContents, slug, postImports);
+    });
+}
+
+export async function getRecentPostFrontMatter(
+  origin: string
+): Promise<PostFrontMatter> {
+  let url;
+  if (process.env.NODE_ENV === "development") {
+    url = new URL(`http://localhost:8080/${FRONT_MATTER_CACHE_FILENAME}`);
+  } else {
+    url = new URL(FRONT_MATTER_CACHE_FILENAME, origin);
   }
   return fetch(url)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Could not retrieve posts ${response.statusText}`);
       }
-      return response.json() as Promise<Mdx[]>;
+      return response.json() as Promise<PostFrontMatterCollection>;
     })
-    .then((posts) => {
-      return posts
-        .filter(
-          ({ frontmatter }) =>
-            isDefinedString(frontmatter.date) &&
-            isDefinedString(frontmatter.title)
-        )
-        .sort(reverseSort);
+    .then((frontMatterCollection) => {
+      return frontMatterCollection[0][1];
     });
-}
-
-export async function getPost(origin: string, slug: string) {
-  const posts = await getPosts(origin);
-  return posts.find((post) => post.slug === slug);
-}
-
-export async function getRecentPost(origin: string, count = 10) {
-  const posts = await getPosts(origin);
-  return posts.slice(0, count);
 }

@@ -2,7 +2,8 @@ node_modules
 
 /build
 /public/build
-/public/post-cache.json
+/public/posts
+/public/blog-post-cache.json
 .env
 .env.example
 .vscode
