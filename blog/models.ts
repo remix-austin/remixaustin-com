@@ -1,8 +1,11 @@
-export interface PostFrontMatter extends Record<string, any> {
+export interface PostFrontMatter {
   title: string;
   date: string;
   author: string;
-  tags: string[];
+  tags?: string[];
 }
-export type PostFrontMatterGroup = [string, PostFrontMatter];
-export type PostFrontMatterCollection = PostFrontMatterGroup[];
+export interface PostFrontMatterWithSlug extends PostFrontMatter {
+  slug: string;
+}
+
+export type PostFrontMatterCollection = PostFrontMatterWithSlug[];

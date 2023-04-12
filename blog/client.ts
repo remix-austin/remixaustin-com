@@ -1,4 +1,7 @@
-import type { PostFrontMatter, PostFrontMatterCollection } from "./models";
+import type {
+  PostFrontMatterWithSlug,
+  PostFrontMatterCollection,
+} from "./models";
 import { FRONT_MATTER_CACHE_FILENAME, POSTS_BUILD_DIR } from "./paths";
 import { extractImports } from "./extractImports";
 import { type Mdx, parseMdx } from "./parser";
@@ -46,7 +49,7 @@ export async function getPost(origin: string, slug: string): Promise<Mdx> {
 
 export async function getRecentPostFrontMatter(
   origin: string
-): Promise<PostFrontMatter> {
+): Promise<PostFrontMatterWithSlug> {
   let url;
   if (process.env.NODE_ENV === "development") {
     url = new URL(`http://localhost:8080/${FRONT_MATTER_CACHE_FILENAME}`);
@@ -61,6 +64,6 @@ export async function getRecentPostFrontMatter(
       return response.json() as Promise<PostFrontMatterCollection>;
     })
     .then((frontMatterCollection) => {
-      return frontMatterCollection[0][1];
+      return frontMatterCollection[0];
     });
 }

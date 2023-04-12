@@ -4,7 +4,7 @@ import fm from "front-matter";
 import type {
   PostFrontMatter,
   PostFrontMatterCollection,
-  PostFrontMatterGroup,
+  PostFrontMatterWithSlug,
 } from "./models";
 import { POSTS_SOURCE_DIR } from "./paths";
 
@@ -24,9 +24,9 @@ function isMarkdownFilename(filename: unknown): filename is "*md" | "*mdx" {
  * @param a - first group of `[slug, frontMatter]`
  * @param b - second group of `[slug, frontMatter]`
  */
-function reverseSort(a: PostFrontMatterGroup, b: PostFrontMatterGroup) {
-  const aDate = new Date(a[1].date);
-  const bDate = new Date(b[1].date);
+function reverseSort(a: PostFrontMatterWithSlug, b: PostFrontMatterWithSlug) {
+  const aDate = new Date(a.date);
+  const bDate = new Date(b.date);
   return bDate.getTime() - aDate.getTime();
 }
 
@@ -95,10 +95,10 @@ export function buildFrontMatter(): string {
       }
       return [
         ...postMetadata,
-        [
-          path.basename(filename, path.extname(filename)),
-          frontMatter,
-        ] as PostFrontMatterGroup,
+        {
+          ...frontMatter,
+          slug: path.basename(filename, path.extname(filename)),
+        },
       ];
     }, []);
   frontMatterCollection.sort(reverseSort);
