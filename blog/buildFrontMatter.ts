@@ -6,13 +6,12 @@ import type {
   PostFrontMatterCollection,
   PostFrontMatterGroup,
 } from "./models";
-import { POSTS_SOURCE_DIR } from "./pathsBuild";
+import { POSTS_SOURCE_DIR } from "./paths";
 
-//  The functions below are focused on taking all blog posts and compiling an
-//  array for their front matter. This is primarily used for the blog page
-//  where we list all blog posts starting from most recent. We don't need all the data from the blogs,
-//  just their top level details.
-
+/**
+ * Confirms the file is markdown or MDX
+ * @param filename - the file name
+ */
 function isMarkdownFilename(filename: unknown): filename is "*md" | "*mdx" {
   return (
     typeof filename === "string" &&
@@ -20,12 +19,21 @@ function isMarkdownFilename(filename: unknown): filename is "*md" | "*mdx" {
   );
 }
 
+/**
+ * Sorts our front matter collection with most recent first
+ * @param a - first group of `[slug, frontMatter]`
+ * @param b - second group of `[slug, frontMatter]`
+ */
 function reverseSort(a: PostFrontMatterGroup, b: PostFrontMatterGroup) {
   const aDate = new Date(a[1].date);
   const bDate = new Date(b[1].date);
   return bDate.getTime() - aDate.getTime();
 }
 
+/**
+ * Builds the front matter of all posts into a `PostFrontMatterCollection`
+ * as a JSON string.
+ */
 export async function buildFrontMatter(): Promise<string> {
   const frontMatterCollection = fs
     .readdirSync(POSTS_SOURCE_DIR)

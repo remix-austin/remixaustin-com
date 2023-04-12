@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { POSTS_SOURCE_DIR } from "./pathsBuild";
-import { POSTS_BUILD_DIR } from "./pathsBuild";
+import { POSTS_SOURCE_DIR } from "./paths";
+import { POSTS_BUILD_DIR } from "./paths";
 
 export function copyAllPostContent(src: string, dest: string) {
   const exists = fs.existsSync(src);

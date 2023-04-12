@@ -1,5 +1,5 @@
 import type { PostFrontMatter, PostFrontMatterCollection } from "./models";
-import { FRONT_MATTER_CACHE_FILENAME } from "./pathsBuild";
+import { FRONT_MATTER_CACHE_FILENAME, POSTS_BUILD_DIR } from "./paths";
 import { extractImports } from "./extractImports";
 import { type Mdx, parseMdx } from "./parser";
 
@@ -19,21 +19,29 @@ export async function getPosts(origin: string) {
 }
 
 export async function getPost(origin: string, slug: string): Promise<Mdx> {
-  const url = new URL(`${origin}/posts/${slug}.mdx`);
-  return fetch(url)
-    .then((response) => {
+  let url!: URL;
+  if (process.env.NODE_ENV === "development") {
+    url = new URL(`http://localhost:8080/posts/${slug}.mdx`);
+    return fetch(url).then((response) => {
       if (!response.ok) {
         throw new Error(`Could not retrieve post ${response.statusText}`);
       }
-      return response.text();
-    })
-    .then((postContents): [string, Record<string, string>] => {
-      const postImports = extractImports(`${origin}/posts`, postContents);
-      return [postContents, postImports];
-    })
-    .then(([postContents, postImports]) => {
-      return parseMdx(postContents, slug, postImports);
+      return response.json();
     });
+  } else {
+    url = new URL(`${origin}/posts/${slug}.mdx`);
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Could not retrieve post ${response.statusText}`);
+        }
+        return response.text();
+      })
+      .then((postContents) => {
+        const postImports = extractImports(`${origin}/posts`, postContents);
+        return parseMdx(postContents, slug, POSTS_BUILD_DIR, postImports);
+      });
+  }
 }
 
 export async function getRecentPostFrontMatter(

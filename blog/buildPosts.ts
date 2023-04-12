@@ -6,8 +6,8 @@ import {
   POSTS_BUILD_DIR,
   FRONT_MATTER_CACHE_FILEPATH,
   POSTS_SOURCE_DIR,
-} from "./pathsBuild";
-import { copyAllPostContent } from "./syncBlogContents";
+} from "./paths";
+import { copyAllPostContent } from "./copyAllPostContent";
 
 (async function buildPostsAndCache() {
   rimrafSync(POSTS_BUILD_DIR);

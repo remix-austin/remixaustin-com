@@ -1,21 +1,13 @@
 import http from "http";
+import fs from "fs";
 import { watch } from "chokidar";
 import { type WebSocket, WebSocketServer } from "ws";
-import { rimrafSync } from "rimraf";
 import { buildFrontMatter } from "./buildFrontMatter";
-import {
-  POSTS_BUILD_DIR,
-  FRONT_MATTER_CACHE_FILENAME,
-  POSTS_SOURCE_DIR,
-} from "./pathsBuild";
-import {
-  copyAllPostContent,
-  copyOnePostFile,
-  deleteOnePostFile,
-} from "./syncBlogContents";
+import { FRONT_MATTER_CACHE_FILENAME, POSTS_SOURCE_DIR } from "./paths";
+import { extractImports } from "./extractImports";
+import { parseMdx } from "./parser";
+import path from "path";
 
-rimrafSync(POSTS_BUILD_DIR);
-copyAllPostContent(POSTS_SOURCE_DIR, POSTS_BUILD_DIR);
 let localCache!: string;
 async function createLocalCacheData() {
   localCache = await buildFrontMatter();
@@ -31,6 +23,21 @@ createLocalCacheData().then(() => {
       res.setHeader("Cache-Control", "no-store");
       res.writeHead(200);
       res.end(localCache);
+    } else if (req.url?.includes(".mdx")) {
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader("Cache-Control", "no-store");
+      res.writeHead(200);
+      const urlPieces = req.url.split("/");
+      const slug = urlPieces[urlPieces.length - 1];
+      const postContents = fs
+        .readFileSync(path.join(POSTS_SOURCE_DIR, slug))
+        .toString("utf-8");
+      const postImports = extractImports(POSTS_SOURCE_DIR, postContents);
+      parseMdx(postContents, slug, POSTS_SOURCE_DIR, postImports).then(
+        (mdx) => {
+          res.end(JSON.stringify(mdx));
+        }
+      );
     } else {
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/plain");
@@ -51,21 +58,7 @@ let socket!: WebSocket;
 wss.on("connection", function (ws) {
   socket = ws;
 });
-watch(POSTS_SOURCE_DIR, { ignoreInitial: true }).on(
-  "all",
-  async (type, filepath) => {
-    console.log(type);
-    if (type === "add" || type === "change") {
-      copyOnePostFile(filepath);
-    } else if (type === "unlink") {
-      deleteOnePostFile(filepath);
-    } else if (type === "addDir" || type === "unlinkDir") {
-      // For adding or removing entire directories, just whole hog
-      // update. We don't have to be perfect right now 😜
-      rimrafSync(POSTS_BUILD_DIR);
-      copyAllPostContent(POSTS_SOURCE_DIR, POSTS_BUILD_DIR);
-    }
-    await createLocalCacheData();
-    socket?.send(`{ "type": "RELOAD" }`);
-  }
-);
+watch(POSTS_SOURCE_DIR, { ignoreInitial: true }).on("all", async () => {
+  await createLocalCacheData();
+  socket?.send(`{ "type": "RELOAD" }`);
+});
