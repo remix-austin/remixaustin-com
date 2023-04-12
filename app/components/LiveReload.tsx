@@ -1,9 +1,10 @@
+import { LiveReload as RemixLiveReload } from "@remix-run/react";
 import React from "react";
 
-export const BlogLiveReload =
+export const LiveReload =
   process.env.NODE_ENV === "development"
     ? () => {
-        return React.createElement("script", {
+        const BlogLiveReload = React.createElement("script", {
           suppressHydrationWarning: true,
           dangerouslySetInnerHTML: {
             __html: `
@@ -18,5 +19,11 @@ export const BlogLiveReload =
       `,
           },
         });
+        return (
+          <>
+            <RemixLiveReload />
+            {BlogLiveReload}
+          </>
+        );
       }
     : () => null;

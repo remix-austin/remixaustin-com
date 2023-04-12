@@ -6,7 +6,6 @@ import type {
 } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -18,7 +17,7 @@ import Navbar from "./components/Navbar/Navbar";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import { getRedirectUrlIfWww } from "./utils";
-import { BlogLiveReload } from "./components/BlogLiveReload";
+import { LiveReload } from "./components/LiveReload";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -79,7 +78,6 @@ export default function App() {
         <ScrollRestoration />
         {includeScripts ? <Scripts /> : null}
         <LiveReload />
-        <BlogLiveReload />
       </body>
     </html>
   );

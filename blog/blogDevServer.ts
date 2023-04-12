@@ -8,7 +8,7 @@ import { extractImports } from "./extractImports";
 import { parseMdx } from "./parser";
 import path from "path";
 
-let localCache!: string;
+let localCache: string = "[]";
 function createLocalCacheData() {
   localCache = buildFrontMatter();
 }
