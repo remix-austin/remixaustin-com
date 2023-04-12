@@ -34,7 +34,10 @@ function reverseSort(a: PostFrontMatterGroup, b: PostFrontMatterGroup) {
  * Builds the front matter of all posts into a `PostFrontMatterCollection`
  * as a JSON string.
  */
-export async function buildFrontMatter(): Promise<string> {
+export function buildFrontMatter(): string {
+  if (!fs.existsSync(POSTS_SOURCE_DIR)) {
+    return "";
+  }
   const frontMatterCollection = fs
     .readdirSync(POSTS_SOURCE_DIR)
     .reduce((postMetadata: PostFrontMatterCollection, filename: string) => {

@@ -1,7 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { POSTS_SOURCE_DIR } from "./paths";
-import { POSTS_BUILD_DIR } from "./paths";
 
 export function copyAllPostContent(src: string, dest: string) {
   const exists = fs.existsSync(src);
@@ -21,20 +19,4 @@ export function copyAllPostContent(src: string, dest: string) {
   } else {
     fs.copyFileSync(src, dest);
   }
-}
-
-export function copyOnePostFile(src: string) {
-  const exists = fs.existsSync(src);
-  if (!exists) {
-    return;
-  }
-  const relativePath = path.relative(POSTS_SOURCE_DIR, src);
-  const absolutePath = path.join(POSTS_BUILD_DIR, relativePath);
-  fs.writeFileSync(absolutePath, fs.readFileSync(src), "utf-8");
-}
-
-export function deleteOnePostFile(src: string) {
-  const relativePath = path.relative(POSTS_SOURCE_DIR, src);
-  const absolutePath = path.join(POSTS_BUILD_DIR, relativePath);
-  fs.unlinkSync(absolutePath);
 }
