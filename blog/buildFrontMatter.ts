@@ -30,6 +30,26 @@ function reverseSort(a: PostFrontMatterGroup, b: PostFrontMatterGroup) {
   return bDate.getTime() - aDate.getTime();
 }
 
+function validateFrontMatter(frontMatter: PostFrontMatter): never | void {
+  const hasTitle = !!frontMatter.title;
+  const hasAuthor = !!frontMatter.author;
+  const hasDate = !!frontMatter.date;
+  const hasTags = !!frontMatter.tags;
+  const isValid = hasTitle && hasAuthor && hasDate && hasTags;
+  let missingFields: string[] = [];
+  if (!isValid) {
+    !hasTitle && missingFields.push("title");
+    !hasAuthor && missingFields.push("author");
+    !hasDate && missingFields.push("date");
+    !hasTags && missingFields.push("tags");
+    throw new Error(
+      `${
+        hasTitle ? `"${frontMatter.title}"` : "A blog post"
+      } was missing this required front matter: [${missingFields.join(", ")}].`
+    );
+  }
+}
+
 /**
  * Builds the front matter of all posts into a `PostFrontMatterCollection`
  * as a JSON string.
@@ -57,18 +77,30 @@ export function buildFrontMatter(): string {
         console.error("Blog post has no front matter! Skipping cache!");
         return postMetadata;
       }
-      let frontmatter!: PostFrontMatter;
+      let frontMatter!: PostFrontMatter;
       try {
-        frontmatter = fm<PostFrontMatter>(fileContents).attributes;
+        frontMatter = fm<PostFrontMatter>(fileContents).attributes;
       } catch (e) {
         console.error("Could not parse blog front matter! Skipping cache!");
         return postMetadata;
       }
+      try {
+        validateFrontMatter(frontMatter);
+      } catch (e) {
+        console.error(
+          (e as Error).message,
+          "Skipping cache!",
+          "Front matter received was",
+          frontMatter
+        );
+        return postMetadata;
+      }
+      console.log("whasa");
       return [
         ...postMetadata,
         [
           path.basename(filename, path.extname(filename)),
-          frontmatter,
+          frontMatter,
         ] as PostFrontMatterGroup,
       ];
     }, []);

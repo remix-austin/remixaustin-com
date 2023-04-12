@@ -12,6 +12,7 @@ let localCache: string = "[]";
 function createLocalCacheData() {
   localCache = buildFrontMatter();
 }
+createLocalCacheData();
 /**
  * This server will serve a cached version of the posts
  * compiled to JSON
@@ -54,7 +55,7 @@ let socket!: WebSocket;
 wss.on("connection", function (ws) {
   socket = ws;
 });
-watch(POSTS_SOURCE_DIR, { ignoreInitial: true }).on("all", async () => {
+watch(POSTS_SOURCE_DIR, { ignoreInitial: true }).on("all", () => {
   createLocalCacheData();
   socket?.send(`{ "type": "RELOAD" }`);
 });
