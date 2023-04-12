@@ -26,7 +26,6 @@ of the Remix app.
 - `title: string`
 - `date: string` - Many date formats are accepted, but for the sake of consistency amongst people of all regions, we recommend something like `04 April 2023`
 - `author: string`
-- `tags: string[]`
 
 The front matter is in YAML format and it must go at the top of the `.mdx` file.
 
@@ -37,10 +36,6 @@ Example:
 title: My first post!
 author: Matt Hernandez
 date: 04 April 2023
-tags:
-  - remix
-  - react
-  - blog
 ---
 ```
 

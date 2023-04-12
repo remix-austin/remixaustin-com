@@ -34,14 +34,12 @@ function validateFrontMatter(frontMatter: PostFrontMatter): never | void {
   const hasTitle = !!frontMatter.title;
   const hasAuthor = !!frontMatter.author;
   const hasDate = !!frontMatter.date;
-  const hasTags = !!frontMatter.tags;
-  const isValid = hasTitle && hasAuthor && hasDate && hasTags;
+  const isValid = hasTitle && hasAuthor && hasDate;
   let missingFields: string[] = [];
   if (!isValid) {
     !hasTitle && missingFields.push("title");
     !hasAuthor && missingFields.push("author");
     !hasDate && missingFields.push("date");
-    !hasTags && missingFields.push("tags");
     throw new Error(
       `${
         hasTitle ? `"${frontMatter.title}"` : "A blog post"
@@ -95,7 +93,6 @@ export function buildFrontMatter(): string {
         );
         return postMetadata;
       }
-      console.log("whasa");
       return [
         ...postMetadata,
         [
