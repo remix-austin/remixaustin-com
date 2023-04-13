@@ -15,7 +15,7 @@ export async function getPosts(origin: string) {
   }
   return fetch(url).then((response) => {
     if (!response.ok) {
-      throw new Error(`Could not retrieve posts ${response.statusText}`);
+      throw new Error(`Could not retrieve posts. ${response.statusText}`);
     }
     return response.json() as Promise<PostFrontMatterCollection>;
   });
@@ -27,7 +27,7 @@ export async function getPost(origin: string, slug: string): Promise<Mdx> {
     url = new URL(`http://localhost:8080/posts/${slug}.mdx`);
     return fetch(url).then((response) => {
       if (!response.ok) {
-        throw new Error(`Could not retrieve post ${response.statusText}`);
+        throw new Error(`Could not retrieve post. ${response.statusText}`);
       }
       return response.json();
     });
@@ -36,7 +36,7 @@ export async function getPost(origin: string, slug: string): Promise<Mdx> {
     return fetch(url)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Could not retrieve post ${response.statusText}`);
+          throw new Error(`Could not retrieve post. ${response.statusText}`);
         }
         return response.text();
       })
@@ -59,7 +59,7 @@ export async function getRecentPostFrontMatter(
   return fetch(url)
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`Could not retrieve posts ${response.statusText}`);
+        throw new Error(`Could not retrieve posts. ${response.statusText}`);
       }
       return response.json() as Promise<PostFrontMatterCollection>;
     })
