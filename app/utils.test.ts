@@ -3,6 +3,7 @@ import {
   safeRedirect,
   getRedirectUrlIfWww,
   isEmptyString,
+  formatDateTime,
 } from "./utils";
 
 describe("utils", () => {
@@ -123,10 +124,11 @@ describe("utils", () => {
     });
   });
 
-  // TODO
-  // describe("useMatchesData", () => {
-  //   it("safeRedirect", () => {
-  //     expect(validateEmail("kody@example.com")).toBe(true);
-  //   });
-  // });
+  describe("formatDateTime", () => {
+    it("Correctly formats a date string", () => {
+      const dateTime = "2023-03-08T15:06:39.096Z";
+      const formattedDateTime = formatDateTime(dateTime);
+      expect(formattedDateTime).toBe("Wed, Mar 8, 9:06 AM CST");
+    });
+  });
 });
