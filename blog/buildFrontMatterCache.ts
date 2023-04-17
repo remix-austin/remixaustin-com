@@ -6,7 +6,8 @@ import type {
   PostFrontMatterCollection,
   PostFrontMatterWithSlug,
 } from "./models";
-import { POSTS_SOURCE_DIR } from "./paths";
+import { FRONT_MATTER_CACHE_FILEPATH, POSTS_SOURCE_DIR } from "./paths";
+import invariant from "tiny-invariant";
 
 /**
  * Confirms the file is markdown or MDX
@@ -30,31 +31,25 @@ function reverseSort(a: PostFrontMatterWithSlug, b: PostFrontMatterWithSlug) {
   return bDate.getTime() - aDate.getTime();
 }
 
-function validateFrontMatter(frontMatter: PostFrontMatter): never | void {
-  const hasTitle = !!frontMatter.title;
-  const hasAuthor = !!frontMatter.author;
-  const hasDate = !!frontMatter.date;
-  const isValid = hasTitle && hasAuthor && hasDate;
-  let missingFields: string[] = [];
-  if (!isValid) {
-    !hasTitle && missingFields.push("title");
-    !hasAuthor && missingFields.push("author");
-    !hasDate && missingFields.push("date");
-    throw new Error(
-      `${
-        hasTitle ? `"${frontMatter.title}"` : "A blog post"
-      } was missing this required front matter: [${missingFields.join(", ")}].`
-    );
-  }
+function validateFrontMatter(
+  frontMatter: Partial<PostFrontMatter>
+): frontMatter is PostFrontMatter {
+  const title = frontMatter.title;
+  const author = frontMatter.author;
+  const date = frontMatter.date;
+  invariant(title, "A blog post was missing a title.");
+  invariant(author, `Blog post ${title} was missing an author.`);
+  invariant(date, `Blog post ${title} was missing an date.`);
+  return true;
 }
 
 /**
  * Builds the front matter of all posts into a `PostFrontMatterCollection`
  * as a JSON string.
  */
-export function buildFrontMatter(): string {
+export function buildFrontMatterCache(): void {
   if (!fs.existsSync(POSTS_SOURCE_DIR)) {
-    return "";
+    return;
   }
   const frontMatterCollection = fs
     .readdirSync(POSTS_SOURCE_DIR)
@@ -102,5 +97,9 @@ export function buildFrontMatter(): string {
       ];
     }, []);
   frontMatterCollection.sort(reverseSort);
-  return JSON.stringify(frontMatterCollection);
+  const contents = JSON.stringify(frontMatterCollection);
+  if (contents) {
+    fs.writeFileSync(FRONT_MATTER_CACHE_FILEPATH, contents, "utf-8");
+    console.log("Wrote", path.relative(__dirname, FRONT_MATTER_CACHE_FILEPATH));
+  }
 }

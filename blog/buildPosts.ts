@@ -1,20 +1,10 @@
-import fs from "fs";
-import path from "path";
+import syncDirectory from "sync-directory";
 import { rimrafSync } from "rimraf";
-import { buildFrontMatter } from "./buildFrontMatter";
-import {
-  POSTS_BUILD_DIR,
-  FRONT_MATTER_CACHE_FILEPATH,
-  POSTS_SOURCE_DIR,
-} from "./paths";
-import { copyAllPostContent } from "./copyAllPostContent";
+import { buildFrontMatterCache } from "./buildFrontMatterCache";
+import { POSTS_BUILD_DIR, POSTS_SOURCE_DIR } from "./paths";
 
 (function buildPostsAndCache() {
   rimrafSync(POSTS_BUILD_DIR);
-  copyAllPostContent(POSTS_SOURCE_DIR, POSTS_BUILD_DIR);
-  const postCache = buildFrontMatter();
-  if (postCache) {
-    fs.writeFileSync(FRONT_MATTER_CACHE_FILEPATH, postCache, "utf-8");
-    console.log("Wrote", path.relative(__dirname, FRONT_MATTER_CACHE_FILEPATH));
-  }
+  syncDirectory(POSTS_SOURCE_DIR, POSTS_BUILD_DIR);
+  buildFrontMatterCache();
 })();
