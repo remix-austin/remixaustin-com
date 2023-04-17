@@ -47,7 +47,7 @@ function validateFrontMatter(
  * Builds the front matter of all posts into a `PostFrontMatterCollection`
  * as a JSON string.
  */
-export function buildFrontMatterCache(): void {
+export function writeFrontMatterCache(): void {
   if (!fs.existsSync(POSTS_SOURCE_DIR)) {
     return;
   }

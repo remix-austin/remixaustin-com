@@ -1,4 +1,4 @@
-import { bundleMDX } from "mdx-bundler";
+import { bundleMDX as bundle } from "mdx-bundler";
 import type { BundleMDXSource } from "mdx-bundler/dist/types";
 import type { PostFrontMatter } from "./models";
 /**
@@ -7,15 +7,15 @@ import type { PostFrontMatter } from "./models";
  */
 const remarkMdxImages = require("fix-esm").require("remark-mdx-images");
 
-export type Mdx = Awaited<ReturnType<typeof parseMdx>>;
+export type Mdx = Awaited<ReturnType<typeof bundleMdx>>;
 
-export async function parseMdx(
+export async function bundleMdx(
   content: string,
   slug: string,
   cwd: string,
   files?: BundleMDXSource<PostFrontMatter>["files"]
 ) {
-  const { code, frontmatter } = await bundleMDX<PostFrontMatter>({
+  const { code, frontmatter } = await bundle<PostFrontMatter>({
     source: content,
     files,
     cwd,

@@ -1,5 +1,5 @@
 import { type LoaderArgs } from "@remix-run/server-runtime";
-import { parseMdx } from "blog/parser";
+import { bundleMdx } from "blog/parser";
 import { POSTS_BUILD_DIR } from "blog/paths";
 import invariant from "tiny-invariant";
 
@@ -15,6 +15,6 @@ export const loader = async function ({ request, params }: LoaderArgs) {
       return response.text();
     })
     .then((postContents) => {
-      return parseMdx(postContents, slug, POSTS_BUILD_DIR);
+      return bundleMdx(postContents, slug, POSTS_BUILD_DIR);
     });
 };
