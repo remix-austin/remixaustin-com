@@ -4,7 +4,7 @@ import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { publishDateFormatter } from "~/utils";
-import { Mdx } from "blog/parser";
+import { type Mdx } from "blog/parser";
 
 export const loader = async function ({ params, request }: LoaderArgs) {
   const { slug } = params;

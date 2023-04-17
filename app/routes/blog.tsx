@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { type LoaderArgs } from "@remix-run/server-runtime";
-import { PostFrontMatterCollection } from "blog/models";
+import type { PostFrontMatterCollection } from "blog/models";
 import { publishDateFormatter } from "~/utils";
 
 export const loader = async function ({ request }: LoaderArgs) {
