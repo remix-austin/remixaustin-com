@@ -1,17 +1,17 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { json, type LoaderArgs } from "@remix-run/server-runtime";
-import { getAllFrontMatter } from "blog/client";
+import { type LoaderArgs } from "@remix-run/server-runtime";
+import { PostFrontMatterCollection } from "blog/models";
 import { publishDateFormatter } from "~/utils";
 
 export const loader = async function ({ request }: LoaderArgs) {
-  const frontMatterArray = await getAllFrontMatter(new URL(request.url).origin);
-  return json({
-    frontMatterArray,
-  });
+  const origin = new URL(request.url).origin;
+  return fetch(`${origin}/resource/get-all-front-matter`).then((response) =>
+    response.json()
+  ) as Promise<PostFrontMatterCollection>;
 };
 
 export default function BlogRoute() {
-  const { frontMatterArray } = useLoaderData<typeof loader>();
+  const frontMatterArray = useLoaderData<typeof loader>();
   return (
     <div className="container prose mx-auto py-8">
       <h1>Blog</h1>

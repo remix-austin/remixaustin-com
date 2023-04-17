@@ -1,8 +1,8 @@
 import path from "path";
 import fs from "fs";
+import { POSTS_BUILD_DIR } from "./paths";
 
-const POSTS_DIR = path.join(__dirname, "..", "public", "posts");
-const COMPONENTS_DIR = path.join(POSTS_DIR, "components");
+const COMPONENTS_DIR = path.join(POSTS_BUILD_DIR, "components");
 
 /**
  *
@@ -14,7 +14,7 @@ const COMPONENTS_DIR = path.join(POSTS_DIR, "components");
 export function getComponents(): Record<string, string> {
   return fs.readdirSync(COMPONENTS_DIR).reduce((acc, filename) => {
     const absolutePath = path.join(COMPONENTS_DIR, filename);
-    const relativePath = path.relative(POSTS_DIR, absolutePath);
+    const relativePath = path.relative(POSTS_BUILD_DIR, absolutePath);
     const isTypescript = fs.existsSync(`${absolutePath}.ts`);
     const isTSX = fs.existsSync(`${absolutePath}.tsx`);
     if (!isTypescript && !isTSX) {
