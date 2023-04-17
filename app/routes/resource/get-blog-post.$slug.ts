@@ -1,10 +1,11 @@
 import { type LoaderArgs } from "@remix-run/server-runtime";
-import { getComponents } from "blog/getComponents";
 import { parseMdx } from "blog/parser";
 import { POSTS_BUILD_DIR } from "blog/paths";
+import invariant from "tiny-invariant";
 
 export const loader = async function ({ request, params }: LoaderArgs) {
-  const { slug = "" } = params;
+  const { slug } = params;
+  invariant(slug, "Blog post slug was not provided!");
   const url = new URL(`${new URL(request.url).origin}/posts/${slug}.mdx`);
   return fetch(url)
     .then((response) => {
@@ -14,7 +15,6 @@ export const loader = async function ({ request, params }: LoaderArgs) {
       return response.text();
     })
     .then((postContents) => {
-      const components = getComponents();
-      return parseMdx(postContents, slug, POSTS_BUILD_DIR, components);
+      return parseMdx(postContents, slug, POSTS_BUILD_DIR);
     });
 };
