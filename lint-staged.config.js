@@ -1,3 +1,3 @@
 module.exports = {
-  "*.{ts,tsx}": [() => "npm run validate:precommit"],
+  "*.{js,jsx,ts,tsx}": [() => "npm run validate:precommit"],
 };
