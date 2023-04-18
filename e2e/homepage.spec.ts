@@ -40,4 +40,12 @@ test.describe("Blog", () => {
       page.getByRole("heading", { name: frontMatter[0].title })
     ).toBeVisible();
   });
+
+  test("can navigate to most recent post", async ({ page }) => {
+    const frontMatter = buildFrontMatterCache();
+    await page.goto(`/blog/${frontMatter[0].slug}`);
+    await expect(
+      page.getByRole("heading", { name: frontMatter[0].title })
+    ).toBeVisible();
+  });
 });
