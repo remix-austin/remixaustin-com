@@ -22,8 +22,8 @@ function isMarkdownFilename(filename: unknown): filename is "*md" | "*mdx" {
 
 /**
  * Sorts our front matter collection with most recent first
- * @param a - first group of `[slug, frontMatter]`
- * @param b - second group of `[slug, frontMatter]`
+ * @param a - front matter
+ * @param b - front matter
  */
 function reverseSort(a: PostFrontMatterWithSlug, b: PostFrontMatterWithSlug) {
   const aDate = new Date(a.date);
@@ -44,12 +44,12 @@ function validateFrontMatter(
 }
 
 /**
- * Builds the front matter of all posts into a `PostFrontMatterCollection`
- * as a JSON string.
+ * Builds the front matter of all posts into a JSON array. It's also used for
+ * e2e testing.
  */
-export function writeFrontMatterCache(): void {
+export function buildFrontMatterCache(): PostFrontMatterCollection {
   if (!fs.existsSync(POSTS_SOURCE_DIR)) {
-    return;
+    return [];
   }
   const frontMatterCollection = fs
     .readdirSync(POSTS_SOURCE_DIR)
@@ -97,8 +97,16 @@ export function writeFrontMatterCache(): void {
       ];
     }, []);
   frontMatterCollection.sort(reverseSort);
-  const contents = JSON.stringify(frontMatterCollection);
-  if (contents) {
+  return frontMatterCollection;
+}
+
+/**
+ * Takes the output of `buildFrontMatterCache` and writes it to a file
+ */
+export function writeFrontMatterCache(): void {
+  const frontMatterCollection = buildFrontMatterCache();
+  if (frontMatterCollection.length) {
+    const contents = JSON.stringify(frontMatterCollection);
     fs.writeFileSync(FRONT_MATTER_CACHE_FILEPATH, contents, "utf-8");
     console.log("Wrote", path.relative(__dirname, FRONT_MATTER_CACHE_FILEPATH));
   }
