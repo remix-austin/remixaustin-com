@@ -4,7 +4,7 @@
 #
 name: 🧼 Clean up staging environment
 on:
-  pull_request_target:
+  pull_request:
     types:
       - closed
       - unlabeled
