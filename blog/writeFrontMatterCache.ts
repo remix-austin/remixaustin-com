@@ -31,7 +31,7 @@ function reverseSort(a: PostFrontMatterWithSlug, b: PostFrontMatterWithSlug) {
   return bDate.getTime() - aDate.getTime();
 }
 
-function validateFrontMatter(
+export function validateFrontMatter(
   frontMatter: Partial<PostFrontMatter>
 ): frontMatter is PostFrontMatter {
   const title = frontMatter.title;
