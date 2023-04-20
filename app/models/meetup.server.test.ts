@@ -41,7 +41,6 @@ describe("meetup.server", () => {
           const response: MeetupGroupResponse = {
             data: { groupByUrlname: MOCK_GROUP },
           };
-          console.log({ context });
           return res(context.status(200), context.json(response));
         })
       );
