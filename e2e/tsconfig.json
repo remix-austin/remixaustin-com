@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true, // This doesn't affect playwright directly. Mostly used to remove IDE errors for Node imports.
     "baseUrl": "..", // This must be specified if "paths" is.
     "paths": {
       "@app/*": ["app/*"] // This mapping is relative to "baseUrl".

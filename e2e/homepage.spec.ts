@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
-// import { h1Title } from "~/routes/index";
-// import { defaultTitle } from "../app/root";
+import { buildFrontMatterCache } from "../blog/writeFrontMatterCache";
 
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {
@@ -8,8 +7,9 @@ test.describe("Homepage", () => {
   });
 
   test("homepage has title and footer text", async ({ page }) => {
-    // TODO: Import from ".tsx" files is failing ... perhaps we need to add some tsconfig to e2e tests?
-    //       (see https://playwright.dev/docs/test-typescript)
+    // NOTE: It appears that playwright doesn't support tsx, despite some debate about it.
+    //       (see https://github.com/microsoft/playwright/issues/7121)
+    //       The strings below are duplicates because we can't import.
 
     const pageTitle =
       "Remix Austin 💿 A community & monthly Meetup event for Remix developers";
@@ -20,5 +20,35 @@ test.describe("Homepage", () => {
     await expect(page).toHaveTitle(pageTitle);
     await expect(page.getByRole("heading", { name: h1Title })).toBeVisible();
     await expect(page.getByText(copyrightText, { exact: true })).toBeVisible();
+  });
+});
+
+test.describe("Blog", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/blog");
+  });
+
+  test("has a title", async ({ page }) => {
+    const h1Title = "Blog";
+    const year = new Date().getFullYear().toString();
+    const copyrightText = `Copyright © ${year} Remix Austin - All rights reserved.`;
+
+    await expect(page.getByRole("heading", { name: h1Title })).toBeVisible();
+    await expect(page.getByText(copyrightText, { exact: true })).toBeVisible();
+  });
+
+  test("has the most recent post", async ({ page }) => {
+    const frontMatter = buildFrontMatterCache();
+    await expect(
+      page.getByRole("heading", { name: frontMatter[0].title })
+    ).toBeVisible();
+  });
+
+  test("can navigate to most recent post", async ({ page }) => {
+    const frontMatter = buildFrontMatterCache();
+    await page.goto(`/blog/${frontMatter[0].slug}`);
+    await expect(
+      page.getByRole("heading", { name: frontMatter[0].title })
+    ).toBeVisible();
   });
 });
