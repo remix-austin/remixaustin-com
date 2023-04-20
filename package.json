@@ -12,7 +12,6 @@
     "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
     "clean": "rm -rf ./build ./public/build ./node_modules/.cache ./playwright-report",
     "format": "prettier --write --cache .",
-    "format:check": "prettier --check .",
     "generate:css": "tailwindcss -o ./app/styles/tailwind.css",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "eslint --cache --fix --cache-location ./node_modules/.cache/eslint .",
