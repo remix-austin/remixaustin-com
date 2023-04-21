@@ -53,7 +53,7 @@ jobs:
           useLockFile: false
 
       - name: 🔎 Type check
-        run: npm run typecheck --if-present
+        run: npm run ts --if-present
 
   vitest:
     name: ⚡ Vitest
