@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
-import { publishDateFormatter } from "~/utils";
+import { PUBLISH_DATE_FORMATTER } from "~/utils";
 import { type Mdx } from "blog/parser";
 
 export const loader = async function ({ params, request }: LoaderArgs) {
@@ -28,7 +28,9 @@ export default function BlogSlugRoute() {
         <h4 className={`mt-4${date ? " mb-[0px]" : ""}`}>By {author}</h4>
       )}
       {date && (
-        <h5 className="mb-2">{publishDateFormatter.format(new Date(date))}</h5>
+        <h5 className="mb-2">
+          {PUBLISH_DATE_FORMATTER.format(new Date(date))}
+        </h5>
       )}
       <Component />
     </div>

@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { type LoaderArgs } from "@remix-run/server-runtime";
 import type { PostFrontMatterCollection } from "blog/models";
-import { publishDateFormatter } from "~/utils";
+import { PUBLISH_DATE_FORMATTER } from "~/utils";
 
 export const loader = async function ({ request }: LoaderArgs) {
   const origin = new URL(request.url).origin;
@@ -25,7 +25,7 @@ export default function BlogRoute() {
                   <h4>
                     {author}
                     {author && date && " - "}
-                    {date && publishDateFormatter.format(new Date(date))}
+                    {date && PUBLISH_DATE_FORMATTER.format(new Date(date))}
                   </h4>
                 )}
               </Link>
