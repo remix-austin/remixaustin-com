@@ -20,7 +20,7 @@ export default function BlogRoute() {
           ({ slug, title, date, author }, index: number) => (
             <li key={`${title}-${index}`} className="pl-0">
               <Link to={`/blog/${slug}`}>
-                <h2 className="mb-4 text-2xl font-bold">{title}</h3>
+                <h2 className="mb-4 text-2xl font-bold">{title}</h2>
                 {(author || date) && (
                   <h3>
                     {author}
