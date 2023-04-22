@@ -25,12 +25,12 @@ export default function BlogSlugRoute() {
     <div className="container prose mx-auto px-4 py-8 md:px-0">
       <h1 className="mb-[0px]">{title}</h1>
       {author && (
-        <h4 className={`mt-4${date ? " mb-[0px]" : ""}`}>By {author}</h4>
+        <h2 className={`mt-4${date ? " mb-[0px]" : ""}`}>By {author}</h2>
       )}
       {date && (
-        <h5 className="mb-2">
+        <h3 className="mb-2">
           {PUBLISH_DATE_FORMATTER.format(new Date(date))}
-        </h5>
+        </h3>
       )}
       <Component />
     </div>
