@@ -93,9 +93,9 @@ function hasDedicatedV4Ip() {
 # Allocate dedicated IPv4 addresses if none exist.
 #
 if ( hasDedicatedV4Ip $app = False ) ; then
-  echo -e "\n⚙️ Allocating a new IPv4 address for \"$app\" in \"$FLY_REGION\""
-  flyctl ips allocate-v4 --app "$app" --yes --region "$FLY_REGION"
+  echo -e "\n⚙️ Allocating a new IPv4 address for \"$app\""
+  flyctl ips allocate-v4 --app "$app" --yes
 else
-  echo -e "\n✅ \"$app\" app already has a dedicated IPv4 address but maybe not in \"$FLY_REGION\":"
+  echo -e "\n✅ \"$app\" app already has a dedicated IPv4 address:"
   flyctl ips list --app "$app" | grep -P "^v4"
 fi
