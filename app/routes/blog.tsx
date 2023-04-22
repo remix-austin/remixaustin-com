@@ -20,13 +20,13 @@ export default function BlogRoute() {
           ({ slug, title, date, author }, index: number) => (
             <li key={`${title}-${index}`} className="pl-0">
               <Link to={`/blog/${slug}`}>
-                <h3 className="mb-4 text-2xl font-bold">{title}</h3>
+                <h2 className="mb-4 text-2xl font-bold">{title}</h3>
                 {(author || date) && (
-                  <h4>
+                  <h3>
                     {author}
                     {author && date && " - "}
                     {date && PUBLISH_DATE_FORMATTER.format(new Date(date))}
-                  </h4>
+                  </h3>
                 )}
               </Link>
             </li>
