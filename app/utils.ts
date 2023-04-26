@@ -71,11 +71,18 @@ export function isEmptyString(val: unknown): boolean {
   return typeof val === "string" && val.trim().length <= 0;
 }
 
+export const PUBLISH_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "America/Chicago",
+});
+
 export type PropsWithRequiredChildren<P = unknown> = P & {
   children: ReactNode;
 };
 
-const eventTimeFormat = new Intl.DateTimeFormat("en-US", {
+const EVENT_TIME_FORMAT = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
   month: "short",
   day: "numeric",
@@ -96,7 +103,8 @@ const NARROW_NON_BREAK_SPACE = String.fromCharCode(8239);
  */
 export function formatDateTime(dateTime: string) {
   // Discrepency between server and client, see https://github.com/remix-austin/remixaustin-com/issues/83#issuecomment-1450654389
-  return eventTimeFormat
-    .format(new Date(dateTime))
-    .replaceAll(NARROW_NON_BREAK_SPACE, " ");
+  return EVENT_TIME_FORMAT.format(new Date(dateTime)).replaceAll(
+    NARROW_NON_BREAK_SPACE,
+    " "
+  );
 }

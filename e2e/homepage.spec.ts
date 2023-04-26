@@ -1,6 +1,4 @@
 import { test, expect } from "@playwright/test";
-// import { h1Title } from "~/routes/index";
-// import { defaultTitle } from "../app/root";
 
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {
@@ -8,8 +6,9 @@ test.describe("Homepage", () => {
   });
 
   test("homepage has title and footer text", async ({ page }) => {
-    // TODO: Import from ".tsx" files is failing ... perhaps we need to add some tsconfig to e2e tests?
-    //       (see https://playwright.dev/docs/test-typescript)
+    // NOTE: It appears that playwright doesn't support tsx, despite some debate about it.
+    //       (see https://github.com/microsoft/playwright/issues/7121)
+    //       The strings below are duplicates because we can't import.
 
     const pageTitle =
       "Remix Austin 💿 A community & monthly Meetup event for Remix developers";

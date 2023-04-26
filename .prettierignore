@@ -2,8 +2,13 @@ node_modules
 
 /build
 /public/build
+/public/posts
+/public/front-matter-cache.json
 /coverage
 .env
 
 /app/styles/tailwind.css
 /playwright-report
+
+# New line breaks matter on MDX files, and prettier has broken some MDX files after formatting
+/blog/**/*.mdx
