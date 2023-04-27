@@ -1,0 +1,215 @@
+---
+title: Making the Remix Austin Blog
+date: 01 May 2023
+author: Matt Hernandez
+---
+
+import { BlogImage } from "./components/BlogImage";
+import { AuthorFooter } from "./components/AuthorFooter";
+import blogBanner from "./img/blog-banner.jpg";
+import colbyWhite from "./img/colby-white.jpg";
+import mattConfused from "./img/matt-confused.jpg";
+import refreshFunctionality from "./img/refresh.jpg";
+import websocketImage from "./img/websocket.jpg";
+import mattAuthor from "./img/matt-author.png";
+
+<BlogImage src={blogBanner} alt="Blog banner" />
+
+## So how did we get here?
+
+Well, it starts a little before I got here. If I'm going to play historian, I'll say it all
+began with a [discussion](https://github.com/remix-austin/remixaustin-com/discussions/1).
+As a subset of the greater Remix community, there was talk of what exactly this site was going
+to be other than a place to highlight the date of the next Austin Remix Meetup. What kind of
+greater impact did we want to have on all the Remixers out there?
+
+The rumblings of having a blog began back there, but they really started to move from idea
+to conception when our good friend Colby White [decided to chime in with a plan](https://github.com/remix-austin/remixaustin-com/discussions/89).
+A few things began to take shape at that point, some more discussion, an [early PR with mock
+blog content](https://github.com/remix-austin/remixaustin-com/pull/86). But from what I can tell,
+nothing solidified just yet.
+
+## Where did I come in?
+
+A month after Colby White's discussion of what a blog implementation of Remix could be, that's when I
+showed up. As a developer trying to get back into the React community after spending 3 years doing
+nothing but Angular at my full time job (seriously y'all, Angular is not cool and I want out 😅),
+I needed a way to brush up my old skills.
+
+I went to a few React meetups in the Austin area, and through the word of mouth heard about the
+Remix Austin meetup. I showed up, heard some awesome talks, hung out with cool people, and figured
+this was a good way to get back in it.
+
+## Steal like an artist
+
+I'm a big fan of using a file system as a CMS, and the concept has been around for a while now. I especially
+like file-based CMS-es for proof of concept work on blogs that are just getting started. This site is the
+perfect fit.
+
+I was happy to see in Colby's discussion that he also liked the file system approach to a degree and
+had gone down that route when making his [own website](https://colbywhite.dev/).
+He used `.mdx` files to write markdown posts with a little bit of React flavor.
+
+You might be thinking, "Well problem already solved! Remix has support for `.mdx` files!"
+
+And you're right, but even Remix acknowledges in [their documentation](https://remix.run/docs/en/main/guides/mdx)
+that their implementation is not designed to scale and that it's better to use `mdx-bundler` to build content.
+A few people in the Remix community have already made their own [creative solutions](https://kentcdodds.com/blog/how-i-built-a-modern-website-in-2021#mdx-compilation-with-mdx-bundler)
+to this problem. These solutions work, and Colby's solution, inspired by [this Remix stack](https://github.com/freekrai/remix-blog),
+is hosted on [his Github](https://github.com/colbywhite/colbywhite.dev).
+
+<BlogImage
+  src={colbyWhite}
+  alt="Colby White's website"
+  caption="Pay Colby's website a visit if you can"
+></BlogImage>
+
+So my next move was simple? Steal his work!
+
+With credit, of course! But hey, don't repeat work that's already been done for you. And thanks
+almost exclusively to my timing in this project, I was the unlikely benefactor of Colby's
+hard work <span className="text-xxs">Hehehehe</span>. I branched off a [previous PR for an initial blog implementation from Seth Davis](https://github.com/remix-austin/remixaustin-com/pull/86)
+and then got to work. I explored the Github repo for Colby's website, found the pieces concerned
+with parsing `.mdx` files into a consumable format, and then whole-hog copied and
+pasted that stuff over.
+
+I gotta admit, during the whole process, I only had about a 50% understanding of how everything worked.
+I just kind of let the compiler act as my guide. Module not found error?
+Great! What did I not steal that I was supposed to? Let me go back to Colby's
+repo and find out.
+
+With about two hours of copy and paste, some compiler errors, and a few mock blog files, I was
+able to get an [initial working solution in our site](https://github.com/remix-austin/remixaustin-com/pull/91/commits/971f180faa14c8dc672d8cb0ee66866ced24a248).
+
+## We got the goods. Now what?
+
+The solution technically worked, but it was lacking quite a bit. The first being understanding.
+I'm no fan of "copy and paste" into production code. Sure, publicly available solutions are great
+starting points. But you shouldn't put any code into a codebase that you don't understand.
+
+I took a good long look at what I copied and got my head around how it worked. The basic idea was this:
+there's a NodeJS script that takes all of the `.mdx` files and any of their dependencies
+and compiles them using `mdx-bundler`. The final result is a JSON array, with each post as an
+object in that array. Those objects have some frontmatter and a raw source string for a React
+component. That raw React component is the full content of the blog post.
+
+The array then gets written into a file called `post-cache.json` in our `/public`
+directory, making it available to all loaders in the site. Loaders for the blog list route and the
+individual blog post route make a fetch for the file, pick out the data they need, and pass the
+raw React component to a helper function from `mdx-bundler` which converts into a regular
+React component, and finally we display it in our page like good ol' JSX.
+
+And lastly, all `.mdx` files are watched by Node when we run this script in development mode. If any
+of their content changes, `post-cache.json` is regenerated with the updated contents.
+
+<BlogImage
+  src={mattConfused}
+  alt="Not confused at all"
+  caption="Confused like my face here? Just reread that section a few more times."
+  maxWidth={300}
+></BlogImage>
+
+So this is pretty good, right? But it could be better.
+
+For starters, the entire `post-cache.json` file was being regenerated in dev mode for any
+single change to a blog post. That means every blog was getting built and compiled even if I'm only
+focused on editing one post. That's a lot of wasted power. Ideally, I would like for my app
+to compile the one post I'm working on at the moment.
+
+Secondly, the `post-cache.json` file itself was capable of getting quite large quite fast. There's **a lot** of
+boilerplate that goes into that raw React component for each compiled post. Imagine duplicating that boilerplate
+for every single post! It quickly bloats in size. Did we really need to have an array with ALL of the blog
+information in it (front matter and content)? It seemed better to have an array that just contained
+each post's front matter. That would then allow us to list all of our blog posts in the `/blog` page,
+without having to worry about all that boilerplate.
+
+Lastly, if each compiled blog post has a lot of boilerplate, it seemed like a better idea to have each
+blog post built on demand by the server when the post is requested. That would save us from having one 
+mega-file with everything in it. There would be a tradeoff because we couldn't cache that mega-file, but `mdx-bundler` is quite fast.
+The overall performance didn't seem to take a hit.
+
+These are all good things to fix, but they take some serious thought into how to do it right.
+
+## Where to begin?
+
+First thing was to start building each post on demand. In order to do that, we had to do something kind of
+odd. We moved the `.mdx` files and any of their dependencies, which could be `.tsx` files or images,
+into a place that is accessible in the server at all times. That place is `/public`.
+
+We installed [`sync-directory`](https://www.npmjs.com/package/sync-directory) and had it watch our blog post
+directory. Whenever we would make a change of any kind, `sync-directory` would make sure to mirror the contents
+of our blog post directory into an equivalent directoy in `/public`. This means that in our app code, we
+can perform a simple `fetch` to each `.mdx` file in `/public` because now all our blog posts are available
+as static assets.
+
+After we get the blog post content from fetch, we pass the contents into `mdx-bundler` along with a directory
+path that points to the blog post's dependencies. `mdx-bundler` then compiles the post, gives us the data we need,
+and we inject it into the page (you may be asking why we don't just read the blog post content directly
+using `fs`. We'll get to that later).
+
+So now we have our blog posts being built on demand. But we're missing something.
+
+<BlogImage
+  src={refreshFunctionality}
+  alt="If you could hit refresh, that would be great."
+  caption="We need that refresh functionality, man."
+  maxWidth={350}
+></BlogImage>
+
+Our blog post source doesn't live with the rest of our code that is watched by Remix. So how do we get
+auto-refresh when blog content changes? Turns out, it's super easy. In `remix.config.js` you can
+specify a `watchPaths` attribute with globs for extra files that you would like Remix to watch. If any of them
+change, Remix will auto-refresh. Now changes show up on demand when we are editing posts in dev mode!
+
+## And that's that!
+
+So what did we learn and what do we still have to do?
+
+Well, the Remix community doesn't seem to have an established solution for making a blog at scale.
+In fact, that's what [Colby White's original discussion](https://github.com/remix-austin/remixaustin-com/discussions/89)
+was trying to solve. And while our solution can be added to the list of other ways this problem has been solved,
+it still has some rough edges.
+
+The biggest one is that our solution only works if we have access to our file system on the server. If we run
+our app serverless, we're in trouble. We're currently fetching blog post contents using `fetch`,
+which is good because if our `/public` folder was ever hosted on something like a CDN, we could just point
+the fetch to the right URL and we're golden.
+
+But remember, our blog posts can have dependencies, which could be `.tsx` files, images, or anything else
+that can be imported like a module. If we can't find those files locally on our system, we would
+have to host those on a CDN and download them as well. That would turn each blog post into a
+cascade of fetches at one time. Anyone who has had to wrangle multiple dependent async requests knows
+how much of a pain it can be. Maybe at that point we resort to an "ahead of time" build setup. But that
+has trade-offs too, mostly the large file size of compiled posts.
+
+These are problems we're eager to solve and we're already chewing on possible ideas.
+
+## Maybe this is where you come in
+
+We only got to this point thanks to the efforts of so many people, from Seth Davis' original PR,
+to Colby White's musings about Remix and CMS-es, to stacks already built by people, to me integrating it all
+into one cohesive whole.
+
+We're interested in taking these lessons and using them to impact all of the Remix community, not
+just the one here in Austin. We'd ideally like to make a utility library or stack that can act as the solid
+solution we wish we could have had.
+
+If you're interested, please let us know via our [GitHub](https://github.com/remix-austin/remixaustin-com)
+or find some of us on our socials. We'll be improving what we have in the meantime. We hope you're
+there to see it!
+
+<AuthorFooter
+  imageSrc={mattAuthor}
+  alt="Matt Hernandez"
+>
+  <>
+    Matt Hernandez is a UI developer in Austin, TX. Originally a film school
+    grad, he made his way to working as a dev when he realized that working in
+    Hollywood was not all it cracked up to be. He's worked across all layers
+    of the stack, but considers the front-end to be home and React to be the
+    best UI library so far. You can find him on
+    <a href="https://github.com/matt-hernandez" target="_blank">his Github</a>
+    or on
+    <a href="https://www.linkedin.com/in/matthew-hernandez-52665041" target="_blank">LinkedIn.</a>
+  </>
+</AuthorFooter>
