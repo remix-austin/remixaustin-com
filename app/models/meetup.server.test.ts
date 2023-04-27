@@ -28,15 +28,18 @@ const MOCK_GROUP: MeetupGroupByUrlname = {
     edges: [{ node: MOCK_EVENT }],
   },
 };
+
+const MEETUP_URL = "https://www.meetup.com/gql";
+
 describe("meetup.server", () => {
-  describe("getRemixAustinInfo", () => {
-    let lastRequestBody: MeetupRequestBody;
+  describe("tryToFetchRemixAustinInfo", () => {
+    let lastRequestBody: MeetupRequestBody | undefined;
 
     beforeEach(() => {
       const noOp = () => {};
       vi.spyOn(console, "warn").mockImplementation(noOp);
       server.use(
-        rest.post("https://www.meetup.com/gql", async (req, res, context) => {
+        rest.post(MEETUP_URL, async (req, res, context) => {
           lastRequestBody = await req.json();
           const response: MeetupGroupResponse = {
             data: { groupByUrlname: MOCK_GROUP },
@@ -46,19 +49,23 @@ describe("meetup.server", () => {
       );
     });
 
+    afterEach(() => {
+      lastRequestBody = undefined;
+    });
+
     it("should call meetup api", async () => {
       const event = await tryToFetchRemixAustinInfo();
       expect(lastRequestBody).toBeDefined();
-      expect(lastRequestBody.variables).toEqual({ urlname: "remix-austin" });
+      expect(lastRequestBody?.variables).toEqual({ urlname: "remix-austin" });
       // TODO use gql utils for better assertions
-      expect(lastRequestBody.query.includes("groupByUrlname")).toBeTruthy();
+      expect(lastRequestBody?.query.includes("groupByUrlname")).toBeTruthy();
       expect(event).toEqual(MOCK_GROUP);
     });
 
     describe("with a malformed response", () => {
       beforeEach(() => {
         server.use(
-          rest.post("https://www.meetup.com/gql", (req, res, context) =>
+          rest.post(MEETUP_URL, (req, res, context) =>
             res(context.status(200), context.json({ data: {} }))
           )
         );
@@ -73,7 +80,7 @@ describe("meetup.server", () => {
     describe("with a 500 response", () => {
       beforeEach(() => {
         server.use(
-          rest.post("https://www.meetup.com/gql", (req, res, context) => {
+          rest.post(MEETUP_URL, (req, res, context) => {
             const response: MeetupGroupResponse = {
               data: { groupByUrlname: MOCK_GROUP },
             };
