@@ -19,7 +19,6 @@ export const loader = async function ({
     .then((frontMatterArray) => {
       const start = (pageNumber - 1) * pageSize;
       const end = pageNumber * pageSize;
-      const results = frontMatterArray.slice(start, end);
-      return results;
+      return frontMatterArray.slice(start, end);
     });
 };
