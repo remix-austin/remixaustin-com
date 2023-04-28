@@ -7,10 +7,11 @@ test.describe("Blog", () => {
   });
 
   test("has a title", async ({ page }) => {
+    const h1Title = "Blog";
     const year = new Date().getFullYear().toString();
     const copyrightText = `Copyright © ${year} Remix Austin - All rights reserved.`;
 
-    await expect(page.getByRole("heading", { name: /^Blog$/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: h1Title })).toBeVisible();
     await expect(page.getByText(copyrightText, { exact: true })).toBeVisible();
   });
 
