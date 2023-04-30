@@ -2,8 +2,8 @@ import GitHubIcon from "../icons/GitHubIcon";
 import MeetupIcon from "../icons/MeetupIcon";
 import YouTubeIcon from "../icons/YouTubeIcon";
 import DiscordIcon from "../icons/DiscordIcon";
-// import { NavLink } from "@remix-run/react";
-// import BlogIcon from "../icons/BlogIcon";
+import { NavLink } from "@remix-run/react";
+import BlogIcon from "../icons/BlogIcon";
 
 export const meetupUrl = "https://www.meetup.com/remix-austin/";
 export const gitHubUrl = "https://github.com/remix-austin";
@@ -17,13 +17,12 @@ export default function SocialLinks({
 }) {
   return (
     <>
-      {/* Code seems to be ready. Just waiting until we have a post approved. */}
-      {/* <li>
+      <li>
         <NavLink className={linkClassName} to="blog">
           <BlogIcon />
           Blog
         </NavLink>
-      </li> */}
+      </li>
       <li>
         <a
           className={linkClassName}
