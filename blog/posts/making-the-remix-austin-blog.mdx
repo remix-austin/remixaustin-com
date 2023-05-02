@@ -93,12 +93,12 @@ object in that array. Those objects have some frontmatter and a raw source strin
 component. That raw React component is the full content of the blog post.
 
 The array then gets written into a file called `post-cache.json` in our `/public`
-directory, making it available to all loaders in the site. Loaders for the blog list route and the
-individual blog post route make a fetch for the file, pick out the data they need, and pass the
-raw React component to a helper function from `mdx-bundler` which converts into a regular
-React component, and finally we display it in our page like good ol' JSX.
+directory. Because it's in public, it's available to all loaders. Loaders for the blog pages
+fetch the file, pick out the data they need, and pass the raw React component source to `mdx-bundler`
+which returns it as a regular React component. Finally, after all that, we display it in our page
+like good ol' JSX as a complete blog post.
 
-And lastly, all `.mdx` files are watched by Node when we run this script in development mode. If any
+Oh, and one more thing: all `.mdx` files are watched by Node when we run this script in development mode. If any
 of their content changes, `post-cache.json` is regenerated with the updated contents.
 
 <BlogImage
@@ -108,7 +108,7 @@ of their content changes, `post-cache.json` is regenerated with the updated cont
   maxWidth={300}
 />
 
-So this is pretty good, right? But it could be better.
+This is a lot, right? And in fairness, it works pretty good. But it could be better.
 
 For starters, the entire `post-cache.json` file was being regenerated in dev mode for any
 single change to a blog post. That means every blog was getting built and compiled even if I'm only
