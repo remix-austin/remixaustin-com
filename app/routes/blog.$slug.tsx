@@ -22,7 +22,7 @@ export default function BlogSlugRoute() {
   const { code } = post;
   const Component = useMemo(() => getMDXComponent(code), [code]);
   return (
-    <div className="container prose mx-auto px-4 py-8 md:px-0">
+    <div className="container prose mx-auto px-4 py-8 text-justify md:px-0">
       <h1 className="mb-[0px]">{title}</h1>
       {author && (
         <h2 className={`mt-4${date ? " mb-[0px]" : ""}`}>By {author}</h2>
