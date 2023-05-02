@@ -6,7 +6,11 @@ module.exports = {
     "./blog/posts/*.mdx",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontSize: {
+        xxs: ["0.625rem", { lineHeight: "1rem" }],
+      },
+    },
   },
   daisyui: {
     logs: false,
