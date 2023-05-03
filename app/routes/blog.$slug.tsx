@@ -31,6 +31,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   } = data.post;
   const origin = new URL(data.url).origin;
   return {
+    title,
+    description,
     "og:url": data.url,
     "og:type": "article",
     "og:author": author,
