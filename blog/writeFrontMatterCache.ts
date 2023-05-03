@@ -37,9 +37,15 @@ export function validateFrontMatter(
   const title = frontMatter.title;
   const author = frontMatter.author;
   const date = frontMatter.date;
+  const description = frontMatter.description;
+  const imageUrl = frontMatter.imageUrl;
+  const imageAlt = frontMatter.imageAlt;
   invariant(title, "A blog post was missing a title.");
   invariant(author, `Blog post ${title} was missing an author.`);
-  invariant(date, `Blog post ${title} was missing an date.`);
+  invariant(date, `Blog post ${title} was missing a date.`);
+  invariant(description, `Blog post ${title} was missing a description.`);
+  invariant(imageUrl, `Blog post ${title} was missing an image url.`);
+  invariant(imageAlt, `Blog post ${title} was missing an image alt text.`);
   return true;
 }
 
