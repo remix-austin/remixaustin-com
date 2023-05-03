@@ -31,7 +31,8 @@ of the Remix app.
 - `imageUrl: string` - Provide a URL to a banner image for your post. This will be used at the top of your post and in social media links
   - This can be a full URL to an image you have hosted on your own. Example: `https://image-you-hosted.com/image.jpeg`
   - Or it can be a path from `/posts` to an image you have saved in the `/posts/img` directory. Example: `/posts/img/blog-banner-resized.jpg`
-  - The image must be 1200 x 630 pixels and it must be a JPEG
+  - The image must be 1200 x 690 pixels and it must be a JPEG
+  - Try to keep the focus of your blog banner image towards the center and save a good amount of breathing room along the outside edges. This will allow your image to look good on all major social networks.
 - `imageAlt: string` - Provide alt text to your blog banner image
 
 The front matter is in YAML format and it must go at the top of the `.mdx` file.
