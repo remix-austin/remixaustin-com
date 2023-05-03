@@ -1,3 +1,4 @@
+import type { MetaFunction } from "@remix-run/node";
 import { type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
@@ -9,16 +10,45 @@ import type { Mdx } from "blog/parser";
 export const loader = async function ({ params, request }: LoaderArgs) {
   const { slug } = params;
   invariant(typeof slug === "string", "Missing slug");
-  const post = (await fetch(
+  const post = await fetch(
     `${new URL(request.url).origin}/resource/get-blog-post/${slug}`
-  ).then((response) => response.json())) as Promise<Mdx>;
+  ).then((response) => response.json() as Promise<Mdx>);
   invariant(post !== undefined, "Could not find post");
-  return post;
+  return {
+    post,
+    url: request.url,
+  };
+};
+
+/**
+ * TODO: When we update to Remix v2, we need to change this function according to this
+ * page in the docs: https://remix.run/docs/en/1.16.0/pages/v2#route-meta
+ * Blog tags can't be added to meta in Remix v1. We need to wait until v2.
+ */
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const {
+    frontmatter: { title, author, date, imageUrl, description },
+  } = data.post;
+  const origin = new URL(data.url).origin;
+  return {
+    title,
+    description,
+    "og:url": data.url,
+    "og:type": "article",
+    "og:author": author,
+    "og:published_time": new Date(date).toISOString(),
+    "og:title": title,
+    "og:description": description,
+    "og:image": imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
+    "og:image:type": "image/jpeg",
+    "og:image:width": "1200",
+    "og:image:height": "630",
+  };
 };
 
 export default function BlogSlugRoute() {
-  const post = useLoaderData<typeof loader>();
-  const { title, author, date } = post.frontmatter;
+  const { post } = useLoaderData<typeof loader>();
+  const { title, author, date, imageUrl, imageAlt } = post.frontmatter;
   const { code } = post;
   const Component = useMemo(() => getMDXComponent(code), [code]);
   return (
@@ -32,6 +62,11 @@ export default function BlogSlugRoute() {
           {PUBLISH_DATE_FORMATTER.format(new Date(date))}
         </h3>
       )}
+      <img
+        className="mt-4 w-full object-contain"
+        src={imageUrl}
+        alt={imageAlt}
+      />
       <Component />
     </div>
   );

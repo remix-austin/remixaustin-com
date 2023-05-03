@@ -1,3 +1,4 @@
+import type { PostFrontMatter } from "./models";
 import { validateFrontMatter } from "./writeFrontMatterCache";
 
 describe("writeFrontMatterCache", () => {
@@ -9,10 +10,13 @@ describe("writeFrontMatterCache", () => {
     });
 
     it("should NOT throw if all required front matter is present", () => {
-      const frontMatter = {
+      const frontMatter: PostFrontMatter = {
         title: "Test",
         author: "Alan Smithee",
         date: "26 April 2023",
+        description: "A post",
+        imageUrl: "/posts/img/image.jpg",
+        imageAlt: "A blog banner image",
       };
       expect(() => validateFrontMatter(frontMatter)).not.toThrow();
       expect(validateFrontMatter(frontMatter)).toBeTruthy();
