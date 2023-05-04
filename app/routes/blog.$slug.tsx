@@ -27,7 +27,7 @@ export const loader = async function ({ params, request }: LoaderArgs) {
  */
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const {
-    frontmatter: { title, author, date, imageUrl, description },
+    frontmatter: { title, author, date, imageUrl, imageAlt, description },
   } = data.post;
   const origin = new URL(data.url).origin;
   return {
@@ -40,9 +40,14 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     "og:title": title,
     "og:description": description,
     "og:image": imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
+    "og:image:alt": imageAlt,
     "og:image:type": "image/jpeg",
     "og:image:width": "1200",
     "og:image:height": "630",
+    "twitter:image": imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
+    "twitter:image:alt": imageAlt,
+    "twitter:description": description,
+    "twitter:title": title,
   };
 };
 
