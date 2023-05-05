@@ -16,7 +16,7 @@ export const loader = async function ({ params, request }: LoaderArgs) {
   invariant(post !== undefined, "Could not find post");
   return {
     post,
-    url: request.url,
+    url: request.url.replace("http", "https"), // Request URL doesn't use https for some reason. But let's include it since it's important for the meta tags
   };
 };
 
@@ -29,11 +29,12 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const {
     frontmatter: { title, author, date, imageUrl, imageAlt, description },
   } = data.post;
-  const origin = new URL(data.url).origin;
+  const url = data.url;
+  const origin = new URL(url).origin;
   return {
     title,
     description,
-    "og:url": data.url,
+    "og:url": url,
     "og:type": "article",
     "og:author": author,
     "og:published_time": new Date(date).toISOString(),
@@ -43,11 +44,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     "og:image:alt": imageAlt,
     "og:image:type": "image/jpeg",
     "og:image:width": "1200",
-    "og:image:height": "630",
-    "twitter:image": imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
-    "twitter:image:alt": imageAlt,
-    "twitter:description": description,
-    "twitter:title": title,
+    "og:image:height": "690",
   };
 };
 

@@ -35,17 +35,13 @@ export const meta: MetaFunction = () => ({
   title: defaultTitle,
   description: defaultDescription,
   viewport: "width=device-width,initial-scale=1",
-  "twitter:card": "summary_large_image",
-  "twitter:title": defaultTitle,
-  "twitter:description": defaultDescription,
-  "twitter:image": logoUrl,
-  "twitter:image:alt": "Remix Austin logo",
   "og:type": "website",
   "og:title": defaultTitle,
   "og:site_name": "Remix Austin 💿",
   "og:description": defaultDescription,
   "og:url": baseUrl,
   "og:image": logoUrl,
+  "og:image:alt": "Remix Austin logo",
 });
 
 export const loader: LoaderFunction = async ({ request }) => {
