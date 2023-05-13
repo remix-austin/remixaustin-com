@@ -8,6 +8,7 @@ import type {
   MeetupGroupResponse,
   MeetupRequestBody,
 } from "~/models/meetup.parsing";
+import invariant from "tiny-invariant";
 
 const MOCK_EVENT: MeetupEvent = {
   title: "Title",
@@ -55,10 +56,10 @@ describe("meetup.server", () => {
 
     it("should call meetup api", async () => {
       const event = await tryToFetchRemixAustinInfo();
-      expect(lastRequestBody).toBeDefined();
-      expect(lastRequestBody?.variables).toEqual({ urlname: "remix-austin" });
+      invariant(lastRequestBody, "lastRequestBody must be defined");
+      expect(lastRequestBody.variables).toEqual({ urlname: "remix-austin" });
       // TODO use gql utils for better assertions
-      expect(lastRequestBody?.query.includes("groupByUrlname")).toBeTruthy();
+      expect(lastRequestBody.query.includes("groupByUrlname")).toBeTruthy();
       expect(event).toEqual(MOCK_GROUP);
     });
 
@@ -73,7 +74,7 @@ describe("meetup.server", () => {
 
       it("should return undefined", async () => {
         const info = await tryToFetchRemixAustinInfo();
-        expect(info).toBeUndefined();
+        invariant(info === undefined, "Returned info should be undefined");
       });
     });
 
@@ -91,7 +92,7 @@ describe("meetup.server", () => {
 
       it("should return undefined", async () => {
         const info = await tryToFetchRemixAustinInfo();
-        expect(info).toBeUndefined();
+        invariant(info === undefined, "Returned info should be undefined");
       });
     });
   });
