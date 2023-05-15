@@ -1,11 +1,7 @@
 import { bundleMDX as bundle } from "mdx-bundler";
 import type { BundleMDXSource } from "mdx-bundler/dist/types";
+import remarkMdxImages from "remark-mdx-images";
 import type { PostFrontMatter } from "./models";
-/**
- * Not super proud of this ESM workaround, but it's the only thing
- * that would allow images to be used in blog posts.
- */
-const remarkMdxImages = require("fix-esm").require("remark-mdx-images");
 
 export type Mdx = Awaited<ReturnType<typeof bundleMdx>>;
 

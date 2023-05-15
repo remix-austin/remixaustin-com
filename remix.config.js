@@ -4,6 +4,11 @@
 module.exports = {
   cacheDirectory: "./node_modules/.cache/remix",
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
+  serverDependenciesToBundle: [
+    "remark-mdx-images",
+    /^unist-util-.*/,
+    /^mdx-bundler.*/,
+  ],
   watchPaths: [
     "./blog/*.ts",
     "./public/posts",
