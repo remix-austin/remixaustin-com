@@ -1,5 +1,5 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { type LoaderArgs } from "@remix-run/server-runtime";
+import { type LoaderArgs } from "@remix-run/node";
 import type { PostFrontMatterCollection } from "blog/models";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
 

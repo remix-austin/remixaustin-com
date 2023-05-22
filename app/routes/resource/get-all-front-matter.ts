@@ -1,4 +1,4 @@
-import { type LoaderArgs } from "@remix-run/server-runtime";
+import { type LoaderArgs } from "@remix-run/node";
 import { type PostFrontMatterCollection } from "blog/models";
 import { FRONT_MATTER_CACHE_FILENAME } from "blog/paths";
 
