@@ -4,7 +4,7 @@ import GivePresentationImage from "~/images/give-a-presentation.jpg";
 import { discordUrl } from "~/components/Navbar/SocialLinks";
 import type { LinksFunction } from "@remix-run/node";
 import { tryToFetchRemixAustinInfo } from "~/models/meetup.server";
-import { json } from "@remix-run/server-runtime";
+import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import NextEventInfo from "~/components/NextEventInfo/NextEventInfo";
 import MeetupLink from "~/components/MeetupLink";

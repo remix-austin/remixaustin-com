@@ -1,4 +1,4 @@
-import { type LoaderArgs } from "@remix-run/server-runtime";
+import { type LoaderArgs } from "@remix-run/node";
 import { bundleMdx } from "blog/parser";
 import { POSTS_BUILD_DIR } from "blog/paths";
 import invariant from "tiny-invariant";

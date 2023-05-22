@@ -1,7 +1,7 @@
 import { server } from "../mocks/server";
 import type { DefaultBodyType } from "msw";
 import { rest } from "msw";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderArgs } from "@remix-run/node";
 
 /**
  * Use <code>msw</code> in order to mock a request with a specified response.

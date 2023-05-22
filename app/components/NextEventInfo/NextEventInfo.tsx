@@ -1,7 +1,7 @@
 import type { MeetupEvent } from "~/models/meetup.parsing";
 import { formatDateTime, isEmptyString } from "~/utils";
 import MeetupLink from "~/components/MeetupLink";
-import type { SerializeFrom } from "@remix-run/server-runtime";
+import type { SerializeFrom } from "@remix-run/node";
 
 type Venue = NonNullable<MeetupEvent["venue"]>;
 
