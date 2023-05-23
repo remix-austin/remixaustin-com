@@ -2,7 +2,7 @@
 import "@testing-library/jest-dom";
 import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
 import { loader } from "~/routes/blog.$slug";
-import { bundleMdx } from "../../blog/parser";
+import { bundleMdx } from "../../blog/parser.server";
 import { POSTS_BUILD_DIR } from "blog/paths";
 
 const TEST_URL = "https://test.io";
