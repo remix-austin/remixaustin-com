@@ -1,10 +1,10 @@
 // @vitest-environment node
-import { loader } from "~/routes/resource/get-all-front-matter";
-import { mockUrlResponse, urlToLoaderArgs } from "../../../test/test-utils";
+import { loader } from "~/routes/resource.get-all-front-matter";
+import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
 import type {
   PostFrontMatterCollection,
   PostFrontMatterWithSlug,
-} from "../../../blog/models";
+} from "../../blog/models";
 
 const TEST_URL = "https://test.io";
 const TEST_FRONT_MATTER_URL = `${TEST_URL}/front-matter-cache.json`;
