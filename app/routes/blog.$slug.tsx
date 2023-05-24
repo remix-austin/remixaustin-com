@@ -8,8 +8,21 @@ import invariant from "tiny-invariant";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
 import type { Mdx } from "blog/parser";
 
-export const shortCacheMaxAge = `max-age=28800`; // 8 hour cache
-export const longCacheMaxAge = `max-age=604800`; // One week cache
+export const SHORT_CACHE_MAX_AGE = `max-age=28800`; // 8 hour cache
+export const LONG_CACHE_MAX_AGE = `max-age=604800`; // One week cache
+
+function buildHeaders(publishDate: Date): HeadersInit | undefined {
+  if (process.env.NODE_ENV === "development") {
+    return undefined;
+  }
+  const nowMs = Date.now();
+  const difference = nowMs - publishDate.getTime();
+  const differenceInDays = Math.floor(difference / (1000 * 60 * 60 * 24));
+  return {
+    "Cache-Control":
+      differenceInDays < 4 ? SHORT_CACHE_MAX_AGE : LONG_CACHE_MAX_AGE,
+  };
+}
 
 export const loader = async function ({ params, request }: LoaderArgs) {
   const { slug } = params;
@@ -19,38 +32,13 @@ export const loader = async function ({ params, request }: LoaderArgs) {
   ).then((response) => response.json() as Promise<Mdx>);
   invariant(post !== undefined, "Could not find post");
   invariant(post.frontmatter.date !== undefined, "Post has no publish date");
-  const publishDateMs = new Date(post.frontmatter.date).getTime();
-  const nowMs = Date.now();
-  const difference = nowMs - publishDateMs;
-  const differenceInDays = Math.floor(difference / (1000 * 60 * 60 * 24));
-  if (process.env.NODE_ENV === "development") {
-    return json({
-      post,
-      url: request.url,
-    });
-  }
-  if (differenceInDays < 4) {
-    return json(
-      {
-        post,
-        url: request.url,
-      },
-      {
-        headers: {
-          "Cache-Control": shortCacheMaxAge,
-        },
-      }
-    );
-  }
   return json(
     {
       post,
       url: request.url,
     },
     {
-      headers: {
-        "Cache-Control": longCacheMaxAge,
-      },
+      headers: buildHeaders(new Date(post.frontmatter.date)),
     }
   );
 };

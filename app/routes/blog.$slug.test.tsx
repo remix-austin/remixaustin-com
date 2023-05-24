@@ -1,7 +1,11 @@
 // @vitest-environment node
 import "@testing-library/jest-dom";
 import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
-import { loader, longCacheMaxAge, shortCacheMaxAge } from "~/routes/blog.$slug";
+import {
+  loader,
+  LONG_CACHE_MAX_AGE,
+  SHORT_CACHE_MAX_AGE,
+} from "~/routes/blog.$slug";
 import { bundleMdx } from "../../blog/parser";
 import { POSTS_BUILD_DIR } from "blog/paths";
 
@@ -57,7 +61,7 @@ Hello, world.
     const response = await loader(args);
     const cacheControlHeader = response.headers.get("Cache-Control");
     expect(cacheControlHeader).not.toBeNull();
-    expect(cacheControlHeader).toBe(shortCacheMaxAge);
+    expect(cacheControlHeader).toBe(SHORT_CACHE_MAX_AGE);
   });
 
   it("should have a Cache-Control header with a max-age of 1 week if post is more than 4 days old", async () => {
@@ -79,6 +83,6 @@ Hello, world.
     const response = await loader(args);
     const cacheControlHeader = response.headers.get("Cache-Control");
     expect(cacheControlHeader).not.toBeNull();
-    expect(cacheControlHeader).toBe(longCacheMaxAge);
+    expect(cacheControlHeader).toBe(LONG_CACHE_MAX_AGE);
   });
 });
