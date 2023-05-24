@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { HeadersFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
@@ -14,11 +15,47 @@ export const loader = async function ({ params, request }: LoaderArgs) {
     `${new URL(request.url).origin}/resource/get-blog-post/${slug}`
   ).then((response) => response.json() as Promise<Mdx>);
   invariant(post !== undefined, "Could not find post");
-  return {
-    post,
-    url: request.url,
-  };
+  const publishDate = new Date(post.frontmatter.date).getTime();
+  const nowMs = Date.now();
+  const longCacheAge = "604800"; // One week cache
+  const shortCacheAge = "28800"; // 8 hour cache
+  const difference = nowMs - publishDate;
+  const differenceInDays = Math.ceil(difference / (1000 * 60 * 60 * 24));
+  if (process.env.NODE_ENV === "development") {
+    return json({
+      post,
+      url: request.url,
+    });
+  }
+  if (differenceInDays < 4) {
+    return json(
+      {
+        post,
+        url: request.url,
+      },
+      {
+        headers: {
+          "Cache-Control": `max-age=${shortCacheAge}`,
+        },
+      }
+    );
+  }
+  return json(
+    {
+      post,
+      url: request.url,
+    },
+    {
+      headers: {
+        "Cache-Control": `max-age=${longCacheAge}`,
+      },
+    }
+  );
 };
+
+export const headers: HeadersFunction = ({ loaderHeaders }) => ({
+  "Cache-Control": loaderHeaders.get("Cache-Control") ?? "no-cache",
+});
 
 /**
  * TODO: When we update to Remix v2, we need to change this function according to this

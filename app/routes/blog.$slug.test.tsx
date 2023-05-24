@@ -23,9 +23,10 @@ describe("/blog/$slug", () => {
       json: await bundleMdx(TEST_MDX, SLUG, POSTS_BUILD_DIR),
     });
     const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
+    const response = await loader(args);
     const {
       post: { code, ...metaProps },
-    } = await loader(args);
+    } = await response.json();
     expect(metaProps).toEqual({ slug: SLUG, frontmatter: { title: "Title" } });
     expect(code).toContain("Hello, world.");
   });
