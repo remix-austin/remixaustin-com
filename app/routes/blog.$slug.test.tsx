@@ -1,7 +1,7 @@
 // @vitest-environment node
 import "@testing-library/jest-dom";
 import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
-import { loader } from "~/routes/blog.$slug";
+import { loader, longCacheMaxAge, shortCacheMaxAge } from "~/routes/blog.$slug";
 import { bundleMdx } from "../../blog/parser";
 import { POSTS_BUILD_DIR } from "blog/paths";
 
@@ -14,22 +14,27 @@ const ONE_DAY_MS = ONE_MINUTE_MS * 60 * 24;
 
 describe("/blog/$slug", () => {
   it("should bundle mdx", async () => {
-    const TEST_MDX = `---
+    const todayPublishDate = new Date().toISOString();
+    const testMdx = `---
 title: Title
+date: ${todayPublishDate}
 ---
 # Header
 
 Hello, world.
 `;
     mockUrlResponse(TEST_GET_BLOG_POST_URL, {
-      json: await bundleMdx(TEST_MDX, SLUG, POSTS_BUILD_DIR),
+      json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
     });
     const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
     const response = await loader(args);
     const {
       post: { code, ...metaProps },
     } = await response.json();
-    expect(metaProps).toEqual({ slug: SLUG, frontmatter: { title: "Title" } });
+    expect(metaProps).toEqual({
+      slug: SLUG,
+      frontmatter: { title: "Title", date: todayPublishDate },
+    });
     expect(code).toContain("Hello, world.");
   });
 
@@ -37,7 +42,7 @@ Hello, world.
     const today = Date.now();
     const fourDaysAgoMs = today - ONE_DAY_MS * 4 + ONE_MINUTE_MS; // 1 minute "safety buffer"
     const publishDate = new Date(fourDaysAgoMs).toISOString();
-    const TEST_MDX = `---
+    const testMdx = `---
 title: Title
 date: ${publishDate}
 ---
@@ -46,20 +51,20 @@ date: ${publishDate}
 Hello, world.
 `;
     mockUrlResponse(TEST_GET_BLOG_POST_URL, {
-      json: await bundleMdx(TEST_MDX, SLUG, POSTS_BUILD_DIR),
+      json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
     });
     const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
     const response = await loader(args);
     const cacheControlHeader = response.headers.get("Cache-Control");
     expect(cacheControlHeader).not.toBeNull();
-    expect(cacheControlHeader).toBe("max-age=28800");
+    expect(cacheControlHeader).toBe(shortCacheMaxAge);
   });
 
   it("should have a Cache-Control header with a max-age of 1 week if post is more than 4 days old", async () => {
     const today = Date.now();
     const fourDaysAgoMs = today - ONE_DAY_MS * 4 - ONE_MINUTE_MS; // 1 minute "safety buffer"
     const publishDate = new Date(fourDaysAgoMs).toISOString();
-    const TEST_MDX = `---
+    const testMdx = `---
 title: Title
 date: ${publishDate}
 ---
@@ -68,12 +73,12 @@ date: ${publishDate}
 Hello, world.
 `;
     mockUrlResponse(TEST_GET_BLOG_POST_URL, {
-      json: await bundleMdx(TEST_MDX, SLUG, POSTS_BUILD_DIR),
+      json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
     });
     const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
     const response = await loader(args);
     const cacheControlHeader = response.headers.get("Cache-Control");
     expect(cacheControlHeader).not.toBeNull();
-    expect(cacheControlHeader).toBe("max-age=604800");
+    expect(cacheControlHeader).toBe(longCacheMaxAge);
   });
 });

@@ -8,6 +8,9 @@ import invariant from "tiny-invariant";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
 import type { Mdx } from "blog/parser";
 
+export const shortCacheMaxAge = `max-age=28800`; // 8 hour cache
+export const longCacheMaxAge = `max-age=604800`; // One week cache
+
 export const loader = async function ({ params, request }: LoaderArgs) {
   const { slug } = params;
   invariant(typeof slug === "string", "Missing slug");
@@ -15,10 +18,9 @@ export const loader = async function ({ params, request }: LoaderArgs) {
     `${new URL(request.url).origin}/resource/get-blog-post/${slug}`
   ).then((response) => response.json() as Promise<Mdx>);
   invariant(post !== undefined, "Could not find post");
+  invariant(post.frontmatter.date !== undefined, "Post has no publish date");
   const publishDateMs = new Date(post.frontmatter.date).getTime();
   const nowMs = Date.now();
-  const longCacheAge = "604800"; // One week cache
-  const shortCacheAge = "28800"; // 8 hour cache
   const difference = nowMs - publishDateMs;
   const differenceInDays = Math.floor(difference / (1000 * 60 * 60 * 24));
   if (process.env.NODE_ENV === "development") {
@@ -35,7 +37,7 @@ export const loader = async function ({ params, request }: LoaderArgs) {
       },
       {
         headers: {
-          "Cache-Control": `max-age=${shortCacheAge}`,
+          "Cache-Control": shortCacheMaxAge,
         },
       }
     );
@@ -47,7 +49,7 @@ export const loader = async function ({ params, request }: LoaderArgs) {
     },
     {
       headers: {
-        "Cache-Control": `max-age=${longCacheAge}`,
+        "Cache-Control": longCacheMaxAge,
       },
     }
   );
