@@ -1,5 +1,5 @@
 import { type LoaderArgs } from "@remix-run/node";
-import { bundleMdx } from "blog/parser";
+import { bundleMdx } from "blog/parser.server";
 import { POSTS_BUILD_DIR } from "blog/paths";
 import invariant from "tiny-invariant";
 

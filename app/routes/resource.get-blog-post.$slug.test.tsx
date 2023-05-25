@@ -1,7 +1,7 @@
 // @vitest-environment node
 import "@testing-library/jest-dom";
-import { mockUrlResponse, urlToLoaderArgs } from "../../../test/test-utils";
-import { loader } from "~/routes/resource/get-blog-post.$slug";
+import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
+import { loader } from "~/routes/resource.get-blog-post.$slug";
 
 const TEST_URL = "https://test.io";
 const SLUG = "slug";

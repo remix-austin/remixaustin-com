@@ -6,7 +6,7 @@ import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
-import type { Mdx } from "blog/parser";
+import type { Mdx } from "blog/parser.server";
 
 export const SHORT_CACHE_MAX_AGE = `max-age=28800`; // 8 hour cache
 export const LONG_CACHE_MAX_AGE = `max-age=604800`; // One week cache

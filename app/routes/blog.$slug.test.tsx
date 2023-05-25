@@ -6,7 +6,7 @@ import {
   LONG_CACHE_MAX_AGE,
   SHORT_CACHE_MAX_AGE,
 } from "~/routes/blog.$slug";
-import { bundleMdx } from "../../blog/parser";
+import { bundleMdx } from "../../blog/parser.server";
 import { POSTS_BUILD_DIR } from "blog/paths";
 
 const TEST_URL = "https://test.io";
