@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { HeadersFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
@@ -7,6 +8,22 @@ import invariant from "tiny-invariant";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
 import type { Mdx } from "blog/parser.server";
 
+export const SHORT_CACHE_MAX_AGE = `max-age=28800`; // 8 hour cache
+export const LONG_CACHE_MAX_AGE = `max-age=604800`; // One week cache
+
+function buildHeaders(publishDate: Date): HeadersInit | undefined {
+  if (process.env.NODE_ENV === "development") {
+    return undefined;
+  }
+  const nowMs = Date.now();
+  const difference = nowMs - publishDate.getTime();
+  const differenceInDays = Math.floor(difference / (1000 * 60 * 60 * 24));
+  return {
+    "Cache-Control":
+      differenceInDays < 4 ? SHORT_CACHE_MAX_AGE : LONG_CACHE_MAX_AGE,
+  };
+}
+
 export const loader = async function ({ params, request }: LoaderArgs) {
   const { slug } = params;
   invariant(typeof slug === "string", "Missing slug");
@@ -14,11 +31,21 @@ export const loader = async function ({ params, request }: LoaderArgs) {
     `${new URL(request.url).origin}/resource/get-blog-post/${slug}`
   ).then((response) => response.json() as Promise<Mdx>);
   invariant(post !== undefined, "Could not find post");
-  return {
-    post,
-    url: request.url,
-  };
+  invariant(post.frontmatter.date !== undefined, "Post has no publish date");
+  return json(
+    {
+      post,
+      url: request.url,
+    },
+    {
+      headers: buildHeaders(new Date(post.frontmatter.date)),
+    }
+  );
 };
+
+export const headers: HeadersFunction = ({ loaderHeaders }) => ({
+  "Cache-Control": loaderHeaders.get("Cache-Control") ?? "no-cache",
+});
 
 /**
  * TODO: When we update to Remix v2, we need to change this function according to this
