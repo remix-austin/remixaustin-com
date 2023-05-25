@@ -51,8 +51,9 @@ Hello, world.
     });
 
     it("should have a Cache-Control header with a max-age of 8 hours if post is less than 4 days old", async () => {
-      vi.setSystemTime(Date.now());
-      const fourDaysAgoMs = Date.now() - ONE_DAY_MS * 4 + 1; // Just under 4 days old
+      const now = new Date();
+      vi.setSystemTime(now);
+      const fourDaysAgoMs = now.getTime() - ONE_DAY_MS * 4 + 1; // Just under 4 days old
       const publishDate = new Date(fourDaysAgoMs).toISOString();
       const testMdx = `---
 title: Title
@@ -73,8 +74,9 @@ Hello, world.
     });
 
     it("should have a Cache-Control header with a max-age of 1 week if post is 4 days old or older", async () => {
-      vi.setSystemTime(Date.now());
-      const fourDaysAgoMs = Date.now() - ONE_DAY_MS * 4;
+      const now = new Date();
+      vi.setSystemTime(now);
+      const fourDaysAgoMs = now.getTime() - ONE_DAY_MS * 4;
       const publishDate = new Date(fourDaysAgoMs).toISOString();
       const testMdx = `---
 title: Title
