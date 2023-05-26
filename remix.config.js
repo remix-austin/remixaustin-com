@@ -8,6 +8,7 @@ module.exports = {
     v2_meta: false,
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,
+    unstable_dev: true,
   },
   ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
   serverDependenciesToBundle: [
