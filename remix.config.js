@@ -3,6 +3,7 @@
  */
 module.exports = {
   cacheDirectory: "./node_modules/.cache/remix",
+  tailwind: true,
   future: {
     v2_errorBoundary: true,
     v2_meta: false,

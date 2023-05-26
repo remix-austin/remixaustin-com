@@ -15,11 +15,11 @@ import {
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
-import tailwindStylesheetUrl from "./styles/tailwind.css";
+import tailwindStyles from "./tailwind.css";
 import { getRedirectUrlIfWww } from "./utils";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [{ rel: "stylesheet", href: tailwindStyles }];
 };
 
 export const defaultTitle =
