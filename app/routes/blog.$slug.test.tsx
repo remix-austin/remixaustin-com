@@ -96,4 +96,32 @@ Hello, world.
       expect(cacheControlHeader).toBe(LONG_CACHE_MAX_AGE);
     });
   });
+
+  it("should have blog tags in <head> for <meta>", async () => {
+    const tag = "testTag";
+    const todayPublishDate = new Date().toISOString();
+    const testMdx = `---
+title: Title
+date: ${todayPublishDate}
+tags:
+  - ${tag}
+---
+# Header
+
+Hello, world.
+`;
+    mockUrlResponse(TEST_GET_BLOG_POST_URL, {
+      json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
+    });
+    const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
+    const response = await loader(args);
+    const loaderData = await response.json();
+    const {
+      post: { code, ...metaProps },
+    } = loaderData;
+    expect(metaProps).toEqual({
+      slug: SLUG,
+      frontmatter: { title: "Title", date: todayPublishDate, tags: [tag] },
+    });
+  });
 });

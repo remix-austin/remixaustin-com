@@ -1,4 +1,4 @@
-import type { HeadersFunction, MetaFunction } from "@remix-run/node";
+import type { HeadersFunction, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -47,35 +47,87 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => ({
   "Cache-Control": loaderHeaders.get("Cache-Control") ?? "no-cache",
 });
 
-/**
- * TODO: When we update to Remix v2, we need to change this function according to this
- * page in the docs: https://remix.run/docs/en/1.16.0/pages/v2#route-meta
- * Blog tags can't be added to meta in Remix v1. We need to wait until v2.
- */
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) {
+    return [];
+  }
   const {
-    frontmatter: { title, author, date, imageUrl, imageAlt, description },
+    frontmatter: { title, author, date, imageUrl, imageAlt, description, tags },
   } = data.post;
   const origin = new URL(data.url).origin;
-  return {
-    title,
-    description,
-    "og:url": data.url,
-    "og:type": "article",
-    "og:author": author,
-    "og:published_time": new Date(date).toISOString(),
-    "og:title": title,
-    "og:description": description,
-    "og:image": imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
-    "og:image:alt": imageAlt,
-    "og:image:type": "image/jpeg",
-    "og:image:width": "1200",
-    "og:image:height": "630",
-    "twitter:image": imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
-    "twitter:image:alt": imageAlt,
-    "twitter:description": description,
-    "twitter:title": title,
-  };
+  return [
+    { title },
+    {
+      name: "description",
+      content: description,
+    },
+    {
+      name: "og:url",
+      content: data.url,
+    },
+    {
+      name: "og:type",
+      content: "article",
+    },
+    {
+      name: "og:author",
+      content: author,
+    },
+    {
+      name: "og:published_time",
+      content: new Date(date).toISOString(),
+    },
+    {
+      name: "og:title",
+      content: title,
+    },
+    {
+      name: "og:description",
+      content: description,
+    },
+    {
+      name: "og:image",
+      content: imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
+    },
+    {
+      name: "og:image:alt",
+      content: imageAlt,
+    },
+    {
+      name: "og:image:type",
+      content: "image/jpeg",
+    },
+    {
+      name: "og:image:width",
+      content: "1200",
+    },
+    {
+      name: "og:image:height",
+      content: "630",
+    },
+    {
+      name: "twitter:image",
+      content: imageUrl[0] === "/" ? `${origin}${imageUrl}` : imageUrl,
+    },
+    {
+      name: "twitter:image:alt",
+      content: imageAlt,
+    },
+    {
+      name: "twitter:description",
+      content: description,
+    },
+    {
+      name: "twitter:title",
+      content: title,
+    },
+    ...(tags
+      ? tags.map((tag) => ({
+          name: "article:tag",
+          content: tag,
+        }))
+      : []),
+  ];
 };
 
 export default function BlogSlugRoute() {
