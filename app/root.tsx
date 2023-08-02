@@ -2,7 +2,7 @@ import { redirect } from "@remix-run/node";
 import type {
   LinksFunction,
   LoaderFunction,
-  MetaFunction,
+  V2_MetaFunction,
 } from "@remix-run/node";
 import {
   Links,
@@ -29,23 +29,65 @@ const defaultDescription =
 const baseUrl = "https://remixaustin.com/";
 const logoUrl = "https://remixaustin.com/img/remix-logo-rainbow.jpg";
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: defaultTitle,
-  description: defaultDescription,
-  viewport: "width=device-width,initial-scale=1",
-  "twitter:card": "summary_large_image",
-  "twitter:title": defaultTitle,
-  "twitter:description": defaultDescription,
-  "twitter:image": logoUrl,
-  "twitter:image:alt": "Remix Austin logo",
-  "og:type": "website",
-  "og:title": defaultTitle,
-  "og:site_name": "Remix Austin 💿",
-  "og:description": defaultDescription,
-  "og:url": baseUrl,
-  "og:image": logoUrl,
-});
+export const meta: V2_MetaFunction = () => [
+  {
+    name: "charset",
+    content: "utf-8",
+  },
+  { title: defaultTitle },
+  {
+    name: "description",
+    content: defaultDescription,
+  },
+  {
+    name: "viewport",
+    content: "width=device-width,initial-scale=1",
+  },
+  {
+    name: "twitter:card",
+    content: "summary_large_image",
+  },
+  {
+    name: "twitter:title",
+    content: defaultTitle,
+  },
+  {
+    name: "twitter:description",
+    content: defaultDescription,
+  },
+  {
+    name: "twitter:image",
+    content: logoUrl,
+  },
+  {
+    name: "twitter:image:alt",
+    content: "Remix Austin logo",
+  },
+  {
+    name: "og:type",
+    content: "website",
+  },
+  {
+    name: "og:title",
+    content: defaultTitle,
+  },
+  {
+    name: "og:site_name",
+    content: "Remix Austin 💿",
+  },
+  {
+    name: "og:description",
+    content: defaultDescription,
+  },
+  {
+    name: "og:url",
+    content: baseUrl,
+  },
+  {
+    name: "og:image",
+    content: logoUrl,
+  },
+];
 
 export const loader: LoaderFunction = async ({ request }) => {
   // Redirect if "www." is in the url.
