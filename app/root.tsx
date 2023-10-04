@@ -2,7 +2,7 @@ import { redirect } from "@remix-run/node";
 import type {
   LinksFunction,
   LoaderFunction,
-  V2_MetaFunction,
+  MetaFunction,
 } from "@remix-run/node";
 import {
   Links,
@@ -29,7 +29,7 @@ const defaultDescription =
 const baseUrl = "https://remixaustin.com/";
 const logoUrl = "https://remixaustin.com/img/remix-logo-rainbow.jpg";
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   {
     name: "charset",
     content: "utf-8",

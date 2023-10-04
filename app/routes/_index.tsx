@@ -1,14 +1,13 @@
 import DiscordHeaderImage from "~/images/discord-header.jpg";
 import HeroImage from "~/images/hero.jpg";
 import GivePresentationImage from "~/images/give-a-presentation.jpg";
-import { discordUrl } from "~/components/Navbar/SocialLinks";
+import { discordUrl, meetupUrl } from "~/components/Navbar/SocialLinks";
 import type { LinksFunction } from "@remix-run/node";
 import { tryToFetchRemixAustinInfo } from "~/models/meetup.server";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import NextEventInfo from "~/components/NextEventInfo/NextEventInfo";
 import MeetupLink from "~/components/MeetupLink";
-import { meetupUrl } from "~/components/Navbar/SocialLinks";
 
 interface CardProps {
   altText: string;

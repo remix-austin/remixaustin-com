@@ -36,6 +36,7 @@ export function useMatchesData(
     () => matchingRoutes.find((route) => route.id === id),
     [matchingRoutes, id]
   );
+  // @ts-expect-error Remix broke this
   return route?.data;
 }
 
