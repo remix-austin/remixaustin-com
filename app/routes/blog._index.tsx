@@ -1,9 +1,9 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { type LoaderArgs } from "@remix-run/node";
+import { type LoaderFunctionArgs } from "@remix-run/node";
 import type { PostFrontMatterCollection } from "blog/models";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
 
-export const loader = async function ({ request }: LoaderArgs) {
+export const loader = async function ({ request }: LoaderFunctionArgs) {
   const origin = new URL(request.url).origin;
   return fetch(`${origin}/resource/get-all-front-matter`).then((response) =>
     response.json()

@@ -1,6 +1,9 @@
-import type { HeadersFunction, V2_MetaFunction } from "@remix-run/node";
+import type {
+  HeadersFunction,
+  MetaFunction,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { type LoaderArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
@@ -24,7 +27,7 @@ function buildHeaders(publishDate: Date): HeadersInit | undefined {
   };
 }
 
-export const loader = async function ({ params, request }: LoaderArgs) {
+export const loader = async function ({ params, request }: LoaderFunctionArgs) {
   const { slug } = params;
   invariant(typeof slug === "string", "Missing slug");
   const post = await fetch(
@@ -47,7 +50,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => ({
   "Cache-Control": loaderHeaders.get("Cache-Control") ?? "no-cache",
 });
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) {
     return [];
   }

@@ -1,10 +1,10 @@
-import { type LoaderArgs } from "@remix-run/node";
+import { type LoaderFunctionArgs } from "@remix-run/node";
 import { type PostFrontMatterCollection } from "blog/models";
 import { FRONT_MATTER_CACHE_FILENAME } from "blog/paths";
 
 export const loader = async function ({
   request,
-}: LoaderArgs): Promise<PostFrontMatterCollection> {
+}: LoaderFunctionArgs): Promise<PostFrontMatterCollection> {
   const requestUrl = new URL(request.url);
   const pageNumber = Number(requestUrl.searchParams.get("page") ?? 1); // Page number is 1 based, not 0 based
   const pageSize = Number(requestUrl.searchParams.get("pageSize") ?? 10);

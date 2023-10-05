@@ -1,9 +1,9 @@
-import { type LoaderArgs } from "@remix-run/node";
+import { type LoaderFunctionArgs } from "@remix-run/node";
 import { bundleMdx } from "blog/parser.server";
 import { POSTS_BUILD_DIR } from "blog/paths";
 import invariant from "tiny-invariant";
 
-export const loader = async function ({ request, params }: LoaderArgs) {
+export const loader = async function ({ request, params }: LoaderFunctionArgs) {
   const { slug } = params;
   invariant(slug, "Blog post slug was not provided!");
   const url = new URL(`${new URL(request.url).origin}/posts/${slug}.mdx`);

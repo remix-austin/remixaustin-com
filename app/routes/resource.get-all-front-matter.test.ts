@@ -1,6 +1,9 @@
 // @vitest-environment node
 import { loader } from "~/routes/resource.get-all-front-matter";
-import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
+import {
+  mockUrlResponse,
+  urlToLoaderFunctionArgs,
+} from "../../test/test-utils";
 import type {
   PostFrontMatterCollection,
   PostFrontMatterWithSlug,
@@ -32,7 +35,7 @@ const SECOND_TEST_FRONT_MATTER: PostFrontMatterWithSlug = {
 describe("/resource/get-all-front-matter", () => {
   it("should throw error when there is an error retrieving front matter cache", async () => {
     mockUrlResponse(TEST_FRONT_MATTER_URL);
-    const args = urlToLoaderArgs(TEST_URL);
+    const args = urlToLoaderFunctionArgs(TEST_URL);
     await expect(loader(args)).rejects.toThrowError(
       "Could not retrieve posts. Internal Server Error"
     );
@@ -46,19 +49,19 @@ describe("/resource/get-all-front-matter", () => {
     });
 
     it("should return first page of front matter when no page params provided", async () => {
-      const args = urlToLoaderArgs(TEST_URL);
+      const args = urlToLoaderFunctionArgs(TEST_URL);
       await expect(loader(args)).resolves.toEqual(frontMatter);
     });
 
     it("should return first page of front matter", async () => {
-      const args = urlToLoaderArgs(TEST_URL, {
+      const args = urlToLoaderFunctionArgs(TEST_URL, {
         search: { page: "1", pageSize: "1" },
       });
       await expect(loader(args)).resolves.toEqual([FIRST_TEST_FRONT_MATTER]);
     });
 
     it("should return second page of front matter", async () => {
-      const args = urlToLoaderArgs(TEST_URL, {
+      const args = urlToLoaderFunctionArgs(TEST_URL, {
         search: { page: "2", pageSize: "1" },
       });
       await expect(loader(args)).resolves.toEqual([SECOND_TEST_FRONT_MATTER]);

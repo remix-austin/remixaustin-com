@@ -1,7 +1,7 @@
 import { server } from "../mocks/server";
 import type { DefaultBodyType } from "msw";
 import { rest } from "msw";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 
 /**
  * Use <code>msw</code> in order to mock a request with a specified response.
@@ -36,10 +36,13 @@ function buildUrl(url: URL | string, search?: Record<string, string>) {
   return builtUrl;
 }
 
-export function urlToLoaderArgs(
+export function urlToLoaderFunctionArgs(
   url: URL | string,
-  params?: { search?: Record<string, string>; path?: LoaderArgs["params"] }
-): LoaderArgs {
+  params?: {
+    search?: Record<string, string>;
+    path?: LoaderFunctionArgs["params"];
+  }
+): LoaderFunctionArgs {
   return {
     request: new Request(buildUrl(url, params?.search)),
     context: {},

@@ -1,6 +1,9 @@
 // @vitest-environment node
 import "@testing-library/jest-dom";
-import { mockUrlResponse, urlToLoaderArgs } from "../../test/test-utils";
+import {
+  mockUrlResponse,
+  urlToLoaderFunctionArgs,
+} from "../../test/test-utils";
 import {
   loader,
   LONG_CACHE_MAX_AGE,
@@ -29,7 +32,9 @@ Hello, world.
     mockUrlResponse(TEST_GET_BLOG_POST_URL, {
       json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
     });
-    const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
+    const args = urlToLoaderFunctionArgs(TEST_POST_URL, {
+      path: { slug: SLUG },
+    });
     const response = await loader(args);
     const {
       post: { code, ...metaProps },
@@ -66,7 +71,9 @@ Hello, world.
       mockUrlResponse(TEST_GET_BLOG_POST_URL, {
         json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
       });
-      const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
+      const args = urlToLoaderFunctionArgs(TEST_POST_URL, {
+        path: { slug: SLUG },
+      });
       const response = await loader(args);
       const cacheControlHeader = response.headers.get("Cache-Control");
       expect(cacheControlHeader).not.toBeNull();
@@ -89,7 +96,9 @@ Hello, world.
       mockUrlResponse(TEST_GET_BLOG_POST_URL, {
         json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
       });
-      const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
+      const args = urlToLoaderFunctionArgs(TEST_POST_URL, {
+        path: { slug: SLUG },
+      });
       const response = await loader(args);
       const cacheControlHeader = response.headers.get("Cache-Control");
       expect(cacheControlHeader).not.toBeNull();
@@ -113,7 +122,9 @@ Hello, world.
     mockUrlResponse(TEST_GET_BLOG_POST_URL, {
       json: await bundleMdx(testMdx, SLUG, POSTS_BUILD_DIR),
     });
-    const args = urlToLoaderArgs(TEST_POST_URL, { path: { slug: SLUG } });
+    const args = urlToLoaderFunctionArgs(TEST_POST_URL, {
+      path: { slug: SLUG },
+    });
     const response = await loader(args);
     const loaderData = await response.json();
     const {
