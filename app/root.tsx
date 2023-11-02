@@ -15,7 +15,7 @@ import {
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
-import tailwindStyles from "./tailwind.css";
+import tailwindStyles from "./tailwind.css?url";
 import { getRedirectUrlIfWww } from "./utils";
 
 export const links: LinksFunction = () => {

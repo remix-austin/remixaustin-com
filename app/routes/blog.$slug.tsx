@@ -5,7 +5,7 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getMDXComponent } from "mdx-bundler/client";
+import { getMDXComponent } from "mdx-bundler/client/index.js";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";

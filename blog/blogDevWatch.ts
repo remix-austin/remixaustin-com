@@ -1,5 +1,6 @@
 import fs from "fs";
-import syncDirectory from "sync-directory";
+// @ts-expect-error
+import { sync as syncDirectory } from "sync-directory";
 import { writeFrontMatterCache } from "./writeFrontMatterCache";
 import { POSTS_SOURCE_DIR, POSTS_BUILD_DIR } from "./paths";
 
