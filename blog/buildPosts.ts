@@ -1,4 +1,5 @@
-import syncDirectory from "sync-directory";
+// @ts-expect-error
+import { sync as syncDirectory } from "sync-directory";
 import { rimrafSync } from "rimraf";
 import { writeFrontMatterCache } from "./writeFrontMatterCache";
 import { POSTS_BUILD_DIR, POSTS_SOURCE_DIR } from "./paths";

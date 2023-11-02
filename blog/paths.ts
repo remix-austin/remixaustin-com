@@ -1,4 +1,8 @@
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const POSTS_SOURCE_DIR = path.join(__dirname, ".", "posts");
 export const POSTS_BUILD_DIR = path.join(__dirname, "..", "public", "posts");
