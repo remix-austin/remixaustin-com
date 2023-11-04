@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
 
 import type { SerializedMeetupEvent } from "./NextEventInfo";
 import NextEventInfo from "./NextEventInfo";
@@ -31,14 +32,14 @@ describe("NextEventInfo", () => {
     render(<NextEventInfo event={eventWithVenue} />);
     expect(screen.getByText("Venue name")).toBeInTheDocument();
     expect(
-      screen.getByText("Venue address, Venue city, Venue state")
+      screen.getByText("Venue address, Venue city, Venue state"),
     ).toBeInTheDocument();
   });
 
   it("renders default venue for online events", () => {
     render(<NextEventInfo event={DEFAULT_ONLINE_EVENT} />);
     expect(
-      screen.getByText("H-E-B Digital & Favor Eastside Tech Hub (and online)")
+      screen.getByText("H-E-B Digital & Favor Eastside Tech Hub (and online)"),
     ).toBeInTheDocument();
     expect(screen.getByText("2416 E 6th St, Austin, TX")).toBeInTheDocument();
   });
@@ -52,7 +53,7 @@ describe("NextEventInfo", () => {
     const eventWithManyAttending = { ...DEFAULT_ONLINE_EVENT, going: 10 };
     render(<NextEventInfo event={eventWithManyAttending} />);
     expect(
-      screen.getByRole("link", { name: "Join 10 others at our next meetup!" })
+      screen.getByRole("link", { name: "Join 10 others at our next meetup!" }),
     ).toBeInTheDocument();
   });
 
@@ -60,7 +61,7 @@ describe("NextEventInfo", () => {
     const eventWithNoOneAttending = { ...DEFAULT_ONLINE_EVENT, going: 0 };
     render(<NextEventInfo event={eventWithNoOneAttending} />);
     expect(
-      screen.getByRole("link", { name: "Join us at our next meetup!" })
+      screen.getByRole("link", { name: "Join us at our next meetup!" }),
     ).toBeInTheDocument();
   });
 });

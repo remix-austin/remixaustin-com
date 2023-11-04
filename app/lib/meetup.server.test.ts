@@ -1,5 +1,5 @@
-// @vitest-environment node
-import { tryToFetchRemixAustinInfo } from "~/models/meetup.server";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { tryToFetchRemixAustinInfo } from "./meetup.server";
 import { server } from "../../mocks/server";
 import { rest } from "msw";
 import type {
@@ -7,7 +7,7 @@ import type {
   MeetupGroupByUrlname,
   MeetupGroupResponse,
   MeetupRequestBody,
-} from "~/models/meetup.parsing";
+} from "./meetup.models";
 import invariant from "tiny-invariant";
 
 const MOCK_EVENT: MeetupEvent = {
@@ -46,7 +46,7 @@ describe("meetup.server", () => {
             data: { groupByUrlname: MOCK_GROUP },
           };
           return res(context.status(200), context.json(response));
-        })
+        }),
       );
     });
 
@@ -67,8 +67,8 @@ describe("meetup.server", () => {
       beforeEach(() => {
         server.use(
           rest.post(MEETUP_URL, (req, res, context) =>
-            res(context.status(200), context.json({ data: {} }))
-          )
+            res(context.status(200), context.json({ data: {} })),
+          ),
         );
       });
 
@@ -86,7 +86,7 @@ describe("meetup.server", () => {
               data: { groupByUrlname: MOCK_GROUP },
             };
             return res(context.status(500), context.json(response));
-          })
+          }),
         );
       });
 

@@ -1,9 +1,9 @@
 ---
 title: Making the Remix Austin Blog
-date: 01 May 2023
+date: 2023-05-01
 author: Matt Hernandez
 description: How did we make a blog integration in Remix? Read about the crazy winding journey here.
-imageUrl: /posts/img/blog-banner-resized-690.jpg
+imageUrl: /img/blog/blog-banner-resized-690.jpg
 imageAlt: The word "Blog" over a blurred image of a code editor
 tags:
   - Remix
@@ -14,12 +14,12 @@ tags:
   - Austin
 ---
 
-import { BlogImage } from "./components/BlogImage";
-import { AuthorFooter } from "./components/AuthorFooter";
-import colbyWhite from "./img/colby-white.jpg";
-import mattConfused from "./img/matt-confused.jpg";
-import refreshFunctionality from "./img/refresh.jpg";
-import mattAuthor from "./img/matt-author.png";
+import { BlogImage } from "~/components/Blog/BlogImage";
+import { AuthorFooter } from "~/components/Blog/AuthorFooter";
+import colbyWhite from "~/assets/colby-white.jpg?url";
+import mattConfused from "~/assets/matt-confused.jpg?url";
+import refreshFunctionality from "~/assets/refresh.jpg?url";
+import mattAuthor from "~/assets/matt-author.png?url";
 
 ## So how did we get here?
 
@@ -130,7 +130,7 @@ each post's front matter. That would then allow us to list all of our blog posts
 without having to worry about all that boilerplate.
 
 Lastly, if each compiled blog post has a lot of boilerplate, it seemed like a better idea to have each
-blog post built on demand by the server when the post is requested. That would save us from having one 
+blog post built on demand by the server when the post is requested. That would save us from having one
 mega-file with everything in it.
 
 These are all good things to fix, but they take some serious thought into how to do it right.

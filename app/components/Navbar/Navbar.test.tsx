@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter as Router } from "react-router-dom";
@@ -9,13 +10,13 @@ describe("Navbar", () => {
     render(
       <Router>
         <Navbar />
-      </Router>
+      </Router>,
     );
 
     expect(screen.getByRole("navigation")).toBeInTheDocument();
 
     expect(
-      screen.getByRole("link", { name: homepageLinkTitle })
+      screen.getByRole("link", { name: homepageLinkTitle }),
     ).toBeInTheDocument();
 
     // Check for 2 links for each, for both mobile and desktop nav menus

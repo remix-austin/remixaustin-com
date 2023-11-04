@@ -1,5 +1,5 @@
-import type { MeetupRequestBody } from "~/models/meetup.parsing";
-import { parseMeetupGroupResponse } from "~/models/meetup.parsing";
+import type { MeetupRequestBody } from "~/lib/meetup.models";
+import { parseMeetupGroupResponse } from "~/lib/meetup.models";
 
 const REMIX_AUSTIN_MEETUP_URL = "remix-austin";
 const MEETUP_API = "https://www.meetup.com/gql";

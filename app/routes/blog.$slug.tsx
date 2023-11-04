@@ -5,14 +5,15 @@ import type {
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
+import { getCollection } from "~/lib/content";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
-import type { Mdx } from "blog/parser.server";
 
 export const SHORT_CACHE_MAX_AGE = `max-age=28800`; // 8 hour cache
 export const LONG_CACHE_MAX_AGE = `max-age=604800`; // One week cache
+
+const COLLECTION = getCollection("blog");
 
 function buildHeaders(publishDate: Date): HeadersInit | undefined {
   if (process.env.NODE_ENV === "development") {
@@ -30,19 +31,17 @@ function buildHeaders(publishDate: Date): HeadersInit | undefined {
 export const loader = async function ({ params, request }: LoaderFunctionArgs) {
   const { slug } = params;
   invariant(typeof slug === "string", "Missing slug");
-  const post = await fetch(
-    `${new URL(request.url).origin}/resource/get-blog-post/${slug}`
-  ).then((response) => response.json() as Promise<Mdx>);
+  const post = COLLECTION.find((c) => c.slug === slug);
   invariant(post !== undefined, "Could not find post");
-  invariant(post.frontmatter.date !== undefined, "Post has no publish date");
   return json(
     {
-      post,
+      slug,
+      frontmatter: post.data,
       url: request.url,
     },
     {
-      headers: buildHeaders(new Date(post.frontmatter.date)),
-    }
+      headers: buildHeaders(post.data.date),
+    },
   );
 };
 
@@ -54,11 +53,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) {
     return [];
   }
-  const {
-    frontmatter: { title, author, date, imageUrl, imageAlt, description, tags },
-  } = data.post;
+  const { title, author, date, imageUrl, imageAlt, description, tags } =
+    data.frontmatter;
   const origin = new URL(data.url).origin;
   return [
+    { charSet: "utf-8" },
     { title },
     {
       name: "description",
@@ -125,7 +124,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       content: title,
     },
     ...(tags
-      ? tags.map((tag) => ({
+      ? tags.map((tag: any) => ({
           name: "article:tag",
           content: tag,
         }))
@@ -134,10 +133,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export default function BlogSlugRoute() {
-  const { post } = useLoaderData<typeof loader>();
-  const { title, author, date, imageUrl, imageAlt } = post.frontmatter;
-  const { code } = post;
-  const Component = useMemo(() => getMDXComponent(code), [code]);
+  const { slug, frontmatter } = useLoaderData<typeof loader>();
+  const { title, author, date, imageUrl, imageAlt } = frontmatter;
+  const Content = useMemo(
+    // We can force unwrap this entry because if it doesn't exist, we will throw
+    // in the loader before we even render this component
+    () => COLLECTION.find((c) => c.slug === slug)!.content,
+    [slug],
+  );
+
   return (
     <div className="container prose mx-auto px-4 py-8 text-justify md:px-0">
       <h1 className="mb-[0px]">{title}</h1>
@@ -154,7 +158,7 @@ export default function BlogSlugRoute() {
         src={imageUrl}
         alt={imageAlt}
       />
-      <Component />
+      <Content />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter as Router } from "react-router-dom";
@@ -14,7 +15,7 @@ describe("SocialLinks", () => {
     render(
       <Router>
         <SocialLinks />
-      </Router>
+      </Router>,
     );
 
     const meetupLink = screen.getByRole("link", { name: "Meetup" });
