@@ -1,10 +1,9 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./app/**/*.{ts,tsx,jsx,js}",
-    "./blog/posts/components/*.tsx",
-    "./blog/posts/*.mdx",
-  ],
+import typography from "@tailwindcss/typography";
+import daisyui from "daisyui";
+import type { Config } from "tailwindcss";
+
+export default {
+  content: ["./app/**/*.{ts,tsx,jsx,js}"],
   theme: {
     extend: {
       fontSize: {
@@ -30,5 +29,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [require("@tailwindcss/typography"), require("daisyui")],
-};
+  plugins: [typography(), daisyui],
+} satisfies Config;

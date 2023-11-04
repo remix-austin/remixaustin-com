@@ -11,4 +11,4 @@ node_modules
 /playwright-report
 
 # New line breaks matter on MDX files, and prettier has broken some MDX files after formatting
-/blog/**/*.mdx
+/app/content/**/*.mdx

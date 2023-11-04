@@ -8,7 +8,7 @@ export default function MeetupLink({
   return (
     <a
       href={link}
-      className="btn-primary btn mb-8"
+      className="btn btn-primary mb-8"
       target="_blank"
       rel="noopener noreferrer"
     >

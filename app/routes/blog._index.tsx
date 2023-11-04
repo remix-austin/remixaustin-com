@@ -1,13 +1,20 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { type LoaderFunctionArgs } from "@remix-run/node";
-import type { PostFrontMatterCollection } from "blog/models";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { PUBLISH_DATE_FORMATTER } from "~/utils";
+import { getCollection } from "~/lib/content";
 
-export const loader = async function ({ request }: LoaderFunctionArgs) {
-  const origin = new URL(request.url).origin;
-  return fetch(`${origin}/resource/get-all-front-matter`).then((response) =>
-    response.json()
-  ) as Promise<PostFrontMatterCollection>;
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const requestUrl = new URL(request.url);
+  const pageNumber = Number(requestUrl.searchParams.get("page") ?? 1); // Page number is 1 based, not 0 based
+  const pageSize = Number(requestUrl.searchParams.get("pageSize") ?? 10);
+
+  const collection = getCollection("blog");
+
+  const start = (pageNumber - 1) * pageSize;
+  const end = pageNumber * pageSize;
+
+  return json(collection.slice(start, end));
 };
 
 export default function BlogRoute() {
@@ -17,7 +24,7 @@ export default function BlogRoute() {
       <h1>Blog</h1>
       <ul className="list-none pl-0">
         {frontMatterArray.map(
-          ({ slug, title, date, author }, index: number) => (
+          ({ slug, data: { title, date, author } }, index: number) => (
             <li key={`${title}-${index}`} className="pl-0">
               <Link to={`/blog/${slug}`}>
                 <h2 className="mb-4 text-2xl font-bold">{title}</h2>
@@ -30,7 +37,7 @@ export default function BlogRoute() {
                 )}
               </Link>
             </li>
-          )
+          ),
         )}
       </ul>
     </div>

@@ -1,4 +1,4 @@
-import type { MeetupEvent } from "~/models/meetup.parsing";
+import type { MeetupEvent } from "~/lib/meetup.models";
 import { formatDateTime, isEmptyString } from "~/utils";
 import MeetupLink from "~/components/MeetupLink";
 import type { SerializeFrom } from "@remix-run/node";
@@ -15,6 +15,7 @@ const DEFAULT_VENUE: Venue = {
 function isValidVenue(venue: MeetupEvent["venue"]): venue is Venue {
   return (
     venue !== null &&
+    venue !== undefined &&
     !isEmptyString(venue.address) &&
     !isEmptyString(venue.city) &&
     !isEmptyString(venue.state)

@@ -29,12 +29,12 @@ export const getRedirectUrlIfWww = (requestUrl: string): string | null => {
  * @returns {JSON|undefined} The router data or undefined if not found
  */
 export function useMatchesData(
-  id: string
+  id: string,
 ): Record<string, unknown> | undefined {
   const matchingRoutes = useMatches();
   const route = useMemo(
     () => matchingRoutes.find((route) => route.id === id),
-    [matchingRoutes, id]
+    [matchingRoutes, id],
   );
   // @ts-expect-error Remix broke this
   return route?.data;
@@ -48,7 +48,8 @@ export const PUBLISH_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
   year: "numeric",
-  timeZone: "America/Chicago",
+  // Fix because the frontmatter dates get parsed as GMT
+  timeZone: "Europe/London",
 });
 
 export type PropsWithRequiredChildren<P = unknown> = P & {
@@ -78,6 +79,6 @@ export function formatDateTime(dateTime: string) {
   // Discrepency between server and client, see https://github.com/remix-austin/remixaustin-com/issues/83#issuecomment-1450654389
   return EVENT_TIME_FORMAT.format(new Date(dateTime)).replaceAll(
     NARROW_NON_BREAK_SPACE,
-    " "
+    " ",
   );
 }

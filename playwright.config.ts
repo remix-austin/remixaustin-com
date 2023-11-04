@@ -2,12 +2,6 @@ import type { PlaywrightTestConfig } from "@playwright/test";
 import { devices } from "@playwright/test";
 import path from "path";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
 // Use process.env.PORT by default and fallback to port 3000
 let PORT = Number(process.env.PORT);
 if (Number.isNaN(PORT)) {
@@ -75,34 +69,6 @@ const config: PlaywrightTestConfig = {
         ...devices["Desktop Safari"],
       },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: {
-    //     ...devices['Pixel 5'],
-    //   },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //   },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
-    //   },
-    // },
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */

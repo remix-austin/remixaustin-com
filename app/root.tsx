@@ -1,9 +1,5 @@
 import { redirect } from "@remix-run/node";
-import type {
-  LinksFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -15,12 +11,8 @@ import {
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 
-import tailwindStyles from "./tailwind.css?url";
+import "./tailwind.css";
 import { getRedirectUrlIfWww } from "./utils";
-
-export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStyles }];
-};
 
 export const defaultTitle =
   "Remix Austin 💿 A community & monthly Meetup event for Remix developers";
@@ -30,10 +22,7 @@ const baseUrl = "https://remixaustin.com/";
 const logoUrl = "https://remixaustin.com/img/remix-logo-rainbow.jpg";
 
 export const meta: MetaFunction = () => [
-  {
-    name: "charset",
-    content: "utf-8",
-  },
+  { charSet: "utf-8" },
   { title: defaultTitle },
   {
     name: "description",
@@ -113,8 +102,8 @@ export default function App() {
         </main>
         <Footer />
         <ScrollRestoration />
-        <Scripts />
         <LiveReload />
+        <Scripts />
       </body>
     </html>
   );

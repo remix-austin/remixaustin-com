@@ -1,9 +1,9 @@
-import DiscordHeaderImage from "~/images/discord-header.jpg";
-import HeroImage from "~/images/hero.jpg";
-import GivePresentationImage from "~/images/give-a-presentation.jpg";
+import DiscordHeaderImage from "~/assets/discord-header.jpg?url";
+import HeroImage from "~/assets/hero.jpg?url";
+import GivePresentationImage from "~/assets/give-a-presentation.jpg?url";
 import { discordUrl, meetupUrl } from "~/components/Navbar/SocialLinks";
 import type { LinksFunction } from "@remix-run/node";
-import { tryToFetchRemixAustinInfo } from "~/models/meetup.server";
+import { tryToFetchRemixAustinInfo } from "~/lib/meetup.server";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import NextEventInfo from "~/components/NextEventInfo/NextEventInfo";
@@ -47,7 +47,7 @@ function Card({
         <div className="card-actions justify-end">
           <a
             href={ctaLink}
-            className="btn-primary btn"
+            className="btn btn-primary"
             target={target}
             rel={rel}
           >

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { buildFrontMatterCache } from "../blog/writeFrontMatterCache";
+import { getCollection } from "@app/lib/content";
 
 test.describe("Blog", () => {
   test.beforeEach(async ({ page }) => {
@@ -15,17 +15,17 @@ test.describe("Blog", () => {
   });
 
   test("has the most recent post", async ({ page }) => {
-    const frontMatter = buildFrontMatterCache();
+    const collection = getCollection("blog");
     await expect(
-      page.getByRole("heading", { name: frontMatter[0].title })
+      page.getByRole("heading", { name: collection[0].data.title }),
     ).toBeVisible();
   });
 
   test("can navigate to most recent post", async ({ page }) => {
-    const frontMatter = buildFrontMatterCache();
-    await page.goto(`/blog/${frontMatter[0].slug}`);
+    const collection = getCollection("blog");
+    await page.goto(`/blog/${collection[0].slug}`);
     await expect(
-      page.getByRole("heading", { name: frontMatter[0].title })
+      page.getByRole("heading", { name: collection[0].data.title }),
     ).toBeVisible();
   });
 });

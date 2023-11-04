@@ -1,14 +1,13 @@
 {
   "exclude": ["./e2e"],
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mdx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vitest/globals"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "ESNext",
     "moduleResolution": "Bundler",
+    "module": "ESNext",
     "resolveJsonModule": true,
     "target": "ESNext",
     "strict": true,
@@ -20,7 +19,7 @@
     },
     "skipLibCheck": true,
 
-    // Remix takes care of building everything in `remix build`.
+    // Vite takes care of building everything in `vite build`.
     "noEmit": true
   }
 }
