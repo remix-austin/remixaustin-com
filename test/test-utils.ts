@@ -14,7 +14,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
  */
 export function mockUrlResponse<T extends DefaultBodyType>(
   url: string | URL,
-  body?: { json: T } | { text: string }
+  body?: { json: T } | { text: string },
 ) {
   server.use(
     rest.get(new URL(url).href, async (req, res, context) => {
@@ -24,7 +24,7 @@ export function mockUrlResponse<T extends DefaultBodyType>(
         return res(context.status(200), context.json(body.json));
       }
       return res(context.status(200), context.text(body.text));
-    })
+    }),
   );
 }
 
@@ -41,7 +41,7 @@ export function urlToLoaderFunctionArgs(
   params?: {
     search?: Record<string, string>;
     path?: LoaderFunctionArgs["params"];
-  }
+  },
 ): LoaderFunctionArgs {
   return {
     request: new Request(buildUrl(url, params?.search)),
