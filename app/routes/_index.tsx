@@ -47,7 +47,7 @@ function Card({
         <div className="card-actions justify-end">
           <a
             href={ctaLink}
-            className="btn-primary btn"
+            className="btn btn-primary"
             target={target}
             rel={rel}
           >

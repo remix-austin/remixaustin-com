@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav className="navbar bg-base-300">
       <div className="navbar-start">
         <div className="dropdown">
-          <label tabIndex={0} className="btn-ghost btn md:hidden">
+          <label tabIndex={0} className="btn btn-ghost md:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -31,7 +31,7 @@ export default function Navbar() {
             <SocialLinks />
           </ul>
         </div>
-        <Link to="/" className="btn-ghost btn text-xl normal-case">
+        <Link to="/" className="btn btn-ghost text-xl normal-case">
           {homepageLinkTitle}
         </Link>
       </div>
