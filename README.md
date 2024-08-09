@@ -28,7 +28,7 @@ You can, however, [create an issue](https://github.com/remix-austin/remixaustin-
 
 ## Development
 
-- Use [nvm](https://github.com/nvm-sh/nvm) to use the minimum Node.js version _(`18.3.0`):_
+- Use [nvm](https://github.com/nvm-sh/nvm) to use the minimum Node.js version _(`20.16.0`):_
 
   ```sh
   nvm use
